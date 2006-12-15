@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby -ws
+
+$t ||= false
+$d ||= false
+
+if defined? $h then
+  puts "usage: #{File.dirname($0)} [-d|-t] [group] project"
+  puts "  -t = add project to subdir under 'trunk'"
+  puts "  -d = add project to subdir under 'dev'"
+end
+
+abort "You must specify only one of -t or -d" if $t and $d
+
+group = ARGV.shift
+project = ARGV.shift
+
+project ||= group
+
+# prevents false positives on my tag reporter
+X = 'FI' + 'X'
+
+abort "You must supply a project name on the commandline" unless project
+abort "Project #{project} seems to exist" if test ?d, project
+puts "creating project #{project}"
+
+case project
+when /_/ then
+  file_name = project
+  project = project.capitalize.gsub(/_([a-z])/) {$1.upcase}
+  klass = project
+else
+  file_name = project.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
+  klass = project.capitalize.gsub(/_([a-z])/) {$1.upcase}
+end
+
+Dir.mkdir project
+Dir.chdir project do
+
+  if $d then
+    Dir.mkdir "dev"
+    Dir.chdir "dev"
+  elsif $t then
+    Dir.mkdir "trunk"
+    Dir.chdir "trunk"
+  end
+
+  %w(bin lib test).each do |path|
+    Dir.mkdir path
+  end
+
+  files = {
+    "History.txt" => "== 1.0.0 / #{Time.new.strftime("%Y-%m-%d")}\n\n* 1 major enhancement\n  * Birthday!\n\n",
+    "README.txt" => "#{project}\n    by #{X} (your name)\n    #{X} (url)\n\n== DESCRIPTION:\n  \n#{X} (describe your package)\n\n== FEATURES/PROBLEMS:\n  \n* #{X} (list of features or problems)\n\n== SYNOPSIS:\n\n  #{X} (code sample of usage)\n\n== REQUIREMENTS:\n\n* #{X} (list of requirements)\n\n== INSTALL:\n\n* #{X} (sudo gem install, anything else)\n\n== LICENSE:\n\n(The MIT License)\n\nCopyright (c) #{Time.new.strftime("%Y")} #{X}\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n'Software'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
+    "Manifest.txt" => "",
+    "bin/#{file_name}" => "",
+    "lib/#{file_name}.rb" => "class #{klass}\n  VERSION = '1.0.0'\nend",
+    "test/test_#{file_name}.rb" => "",
+    "Rakefile" => "# -*- ruby -*-\n\nrequire 'rubygems'\nrequire 'hoe'\nrequire './lib/#{file_name}.rb'\n\nHoe.new('#{project}', #{klass}::VERSION) do |p|\n  p.rubyforge_name = \'#{group}\'\n  # p.summary = '#{X}'\n  # p.description = p.paragraphs_of('README.txt', 2..5).join(\"\\n\\n\")\n  # p.url = p.paragraphs_of('README.txt', 0).first.split(/\\n/)[1..-1]\n  p.changes = p.paragraphs_of('History.txt', 0..1).join(\"\\n\\n\")\nend\n\n# vim: syntax=Ruby\n"
+  }
+
+  files["Manifest.txt"] = files.keys.sort.join("\n")
+
+  files.each do |file, content|
+    File.open(file, "w") do |f|
+      f.write content
+    end
+  end
+end
+
+puts "... done, now go fix all occurances of '#{X}'"
+puts `find #{project} -type f | xargs grep -n #{X}`.gsub(/\A|\n/, "\n  ")
