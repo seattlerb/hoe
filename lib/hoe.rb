@@ -128,14 +128,16 @@ class Hoe
     self.need_tar = true
     self.need_zip = false
 
+    yield self if block_given?
+
+    self.extra_deps = Array(extra_deps) # just in case user used = instead of <<
+    self.extra_deps = [extra_deps] unless Array === extra_deps.first
     if name == 'hoe' then
       extra_deps << ['rake']
       extra_deps << ['rubyforge', '>= 0.3.1']
     else
       extra_deps << ['hoe', ">= #{VERSION}"]
     end
-
-    yield self if block_given?
 
     define_tasks
   end
