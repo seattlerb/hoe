@@ -7,6 +7,7 @@ require 'rake/gempackagetask'
 require 'rake/rdoctask'
 require 'rake/testtask'
 require 'rbconfig'
+require 'rubyforge'
 
 ##
 # hoe - a tool to help rake
@@ -22,7 +23,7 @@ require 'rbconfig'
 # Use this as a minimal starting point:
 #
 #   require 'hoe'
-# 
+#
 #   Hoe.new("project_name", '1.0.0') do |p|
 #     p.rubyforge_name = "rf_project"
 #     # add other details here
@@ -31,7 +32,7 @@ require 'rbconfig'
 #   # add other tasks here
 #
 # === Tasks Provided:
-# 
+#
 # * announce         - Generate email announcement file and post to rubyforge.
 # * audit            - Run ZenTest against the package
 # * check_manifest   - Verify the manifest
@@ -131,10 +132,11 @@ class Hoe
     yield self if block_given?
 
     self.extra_deps = Array(extra_deps) # just in case user used = instead of <<
-    self.extra_deps = [extra_deps] unless Array === extra_deps.first
+    self.extra_deps = [extra_deps] unless
+      extra_deps.empty? or Array === extra_deps.first
     if name == 'hoe' then
-      extra_deps << ['rake']
-      extra_deps << ['rubyforge', '>= 0.3.1']
+      extra_deps << ['rake', ">= #{RAKEVERSION}"]
+      extra_deps << ['rubyforge', ">= #{::RubyForge::VERSION}"]
     else
       extra_deps << ['hoe', ">= #{VERSION}"]
     end
@@ -261,7 +263,6 @@ class Hoe
     task :release => [:clean, :package] do |t|
       v = ENV["VERSION"] or abort "Must supply VERSION=x.y.z"
       abort "Versions don't match #{v} vs #{version}" if v != version
-      require 'rubyforge'
       pkg = "pkg/#{name}-#{version}"
 
       if $DEBUG then
@@ -273,7 +274,7 @@ class Hoe
       puts "Logging in"
       rf.login
 
-      c = rf.config
+      c = rf.userconfig
       c["release_notes"] = description if description
       c["release_changes"] = changes if changes
       c["preformatted"] = true
@@ -310,23 +311,11 @@ class Hoe
 
     desc 'Publish RDoc to RubyForge'
     task :publish_docs => [:clean, :docs] do
-      config = YAML.load(File.read(File.expand_path("~/.rubyforge/config.yml")))
-      user = "#{config["username"]}@rubyforge.org"
-      project = "/var/www/gforge-projects/#{rubyforge_name}"
-      project += "/#{name}" if rubyforge_name != name
+      config = YAML.load(File.read(File.expand_path("~/.rubyforge/user-config.yml")))
+      host = "#{config["username"]}@rubyforge.org"
+      remote_dir = "/var/www/gforge-projects/#{rubyforge_name}/#{name}"
       local_dir = 'doc'
-      pub = Rake::SshDirPublisher.new user, project, local_dir
-      if rubyforge_name != name then
-        def pub.upload
-          begin
-            super
-          rescue
-            # project directory probably doesn't exist, transfer as a whole
-            sh %{scp -qr #{local_dir} #{host}:#{remote_dir}}
-          end
-        end
-      end
-      pub.upload
+      sh %{rsync -av --delete #{local_dir}/ #{host}:#{remote_dir}}
     end
 
     ############################################################
