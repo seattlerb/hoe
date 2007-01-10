@@ -90,7 +90,7 @@ require 'rubyforge'
 # * RUBY_FLAGS - Used to specify flags to ruby [has smart default].
 
 class Hoe
-  VERSION = '1.1.6'
+  VERSION = '1.1.7'
 
   rubyprefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -131,14 +131,20 @@ class Hoe
 
     yield self if block_given?
 
+    hoe_deps = {
+      'rake' => ">= #{RAKEVERSION}",
+      'rubyforge' => ">= #{::RubyForge::VERSION}",
+    }
+
     self.extra_deps = Array(extra_deps) # just in case user used = instead of <<
     self.extra_deps = [extra_deps] unless
       extra_deps.empty? or Array === extra_deps.first
     if name == 'hoe' then
-      extra_deps << ['rake', ">= #{RAKEVERSION}"]
-      extra_deps << ['rubyforge', ">= #{::RubyForge::VERSION}"]
+      hoe_deps.each do |pkg, version|
+        extra_deps << [pkg, version]
+      end
     else
-      extra_deps << ['hoe', ">= #{VERSION}"]
+      extra_deps << ['hoe', ">= #{VERSION}"] unless hoe_deps.has_key? name
     end
 
     define_tasks
@@ -375,7 +381,7 @@ class Hoe
       files = []
       Find.find '.' do |path|
         next unless File.file? path
-        next if path =~ /svn|tmp$/
+        next if path =~ /\.svn|tmp$|CVS/
         files << path[2..-1]
       end
       files = files.sort.join "\n"

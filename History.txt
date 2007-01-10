@@ -1,5 +1,9 @@
-= 1.1.7
+= 1.1.7 2007-01-10
 
+* extra_deps is now self-healing, and ensures no (direct) cycles.
+* cleans check_manifest for CVS projects.
+* rubyforge changes for config.
+* Now uses rsync for publish_docs. YAY for fast!
 * Bug #7193 fix spelling of 'synopsys'.  Submitted by Jacob Atzen.
 
 = 1.1.6 2006-11-29
