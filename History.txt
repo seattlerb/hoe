@@ -1,3 +1,10 @@
+= 1.2.0 2007-02-13
+
+* Added more support for ext dirs.
+* Added a simple config file (yaml). Use 'rake config_hoe' to edit.
+* Added post_blog task (thanks Aaron!), configured via config_hoe.
+* Announce task now posts to your blogs and/or publishes API depending on config.
+
 = 1.1.7 2007-01-10
 
 * extra_deps is now self-healing, and ensures no (direct) cycles.

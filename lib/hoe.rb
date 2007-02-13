@@ -90,7 +90,7 @@ require 'rubyforge'
 # * RUBY_FLAGS - Used to specify flags to ruby [has smart default].
 
 class Hoe
-  VERSION = '1.1.7'
+  VERSION = '1.2.0'
 
   rubyprefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -228,7 +228,7 @@ class Hoe
       puts spec.to_ruby
     end
 
-    self.lib_files = spec.files.grep(/^lib/)
+    self.lib_files = spec.files.grep(/^(lib|ext)/)
     self.bin_files = spec.files.grep(/^bin/)
     self.test_files = spec.files.grep(/^test/)
 
@@ -324,12 +324,37 @@ class Hoe
       sh %{rsync -av --delete #{local_dir}/ #{host}:#{remote_dir}}
     end
 
+    # no doco for this one
+    task :publish_on_announce do
+      with_config do |rc, path|
+        if rc["publish_on_announce"] then
+          Rake::Task['publish_docs'].invoke
+        end
+      end
+    end
+
     ############################################################
     # Misc/Maintenance:
 
+    def with_config(create=false)
+      require 'yaml'
+      rc = File.expand_path("~/.hoerc")
+
+      unless create then
+        if test ?f, rc then
+          config = YAML.load_file(rc)
+          yield(config, rc)
+        end
+      else
+        unless test ?f, rc then
+          yield(rc)
+        end
+      end
+    end
+
     desc 'Run ZenTest against the package'
     task :audit do
-      libs = %w(lib test).join(File::PATH_SEPARATOR)
+      libs = %w(lib test ext).join(File::PATH_SEPARATOR)
       sh "zentest -I=#{libs} #{spec.files.grep(/^(lib|test)/).join(' ')}"
     end
 
@@ -338,6 +363,32 @@ class Hoe
       clean_globs.each do |pattern|
         files = Dir[pattern]
         rm_rf files unless files.empty?
+      end
+    end
+
+    desc 'Create a fresh ~/.hoerc file'
+    task :config_hoe do
+      with_config(:create) do |rc, path|
+        blog = {
+          "publish_on_announce" => false,
+          "blogs" => [ {
+                         "user" => "user",
+                         "url" => "url",
+                         "extra_headers" => {
+                           "mt_convert_breaks" => "markdown"
+                         },
+                         "blog_id" => "blog_id",
+                         "password"=>"password",
+                       } ],
+        }
+        File.open(rc, "w") do |f|
+          YAML.dump(blog, f)
+        end
+      end
+
+      with_config do |rc, path|
+        editor = ENV['EDITOR'] || 'vi'
+        system "#{editor} #{path}"
       end
     end
 
@@ -360,6 +411,26 @@ class Hoe
       puts "Created email.txt"
     end
 
+    desc 'Post announcement to blog.'
+    task :post_blog do
+      require 'xmlrpc/client'
+
+      with_config do |config, path|
+        subject, title, body, urls = announcement
+        config['blogs'].each do |site|
+          server = XMLRPC::Client.new2(site['url'])
+          content = site['extra_headers'].merge(:title => title,
+                                                :description => body)
+          result = server.call('metaWeblog.newPost',
+                               site['blog_id'],
+                               site['user'],
+                               site['password'],
+                               content,
+                               true)
+        end
+      end
+    end
+
     desc 'Post announcement to rubyforge.'
     task :post_news do
       require 'rubyforge'
@@ -372,7 +443,7 @@ class Hoe
     end
 
     desc 'Generate email announcement file and post to rubyforge.'
-    task :announce => [:email, :post_news]
+    task :announce => [:email, :post_news, :post_blog, :publish_on_announce ]
 
     desc "Verify the manifest"
     task :check_manifest => :clean do
