@@ -37,6 +37,7 @@ require 'rubyforge'
 # * audit            - Run ZenTest against the package
 # * check_manifest   - Verify the manifest
 # * clean            - Clean up all the extras
+# * config_hoe       - Create a fresh ~/.hoerc file
 # * debug_gem        - Show information about the gem.
 # * default          - Run the default tasks
 # * docs             - Build the docs HTML Files
@@ -45,6 +46,7 @@ require 'rubyforge'
 # * install_gem      - Install the package as a gem
 # * multi            - Run the test suite using multiruby
 # * package          - Build all the packages
+# * post_blog        - Post announcement to blog.
 # * post_news        - Post announcement to rubyforge.
 # * publish_docs     - Publish RDoc to RubyForge
 # * release          - Package and upload the release to rubyforge.
