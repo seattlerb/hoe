@@ -200,7 +200,7 @@ class Hoe
         s.add_dependency(*dep)
       end
 
-      s.files = File.read("Manifest.txt").split
+      s.files = File.read("Manifest.txt").split(/[\r\n]+/)
       s.executables = s.files.grep(/bin/) { |f| File.basename(f) }
 
       s.bindir = "bin"
