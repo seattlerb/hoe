@@ -495,7 +495,7 @@ class Hoe
   #   summary, *description = p.paragraphs_of('Readme.txt', 3, 3..8)
 
   def paragraphs_of(path, *paragraphs)
-    file = File.read(path)
+    file = File.read(path).delete("\r")
     file.split(/\n\n+/).values_at(*paragraphs)
   end
 end
