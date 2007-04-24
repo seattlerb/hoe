@@ -200,12 +200,15 @@ class Hoe
         s.add_dependency(*dep)
       end
 
-      s.files = File.read("Manifest.txt").split(/[\r\n]+/)
+      s.files = File.read("Manifest.txt").delete("\r").split(/\n/)
       s.executables = s.files.grep(/bin/) { |f| File.basename(f) }
 
       s.bindir = "bin"
       dirs = Dir['{lib,ext}']
       s.require_paths = dirs unless dirs.empty?
+
+      s.rdoc_options = ['--main', 'README.txt']
+      s.extra_rdoc_files = s.files.grep(/txt$/)
       s.has_rdoc = true
 
       if test ?f, "test/test_all.rb" then
@@ -492,11 +495,10 @@ class Hoe
   # Reads a file at +path+ and spits out an array of the +paragraphs+ specified
   #
   #   changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
-  #   summary, *description = p.paragraphs_of('Readme.txt', 3, 3..8)
+  #   summary, *description = p.paragraphs_of('README.txt', 3, 3..8)
 
   def paragraphs_of(path, *paragraphs)
-    file = File.read(path).delete("\r")
-    file.split(/\n\n+/).values_at(*paragraphs)
+    File.read(path).delete("\r").split(/\n\n+/).values_at(*paragraphs)
   end
 end
 
