@@ -109,6 +109,17 @@ class Hoe
     (RUBY_DEBUG ? " #{RUBY_DEBUG}" : '')
   FILTER = ENV['FILTER'] # for tests (eg FILTER="-n test_blah")
 
+  WINDOZE = /win32/ =~ RUBY_PLATFORM unless defined? WINDOZE
+  DIFF = if WINDOZE
+           'diff.exe'
+         else
+           if system("gdiff", __FILE__, __FILE__)
+             'gdiff' # solaris and kin suck
+           else
+             'diff'
+           end
+         end unless defined? DIFF
+
   attr_accessor :author, :bin_files, :changes, :clean_globs, :description, :email, :extra_deps, :lib_files, :name, :need_tar, :need_zip, :rdoc_pattern, :rubyforge_name, :spec, :spec_extras, :summary, :test_files, :test_globs, :url, :version
 
   def initialize(name, version)
@@ -116,20 +127,20 @@ class Hoe
     self.version = version
 
     # Defaults
-    self.rubyforge_name = name.downcase
-    self.url = "http://www.zenspider.com/ZSS/Products/#{name}/"
     self.author = "Ryan Davis"
-    self.email = "ryand-ruby@zenspider.com"
-    self.clean_globs = %w(diff diff.txt email.txt ri *.gem **/*~)
-    self.test_globs = ['test/**/test_*.rb']
     self.changes = "The author was too lazy to write a changeset"
+    self.clean_globs = %w(diff diff.txt email.txt ri *.gem **/*~)
     self.description = "The author was too lazy to write a description"
-    self.summary = "The author was too lazy to write a summary"
-    self.rdoc_pattern = /^(lib|bin)|txt$/
+    self.email = "ryand-ruby@zenspider.com"
     self.extra_deps = []
-    self.spec_extras = {}
     self.need_tar = true
     self.need_zip = false
+    self.rdoc_pattern = /^(lib|bin)|txt$/
+    self.rubyforge_name = name.downcase
+    self.spec_extras = {}
+    self.summary = "The author was too lazy to write a summary"
+    self.test_globs = ['test/**/test_*.rb']
+    self.url = "http://www.zenspider.com/ZSS/Products/#{name}/"
 
     yield self if block_given?
 
@@ -462,7 +473,7 @@ class Hoe
       end
       files = files.sort.join "\n"
       File.open f, 'w' do |fp| fp.puts files end
-      system "diff -du Manifest.txt #{f}"
+      system "#{DIFF} -du Manifest.txt #{f}"
       rm f
     end
 
