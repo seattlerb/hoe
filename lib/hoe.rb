@@ -55,35 +55,6 @@ require 'rubyforge'
 # * test_deps        - Show which test files fail when run alone.
 # * uninstall        - Uninstall the package.
 #
-# === Attributes
-#
-# The attributes that you can provide inside the new block above are:
-#
-# ==== Mandatory
-#
-# * name        - The name of the release.
-# * version     - The version. Don't hardcode! use a constant in the project.
-#
-# ==== Damn Good to Set
-#
-# * author      - The author of the package. (can be array of authors)
-# * changes     - A description of the release's latest changes.
-# * description - A description of the project.
-# * email       - The author's email address. (can be array of urls)
-# * summary     - A short summary of the project.
-# * url         - The url of the project.
-#
-# ==== Optional
-#
-# * clean_globs    - An array of file patterns to delete on clean.
-# * extra_deps     - An array of rubygem dependencies.
-# * need_tar       - Should package create a tarball? [default: true]
-# * need_zip       - Should package create a zipfile? [default: false]
-# * rdoc_pattern   - A regexp to match documentation files against the manifest.
-# * rubyforge_name - The name of the rubyforge project. [default: name.downcase]
-# * spec_extras    - A hash of extra values to set in the gemspec.
-# * test_globs     - An array of test file patterns [default: test/**/test_*.rb]
-#
 # === Environment Variables
 #
 # * FILTER     - Used to add flags to test_unit (e.g., -n test_borked)
@@ -92,7 +63,7 @@ require 'rubyforge'
 # * RUBY_FLAGS - Used to specify flags to ruby [has smart default].
 
 class Hoe
-  VERSION = '1.2.0'
+  VERSION = '1.2.1'
 
   rubyprefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -120,7 +91,115 @@ class Hoe
            end
          end unless defined? DIFF
 
-  attr_accessor :author, :bin_files, :changes, :clean_globs, :description, :email, :extra_deps, :lib_files, :name, :need_tar, :need_zip, :rdoc_pattern, :rubyforge_name, :spec, :spec_extras, :summary, :test_files, :test_globs, :url, :version
+  ##
+  # The author of the package. (can be array of authors)
+
+  attr_accessor :author
+
+  ##
+  # Populated automatically from the manifest. List of executables.
+
+  attr_accessor :bin_files # :nodoc:
+
+  ##
+  # A description of the release's latest changes.
+
+  attr_accessor :changes
+
+  ##
+  # An array of file patterns to delete on clean.
+
+  attr_accessor :clean_globs
+
+  ##
+  # A description of the project.
+
+  attr_accessor :description
+
+  ##
+  # The author's email address. (can be array of urls)
+
+  attr_accessor :email
+
+  ##
+  # An array of rubygem dependencies.
+
+  attr_accessor :extra_deps
+
+  ##
+  # Populated automatically from the manifest. List of library files.
+
+  attr_accessor :lib_files # :nodoc:
+
+  ##
+  # Mandatory. The name of the release.
+
+  attr_accessor :name
+
+  ##
+  # Should package create a tarball? [default: true]
+
+  attr_accessor :need_tar
+
+  ##
+  # Should package create a zipfile? [default: false]
+
+  attr_accessor :need_zip
+
+  ##
+  # A regexp to match documentation files against the manifest.
+
+  attr_accessor :rdoc_pattern
+
+  ##
+  # Name of RDoc destination directory on Rubyforge. Defaults to +name+.
+
+  attr_accessor :remote_rdoc_dir
+
+  ##
+  # Flags for RDoc rsync. Defaults to "-av --delete".
+
+  attr_accessor :rsync_args
+
+  ##
+  # The name of the rubyforge project. [default: name.downcase]
+
+  attr_accessor :rubyforge_name
+
+  ##
+  # The Gem::Specification.
+
+  attr_accessor :spec # :nodoc:
+
+  ##
+  # A hash of extra values to set in the gemspec.
+
+  attr_accessor :spec_extras
+
+  ##
+  # A short summary of the project.
+
+  attr_accessor :summary
+
+  ##
+  # Populated automatically from the manifest. List of tests.
+
+  attr_accessor :test_files # :nodoc:
+
+  ##
+  # An array of test file patterns [default: test/**/test_*.rb]
+
+  attr_accessor :test_globs
+
+  ##
+  # The url of the project.
+
+  attr_accessor :url
+
+  ##
+  # Mandatory. The version. Don't hardcode! use a constant in the project.
+
+  attr_accessor :version
 
   def initialize(name, version)
     self.name = name
@@ -136,6 +215,8 @@ class Hoe
     self.need_tar = true
     self.need_zip = false
     self.rdoc_pattern = /^(lib|bin)|txt$/
+    self.remote_rdoc_dir = name
+    self.rsync_args = '-av --delete'
     self.rubyforge_name = name.downcase
     self.spec_extras = {}
     self.summary = "The author was too lazy to write a summary"
@@ -331,13 +412,15 @@ class Hoe
       sh %q{ rdoc --ri -o ri . }
     end
 
-    desc 'Publish RDoc to RubyForge'
+    desc "Publish RDoc to RubyForge"
     task :publish_docs => [:clean, :docs] do
       config = YAML.load(File.read(File.expand_path("~/.rubyforge/user-config.yml")))
       host = "#{config["username"]}@rubyforge.org"
-      remote_dir = "/var/www/gforge-projects/#{rubyforge_name}/#{name}"
+
+      remote_dir = "/var/www/gforge-projects/#{rubyforge_name}/#{remote_rdoc_dir}"
       local_dir = 'doc'
-      sh %{rsync -av --delete #{local_dir}/ #{host}:#{remote_dir}}
+
+      sh %{rsync #{rsync_args} #{local_dir}/ #{host}:#{remote_dir}}
     end
 
     # no doco for this one
