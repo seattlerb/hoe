@@ -42,6 +42,7 @@ require 'rubyforge'
 # * default          - Run the default tasks
 # * docs             - Build the docs HTML Files
 # * email            - Generate email announcement file.
+# * gem              - Build the gem file only.
 # * install          - Install the package. Uses PREFIX and RUBYLIB
 # * install_gem      - Install the package as a gem
 # * multi            - Run the test suite using multiruby
@@ -55,32 +56,45 @@ require 'rubyforge'
 # * test_deps        - Show which test files fail when run alone.
 # * uninstall        - Uninstall the package.
 #
-# === Environment Variables
-#
-# * FILTER     - Used to add flags to test_unit (e.g., -n test_borked)
-# * PREFIX     - Used to specify a custom install location (for rake install).
-# * RUBY_DEBUG - Used to add extra flags to RUBY_FLAGS.
-# * RUBY_FLAGS - Used to specify flags to ruby [has smart default].
-
 class Hoe
   VERSION = '1.2.1'
 
-  rubyprefix = Config::CONFIG['prefix']
+  ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
 
-  PREFIX = ENV['PREFIX'] || rubyprefix
-  RUBYLIB = if PREFIX == rubyprefix then
-              sitelibdir
-            else
-              File.join(PREFIX, sitelibdir[rubyprefix.size..-1])
-            end
+  ##
+  # Used to specify a custom install location (for rake install).
+
+  PREFIX = ENV['PREFIX'] || ruby_prefix
+
+  ##
+  # Used to add extra flags to RUBY_FLAGS.
+
   RUBY_DEBUG = ENV['RUBY_DEBUG']
-  RUBY_FLAGS = ENV['RUBY_FLAGS'] ||
-    "-w -I#{%w(lib ext bin test).join(File::PATH_SEPARATOR)}" +
+
+  default_ruby_flags = "-w -I#{%w(lib ext bin test).join(File::PATH_SEPARATOR)}" +
     (RUBY_DEBUG ? " #{RUBY_DEBUG}" : '')
+
+  ##
+  # Used to specify flags to ruby [has smart default].
+
+  RUBY_FLAGS = ENV['RUBY_FLAGS'] || default_ruby_flags
+
+  ##
+  # Used to add flags to test_unit (e.g., -n test_borked).
+
   FILTER = ENV['FILTER'] # for tests (eg FILTER="-n test_blah")
 
+  # :stopdoc:
+
+  RUBYLIB = if PREFIX == ruby_prefix then
+              sitelibdir
+            else
+              File.join(PREFIX, sitelibdir[ruby_prefix.size..-1])
+            end
+
   WINDOZE = /win32/ =~ RUBY_PLATFORM unless defined? WINDOZE
+
   DIFF = if WINDOZE
            'diff.exe'
          else
@@ -91,8 +105,10 @@ class Hoe
            end
          end unless defined? DIFF
 
+  # :startdoc:
+
   ##
-  # Recommended: The author(s) of the package. (can be array)
+  # *Recommended*: The author(s) of the package. (can be array)
   # Really. Set this or we'll tease you.
 
   attr_accessor :author
@@ -103,7 +119,7 @@ class Hoe
   attr_accessor :bin_files # :nodoc:
 
   ##
-  # Recommended: A description of the release's latest changes.
+  # *Recommended*: A description of the release's latest changes.
 
   attr_accessor :changes
 
@@ -113,12 +129,12 @@ class Hoe
   attr_accessor :clean_globs
 
   ##
-  # Recommended: A description of the project.
+  # *Recommended*: A description of the project.
 
   attr_accessor :description
 
   ##
-  # Recommended: The author's email address(es). (can be array)
+  # *Recommended*: The author's email address(es). (can be array)
 
   attr_accessor :email
 
@@ -133,7 +149,7 @@ class Hoe
   attr_accessor :lib_files # :nodoc:
 
   ##
-  # MANDATORY: The name of the release.
+  # *MANDATORY*: The name of the release.
 
   attr_accessor :name
 
@@ -178,7 +194,7 @@ class Hoe
   attr_accessor :spec_extras
 
   ##
-  # Recommended: A short summary of the project.
+  # *Recommended*: A short summary of the project.
 
   attr_accessor :summary
 
@@ -193,16 +209,16 @@ class Hoe
   attr_accessor :test_globs
 
   ##
-  # Recommended: The url(s) of the project. (can be array)
+  # *Recommended*: The url(s) of the project. (can be array)
 
   attr_accessor :url
 
   ##
-  # MANDATORY. The version. Don't hardcode! use a constant in the project.
+  # *MANDATORY*. The version. Don't hardcode! use a constant in the project.
 
   attr_accessor :version
 
-  def initialize(name, version)
+  def initialize(name, version) # :nodoc:
     self.name = name
     self.version = version
 
@@ -245,7 +261,7 @@ class Hoe
     define_tasks
   end
 
-  def define_tasks
+  def define_tasks # :nodoc:
     desc 'Run the default tasks'
     task :default => :test
 
@@ -436,7 +452,7 @@ class Hoe
     ############################################################
     # Misc/Maintenance:
 
-    def with_config(create=false)
+    def with_config(create=false) # :nodoc:
       require 'yaml'
       rc = File.expand_path("~/.hoerc")
 
@@ -563,12 +579,13 @@ class Hoe
 
   end # end define
 
-  def announcement
-    urls = "  " + Array(url).map {|s| s.strip}.join("\n  ")
+  def announcement # :nodoc:
+    changes = self.changes.gsub(/^(=+)/) { "#" * $1.size }
 
     subject = "#{name} #{version} Released"
     title = "#{name} version #{version} has been released!"
     body = "#{description}\n\nChanges:\n\n#{changes}"
+    urls = Array(url).map { |s| "* <#{s.strip.sub(/^mailto:/, '')}>" }.join("\n")
 
     return subject, title, body, urls
   end
@@ -587,7 +604,7 @@ class Hoe
   end
 
   ##
-  # Reads a file at +path+ and spits out an array of the +paragraphs+ specified
+  # Reads a file at +path+ and spits out an array of the +paragraphs+ specified.
   #
   #   changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
   #   summary, *description = p.paragraphs_of('README.txt', 3, 3..8)

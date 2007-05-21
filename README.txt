@@ -1,7 +1,8 @@
 Hoe
-    http://rubyforge.org/projects/seattlerb/
-    http://seattlerb.rubyforge.org/hoe/
-    ryand-ruby@zenspider.com
+
+* http://rubyforge.org/projects/seattlerb/
+* http://seattlerb.rubyforge.org/hoe/
+* mailto:ryand-ruby@zenspider.com
 
 == DESCRIPTION:
 
