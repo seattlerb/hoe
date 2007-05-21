@@ -92,7 +92,8 @@ class Hoe
          end unless defined? DIFF
 
   ##
-  # The author of the package. (can be array of authors)
+  # Recommended: The author(s) of the package. (can be array)
+  # Really. Set this or we'll tease you.
 
   attr_accessor :author
 
@@ -102,27 +103,27 @@ class Hoe
   attr_accessor :bin_files # :nodoc:
 
   ##
-  # A description of the release's latest changes.
+  # Recommended: A description of the release's latest changes.
 
   attr_accessor :changes
 
   ##
-  # An array of file patterns to delete on clean.
+  # Optional: An array of file patterns to delete on clean.
 
   attr_accessor :clean_globs
 
   ##
-  # A description of the project.
+  # Recommended: A description of the project.
 
   attr_accessor :description
 
   ##
-  # The author's email address. (can be array of urls)
+  # Recommended: The author's email address(es). (can be array)
 
   attr_accessor :email
 
   ##
-  # An array of rubygem dependencies.
+  # Optional: An array of rubygem dependencies.
 
   attr_accessor :extra_deps
 
@@ -132,37 +133,37 @@ class Hoe
   attr_accessor :lib_files # :nodoc:
 
   ##
-  # Mandatory. The name of the release.
+  # MANDATORY: The name of the release.
 
   attr_accessor :name
 
   ##
-  # Should package create a tarball? [default: true]
+  # Optional: Should package create a tarball? [default: true]
 
   attr_accessor :need_tar
 
   ##
-  # Should package create a zipfile? [default: false]
+  # Optional: Should package create a zipfile? [default: false]
 
   attr_accessor :need_zip
 
   ##
-  # A regexp to match documentation files against the manifest.
+  # Optional: A regexp to match documentation files against the manifest.
 
   attr_accessor :rdoc_pattern
 
   ##
-  # Name of RDoc destination directory on Rubyforge. Defaults to +name+.
+  # Optional: Name of RDoc destination directory on Rubyforge. [default: +name+]
 
   attr_accessor :remote_rdoc_dir
 
   ##
-  # Flags for RDoc rsync. Defaults to "-av --delete".
+  # Optional: Flags for RDoc rsync. [default: "-av --delete"]
 
   attr_accessor :rsync_args
 
   ##
-  # The name of the rubyforge project. [default: name.downcase]
+  # Optional: The name of the rubyforge project. [default: name.downcase]
 
   attr_accessor :rubyforge_name
 
@@ -172,12 +173,12 @@ class Hoe
   attr_accessor :spec # :nodoc:
 
   ##
-  # A hash of extra values to set in the gemspec.
+  # Optional: A hash of extra values to set in the gemspec. Value may be a proc.
 
   attr_accessor :spec_extras
 
   ##
-  # A short summary of the project.
+  # Recommended: A short summary of the project.
 
   attr_accessor :summary
 
@@ -187,17 +188,17 @@ class Hoe
   attr_accessor :test_files # :nodoc:
 
   ##
-  # An array of test file patterns [default: test/**/test_*.rb]
+  # Optional: An array of test file patterns [default: test/**/test_*.rb]
 
   attr_accessor :test_globs
 
   ##
-  # The url of the project.
+  # Recommended: The url(s) of the project. (can be array)
 
   attr_accessor :url
 
   ##
-  # Mandatory. The version. Don't hardcode! use a constant in the project.
+  # MANDATORY. The version. Don't hardcode! use a constant in the project.
 
   attr_accessor :version
 
@@ -293,7 +294,7 @@ class Hoe
       end
 
       s.files = File.read("Manifest.txt").delete("\r").split(/\n/)
-      s.executables = s.files.grep(/bin/) { |f| File.basename(f) }
+      s.executables = s.files.grep(/^bin/) { |f| File.basename(f) }
 
       s.bindir = "bin"
       dirs = Dir['{lib,ext}']
