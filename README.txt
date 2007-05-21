@@ -21,6 +21,7 @@ Tasks Provided:
 * default          - Run the default tasks
 * docs             - Build the docs HTML Files
 * email            - Generate email announcement file.
+* gem              - Build the gem file only.
 * install          - Install the package. Uses PREFIX and RUBYLIB
 * install_gem      - Install the package as a gem
 * multi            - Run the test suite using multiruby
