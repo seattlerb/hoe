@@ -214,7 +214,7 @@ class Hoe
   attr_accessor :url
 
   ##
-  # *MANDATORY*. The version. Don't hardcode! use a constant in the project.
+  # *MANDATORY*: The version. Don't hardcode! use a constant in the project.
 
   attr_accessor :version
 
@@ -533,6 +533,9 @@ class Hoe
 
       with_config do |config, path|
         subject, title, body, urls = announcement
+
+        body += "\n\n#{urls}"
+
         config['blogs'].each do |site|
           server = XMLRPC::Client.new2(site['url'])
           content = site['extra_headers'].merge(:title => title,
@@ -580,12 +583,12 @@ class Hoe
   end # end define
 
   def announcement # :nodoc:
-    changes = self.changes.gsub(/^(=+)/) { "#" * $1.size }
+    changes = self.changes.rdoc_to_markdown
 
     subject = "#{name} #{version} Released"
     title = "#{name} version #{version} has been released!"
-    body = "#{description}\n\nChanges:\n\n#{changes}"
-    urls = Array(url).map { |s| "* <#{s.strip.sub(/^mailto:/, '')}>" }.join("\n")
+    body = "#{description}\n\nChanges:\n\n#{changes}".rdoc_to_markdown
+    urls = Array(url).map { |s| "* <#{s.strip.rdoc_to_markdown}>" }.join("\n")
 
     return subject, title, body, urls
   end
@@ -614,8 +617,16 @@ class Hoe
   end
 end
 
+# :enddoc:
+
 class ::Rake::SshDirPublisher # :nodoc:
   attr_reader :host, :remote_dir, :local_dir
+end
+
+class String
+  def rdoc_to_markdown
+    self.gsub(/^mailto:/, '').gsub(/^(=+)/) { "#" * $1.size }
+  end
 end
 
 if $0 == __FILE__ then
