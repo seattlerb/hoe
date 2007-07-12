@@ -571,7 +571,7 @@ class Hoe
       files = []
       Find.find '.' do |path|
         next unless File.file? path
-        next if path =~ /\.svn|tmp$|CVS/
+        next if path =~ /\.bzr|\.svn|tmp$|CVS/ # ugh, how many to support?!?
         files << path[2..-1]
       end
       files = files.sort.join "\n"
