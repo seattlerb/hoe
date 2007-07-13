@@ -486,6 +486,7 @@ class Hoe
     task :config_hoe do
       with_config(:create) do |rc, path|
         blog = {
+          "exclude" => /tmp$|CVS|\.svn/,
           "publish_on_announce" => false,
           "blogs" => [ {
                          "user" => "user",
@@ -569,15 +570,18 @@ class Hoe
       f = "Manifest.tmp"
       require 'find'
       files = []
-      Find.find '.' do |path|
-        next unless File.file? path
-        next if path =~ /\.bzr|\.svn|tmp$|CVS/ # ugh, how many to support?!?
-        files << path[2..-1]
+      with_config do |config, _|
+        exclusions = config["exclude"] || /tmp$|CVS|\.svn/
+        Find.find '.' do |path|
+          next unless File.file? path
+          next if path =~ exclusions
+          files << path[2..-1]
+        end
+        files = files.sort.join "\n"
+        File.open f, 'w' do |fp| fp.puts files end
+        system "#{DIFF} -du Manifest.txt #{f}"
+        rm f
       end
-      files = files.sort.join "\n"
-      File.open f, 'w' do |fp| fp.puts files end
-      system "#{DIFF} -du Manifest.txt #{f}"
-      rm f
     end
 
   end # end define
