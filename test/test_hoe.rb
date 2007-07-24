@@ -14,7 +14,7 @@ class TestHoe < Test::Unit::TestCase
   # everything is forked out.
 
   def test_basics
-    boring   = %w(clobber_docs clobber_package redocs repackage)
+    boring   = %w(clobber_docs clobber_package gem redocs repackage)
     expected = %w(audit
                   announce
                   check_manifest

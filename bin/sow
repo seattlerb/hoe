@@ -67,5 +67,12 @@ Dir.chdir project do
   end
 end
 
-puts "... done, now go fix all occurances of '#{X}'"
-puts `find #{project} -type f | xargs grep -n #{X}`.gsub(/\A|\n/, "\n  ")
+WINDOZE = /win32/ =~ RUBY_PLATFORM
+
+puts "... done, now go fix all occurrences of '#{X}'"
+if WINDOZE then
+  puts `findstr /N /S /C:#{X} #{project}\\*`
+else
+  puts `find #{project} -type f | xargs grep -n #{X}`.gsub(/\A|\n/, "\n  ")
+end
+

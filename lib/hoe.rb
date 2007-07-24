@@ -56,8 +56,19 @@ require 'rubyforge'
 # * test_deps        - Show which test files fail when run alone.
 # * uninstall        - Uninstall the package.
 #
+# === Extra Configuration Options:
+#
+# Run `config_hoe` to generate a new ~/.hoerc file. The file is a
+# YAML formatted config file with the following settings:
+#
+# exclude:: A regular expression of files to exclude from `check_manifest`.
+# publish_on_announce:: Run `publish_docs` when you run `release`.
+# blogs:: An array of hashes of blog settings.
+#
+# Run `config_hoe` and see ~/.hoerc for examples.
+#
 class Hoe
-  VERSION = '1.2.1'
+  VERSION = '1.2.2'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -366,7 +377,7 @@ class Hoe
 
     desc 'Install the package as a gem'
     task :install_gem => [:clean, :package] do
-      sh "sudo gem install pkg/*.gem"
+      sh "#{'sudo ' unless WINDOZE}gem install pkg/*.gem"
     end
 
     desc 'Uninstall the package.'

@@ -1,3 +1,11 @@
+== 1.2.2 / 2007-07-23
+
+* 2 minor enhancement:
+  * Added exclude parameter for check_manifest filtering to .hoerc.
+  * Documented .hoerc stuffs.
+* 1 bug fix:
+  * Various (untested) fixes for windows compatibility.
+
 == 1.2.1 / 2007-05-21
 
 * 8 minor enhancements:
