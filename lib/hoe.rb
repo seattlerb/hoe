@@ -69,7 +69,7 @@ require 'rubyforge'
 # Run +config_hoe+ and see ~/.hoerc for examples.
 #
 class Hoe
-  VERSION = '1.2.2'
+  VERSION = '1.2.3'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -243,7 +243,7 @@ class Hoe
     self.extra_deps = []
     self.need_tar = true
     self.need_zip = false
-    self.rdoc_pattern = /^(lib|bin)|txt$/
+    self.rdoc_pattern = /^(lib|bin|ext)|txt$/
     self.remote_rdoc_dir = name
     self.rsync_args = '-av --delete'
     self.rubyforge_name = name.downcase

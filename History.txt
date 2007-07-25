@@ -1,3 +1,8 @@
+== 1.2.3 / ???
+
+* N minor enhancements:
+  * Extended rdoc pattern to include ext dirs.
+
 == 1.2.2 / 2007-07-23
 
 * 2 minor enhancement:
