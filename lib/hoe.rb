@@ -259,9 +259,8 @@ class Hoe
       'rubyforge' => ">= #{::RubyForge::VERSION}",
     }
 
-    self.extra_deps = Array(extra_deps) # just in case user used = instead of <<
-    self.extra_deps = [extra_deps] unless
-      extra_deps.empty? or Array === extra_deps.first
+    self.extra_deps = Array(extra_deps).map { |o| String === o ? [o] : o }
+
     if name == 'hoe' then
       hoe_deps.each do |pkg, version|
         extra_deps << [pkg, version]
