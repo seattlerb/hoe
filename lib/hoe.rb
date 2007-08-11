@@ -8,6 +8,7 @@ require 'rake/rdoctask'
 require 'rake/testtask'
 require 'rbconfig'
 require 'rubyforge'
+require 'yaml'
 
 ##
 # hoe - a tool to help rake
@@ -309,20 +310,11 @@ class Hoe
   end
 
   def define_tasks # :nodoc:
-    def with_config(create=false) # :nodoc:
-      require 'yaml'
+    def with_config # :nodoc:
       rc = File.expand_path("~/.hoerc")
-
-      unless create then
-        if test ?f, rc then
-          config = YAML.load_file(rc)
-          yield(config, rc)
-        end
-      else
-        unless test ?f, rc then
-          yield(rc)
-        end
-      end
+      exists = File.exist? rc
+      config = exists ? YAML.load_file(rc) : {}
+      yield(config, rc)
     end
 
     desc 'Run the default tasks'
@@ -521,10 +513,8 @@ class Hoe
 
     # no doco for this one
     task :publish_on_announce do
-      with_config do |rc, path|
-        if rc["publish_on_announce"] then
-          Rake::Task['publish_docs'].invoke
-        end
+      with_config do |config, _|
+        Rake::Task['publish_docs'].invoke if config["publish_on_announce"]
       end
     end
 
@@ -547,8 +537,8 @@ class Hoe
 
     desc 'Create a fresh ~/.hoerc file'
     task :config_hoe do
-      with_config(:create) do |path|
-        blog = {
+      with_config do |config, path|
+        default_config = {
           "exclude" => /tmp$|CVS|\.svn/,
           "publish_on_announce" => false,
           "signing_key_file" => "~/.gem/gem-private_key.pem",
@@ -564,11 +554,9 @@ class Hoe
                        } ],
         }
         File.open(path, "w") do |f|
-          YAML.dump(blog, f)
+          YAML.dump(default_config.merge(config), f)
         end
-      end
 
-      with_config do |rc, path|
         editor = ENV['EDITOR'] || 'vi'
         system "#{editor} #{path}"
       end
@@ -598,8 +586,9 @@ class Hoe
       require 'xmlrpc/client'
 
       with_config do |config, path|
-        subject, title, body, urls = announcement
+        break unless config['blogs']
 
+        subject, title, body, urls = announcement
         body += "\n\n#{urls}"
 
         config['blogs'].each do |site|
