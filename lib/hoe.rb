@@ -64,10 +64,46 @@ require 'rubyforge'
 # exclude::             A regular expression of files to exclude from
 #                       +check_manifest+.
 # publish_on_announce:: Run +publish_docs+ when you run +release+.
+# signing_key_file:: Signs your gems with this private key.
+# signing_cert_file:: Signs your gem with this certificate.
 # blogs::               An array of hashes of blog settings.
 #
 # Run +config_hoe+ and see ~/.hoerc for examples.
 #
+# === Generating Signed Gems:
+#
+# 1. Generate a signing key:
+#      gem cert --build you@example.com
+# 2. Move the private key and public certificate files into ~/.gem.  Keep it
+#    secret!  Keep it safe!
+# 3. Configure ~/.hoerc.  If you don't have a ~/.hoerc:
+#    
+#      rake config_hoe
+#    
+#    If you do have a ~/.hoerc, add signing_key_file and signing_cert_file
+#    pointing to ~/.gem/gem-private_key.pem and ~/.gem/gem-public_cert.pem
+#    respectively.
+# 4. Check to make sure you did it right:
+#    
+#      rake debug_gem | grep pem
+#    
+#    Will show a line with "signing_key" and "cert_chain".
+#
+# Now hoe will generate signed gems when you the package task is run.
+#
+# You will need to publish your gem-public_cert.pem file on your RubyForge
+# project.
+#
+# You can double-check with:
+#
+#   rake package; tar tf pkg/yourproject-1.2.3.gem
+#
+# If your gem is signed you will see:
+#
+#   data.tar.gz
+#   data.tar.gz.sig
+#   metadata.gz
+#   metadata.gz.sig
 class Hoe
   VERSION = '1.2.3'
 
@@ -273,6 +309,22 @@ class Hoe
   end
 
   def define_tasks # :nodoc:
+    def with_config(create=false) # :nodoc:
+      require 'yaml'
+      rc = File.expand_path("~/.hoerc")
+
+      unless create then
+        if test ?f, rc then
+          config = YAML.load_file(rc)
+          yield(config, rc)
+        end
+      else
+        unless test ?f, rc then
+          yield(rc)
+        end
+      end
+    end
+
     desc 'Run the default tasks'
     task :default => :test
 
@@ -299,6 +351,17 @@ class Hoe
 
     ############################################################
     # Packaging and Installing
+
+    signing_key = nil
+    cert_chain = nil
+
+    with_config do |config, path|
+      key_file = File.expand_path config['signing_key_file'].to_s
+      signing_key = key_file if File.exist? key_file
+
+      cert_file = File.expand_path config['signing_cert_file'].to_s
+      cert_chain = [cert_file] if File.exist? cert_file
+    end
 
     self.spec = Gem::Specification.new do |s|
       s.name = name
@@ -335,6 +398,11 @@ class Hoe
         s.test_file = "test/test_all.rb"
       else
         s.test_files = Dir[*test_globs]
+      end
+
+      if signing_key and cert_chain then
+        s.signing_key = signing_key
+        s.cert_chain = cert_chain
       end
 
       # Do any extra stuff the user wants
@@ -463,22 +531,6 @@ class Hoe
     ############################################################
     # Misc/Maintenance:
 
-    def with_config(create=false) # :nodoc:
-      require 'yaml'
-      rc = File.expand_path("~/.hoerc")
-
-      unless create then
-        if test ?f, rc then
-          config = YAML.load_file(rc)
-          yield(config, rc)
-        end
-      else
-        unless test ?f, rc then
-          yield(rc)
-        end
-      end
-    end
-
     desc 'Run ZenTest against the package'
     task :audit do
       libs = %w(lib test ext).join(File::PATH_SEPARATOR)
@@ -495,10 +547,12 @@ class Hoe
 
     desc 'Create a fresh ~/.hoerc file'
     task :config_hoe do
-      with_config(:create) do |rc, path|
+      with_config(:create) do |path|
         blog = {
           "exclude" => /tmp$|CVS|\.svn/,
           "publish_on_announce" => false,
+          "signing_key_file" => "~/.gem/gem-private_key.pem",
+          "signing_cert_file" => "~/.gem/gem-public_cert.pem",
           "blogs" => [ {
                          "user" => "user",
                          "url" => "url",
@@ -509,7 +563,7 @@ class Hoe
                          "password"=>"password",
                        } ],
         }
-        File.open(rc, "w") do |f|
+        File.open(path, "w") do |f|
           YAML.dump(blog, f)
         end
       end
