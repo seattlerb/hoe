@@ -1,9 +1,15 @@
-== 1.2.3 / ???
+=== 1.2.3 / 2007-08-13
 
-* N minor enhancements:
+* 1 major enhancement:
+  * Hoe now builds signed gems automatically.  Run the generate_key task to
+    automatically create a signing key.
+* 4 minor enhancements:
   * Extended rdoc pattern to include ext dirs.
+  * Fixed dependency adding for versionless dependencies.
+  * Added NODOT env var to disable RDoc diagram generation.
+  * The config_hoe task automatically merges in new config entries.
 
-== 1.2.2 / 2007-07-23
+=== 1.2.2 / 2007-07-23
 
 * 2 minor enhancement:
   * Added exclude parameter for check_manifest filtering to .hoerc.
@@ -11,7 +17,7 @@
 * 1 bug fix:
   * Various (untested) fixes for windows compatibility.
 
-== 1.2.1 / 2007-05-21
+=== 1.2.1 / 2007-05-21
 
 * 8 minor enhancements:
   * Allow for spaces in filenames in manifest. Thanks to Aaron Patterson.
@@ -25,14 +31,14 @@
 * 1 bug fixes:
   * Fixed executables regexp to /^bin/.
 
-== 1.2.0 / 2007-02-13
+=== 1.2.0 / 2007-02-13
 
 * Added more support for ext dirs.
 * Added a simple config file (yaml). Use 'rake config_hoe' to edit.
 * Added post_blog task (thanks Aaron!), configured via config_hoe.
 * Announce task now posts to your blogs and/or publishes API depending on config.
 
-== 1.1.7 / 2007-01-10
+=== 1.1.7 / 2007-01-10
 
 * extra_deps is now self-healing, and ensures no (direct) cycles.
 * cleans check_manifest for CVS projects.
@@ -40,22 +46,22 @@
 * Now uses rsync for publish_docs. YAY for fast!
 * Bug #7193 fix spelling of 'synopsys'.  Submitted by Jacob Atzen.
 
-== 1.1.6 / 2006-11-29
+=== 1.1.6 / 2006-11-29
 
 * Fix release to work correctly with need_zip and need_tar.
 
-== 1.1.5 / 2006-11-29
+=== 1.1.5 / 2006-11-29
 
 * Reduced check_manifest dependencies to just diff for windows.
 * Don't use default author in summary, description or changes.
 
-== 1.1.4 / 2006-11-12
+=== 1.1.4 / 2006-11-12
 
 * Added need_tar and need_zip to customize package requirements. Stupid windoze.
 * Extended spec_extras to take procs as values. Passes in named parameter.
 * Removed test from require_paths. I thought I already parameterized this. :/
 
-== 1.1.3 / 2006-11-09
+=== 1.1.3 / 2006-11-09
 
 * Added test_deps, now you can automatically discover test dependency ommisions.
 * Added ext support! Build C extensions with hoe!
@@ -64,7 +70,7 @@
 * Fixed doco and automated updating of it.
 * Added rdoc_pattern. Go doco go!
 
-== 1.1.2 / 2006-10-22
+=== 1.1.2 / 2006-10-22
 
 * Added -d and -t flags to sow to make dev or trunk subdirs for p4 and svn projects.
 * Added install_gem to further test gem builds.
@@ -72,17 +78,17 @@
 * Removed demo.rb from clean_globs. I'm torn on this one.
 * Fixed bug in install rule.
 
-== 1.1.1 / 2006-10-11
+=== 1.1.1 / 2006-10-11
 
 * Fixed minor problem with subject of email.
 * Fixed problem in test.
 
-== 1.1.0 / 2006-10-04
+=== 1.1.0 / 2006-10-04
 
 * Added sow, a command-line tool for quickly creating new projects.
 * Added check_manifest task
 
-== 1.0.5 / 2006-10-03
+=== 1.0.5 / 2006-10-03
 
 * Doco cleanup.
 * Removed Manifest.txt from rdoc and added title.
@@ -93,11 +99,11 @@
 * Added email and rubyforge news announcement tasks.
 * Url attribute may now be an array of urls.
 
-== 1.0.4 / 2006-09-23
+=== 1.0.4 / 2006-09-23
 
 * Damnit... I messed up. There is no rubygems gem to be dependent upon. Duh.
 
-== 1.0.3 / 2006-09-23
+=== 1.0.3 / 2006-09-23
 
 * Added debug_gem rule.
 * Added lots of doco.
@@ -110,12 +116,12 @@
 * Renamed upload to publish_docs.
 * publish_docs is now smart about subprojects and missing subdirectories.
 
-== 1.0.2 / 2006-09-20
+=== 1.0.2 / 2006-09-20
 
 * Wee little tests.
 * Fixed up gemspec's require_paths.
 
-== 1.0.1 / 2006-09-20
+=== 1.0.1 / 2006-09-20
 
 * Finally got deployment straightened out. Maybe. Some might be on rubyforge.org.
 * Added default description and summary.
@@ -123,6 +129,6 @@
 * Improved gemspec debugging.
 * Swapped gem with tgz in deploy... we'd rather screw up on tgz
 
-== 1.0.0 / 2006-09-19
+=== 1.0.0 / 2006-09-19
 
 * Birthday!
