@@ -348,6 +348,7 @@ class Hoe
     cert_chain = nil
 
     with_config do |config, path|
+      break unless config['signing_key_file'] and config['signing_cert_file']
       key_file = File.expand_path config['signing_key_file'].to_s
       signing_key = key_file if File.exist? key_file
 
@@ -483,7 +484,7 @@ class Hoe
 
     Rake::RDocTask.new(:docs) do |rd|
       rd.main = "README.txt"
-      rd.options << '-d' if RUBY_PLATFORM !~ /win32/ and `which dot` =~ /\/dot/
+      rd.options << '-d' if RUBY_PLATFORM !~ /win32/ and `which dot` =~ /\/dot/ and not ENV['NODOT']
       rd.rdoc_dir = 'doc'
       files = spec.files.grep(rdoc_pattern)
       files -= ['Manifest.txt']
