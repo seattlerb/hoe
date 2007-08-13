@@ -97,7 +97,7 @@ require 'yaml'
 #   metadata.gz
 #   metadata.gz.sig
 class Hoe
-  VERSION = '1.2.3'
+  VERSION = '1.3.0'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
