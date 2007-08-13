@@ -71,31 +71,22 @@ require 'yaml'
 #
 # Run +config_hoe+ and see ~/.hoerc for examples.
 #
-# === Generating Signed Gems:
+# === Signing Gems:
 #
-# 1. Generate a signing key:
-#      gem cert --build you@example.com
-# 2. Move the private key and public certificate files into ~/.gem.  Keep it
-#    secret!  Keep it safe!
-# 3. Configure ~/.hoerc.  If you don't have a ~/.hoerc:
-#    
-#      rake config_hoe
-#    
-#    If you do have a ~/.hoerc, add signing_key_file and signing_cert_file
-#    pointing to ~/.gem/gem-private_key.pem and ~/.gem/gem-public_cert.pem
-#    respectively.
-# 4. Check to make sure you did it right:
-#    
-#      rake debug_gem | grep pem
-#    
-#    Will show a line with "signing_key" and "cert_chain".
+# Run the 'generate_key' task.  This will:
 #
-# Now hoe will generate signed gems when you the package task is run.
+# 1. Configure your ~/.hoerc.
+# 2. Generate a signing key and certificate.
+# 3. Install the private key and public certificate files into ~/.gem.
+# 4. Upload the certificate to RubyForge.
 #
-# You will need to publish your gem-public_cert.pem file on your RubyForge
-# project.
+# Hoe will now generate signed gems when the package task is run.  If you have
+# multiple machines you build gems on, be sure to install your key and
+# certificate on each machine.
 #
-# You can double-check with:
+# Keep your private key secret!  Keep your private key safe!
+#
+# To make sure your gems are signed run:
 #
 #   rake package; tar tf pkg/yourproject-1.2.3.gem
 #
@@ -345,7 +336,7 @@ class Hoe
     # Packaging and Installing
 
     signing_key = nil
-    cert_chain = nil
+    cert_chain = []
 
     with_config do |config, path|
       break unless config['signing_key_file'] and config['signing_cert_file']
@@ -353,7 +344,7 @@ class Hoe
       signing_key = key_file if File.exist? key_file
 
       cert_file = File.expand_path config['signing_cert_file'].to_s
-      cert_chain = [cert_file] if File.exist? cert_file
+      cert_chain << cert_file if File.exist? cert_file
     end
 
     self.spec = Gem::Specification.new do |s|
@@ -559,7 +550,7 @@ class Hoe
         end
 
         editor = ENV['EDITOR'] || 'vi'
-        system "#{editor} #{path}"
+        system "#{editor} #{path}" if ENV['SHOW_EDITOR'] != 'no'
       end
     end
 
@@ -636,6 +627,56 @@ class Hoe
         File.open f, 'w' do |fp| fp.puts files end
         system "#{DIFF} -du Manifest.txt #{f}"
         rm f
+      end
+    end
+
+    desc 'Generate a key for signing your gems.'
+    task :generate_key do
+      email = spec.email
+      abort "No email in your gemspec" if email.nil? or email.empty?
+
+      key_file = with_config { |config, _| config['signing_key_file'] }
+      cert_file = with_config { |config, _| config['signing_cert_file'] }
+
+      if key_file.nil? or cert_file.nil? then
+        ENV['SHOW_EDITOR'] ||= 'no'
+        Rake::Task['config_hoe'].invoke
+
+        key_file = with_config { |config, _| config['signing_key_file'] }
+        cert_file = with_config { |config, _| config['signing_cert_file'] }
+      end
+
+      key_file = File.expand_path key_file
+      cert_file = File.expand_path cert_file
+
+      unless File.exist? key_file or File.exist? cert_file then
+        sh "gem cert --build #{email}"
+        mv "gem-private_key.pem", key_file, :verbose => true
+        mv "gem-public_cert.pem", cert_file, :verbose => true
+
+        puts "Installed key and certificate."
+
+        rf = RubyForge.new
+        rf.login
+
+        cert_package = "#{rubyforge_name}-certificates"
+
+        begin
+          rf.lookup 'package', cert_package
+        rescue
+          rf.create_package rubyforge_name, cert_package
+        end
+
+        begin
+          rf.lookup('release', cert_package)['certificates']
+          rf.add_file rubyforge_name, cert_package, 'certificates', cert_file
+        rescue
+          rf.add_release rubyforge_name, cert_package, 'certificates', cert_file
+        end
+
+        puts "Uploaded certificate to release \"certificates\" in package #{cert_package}"
+      else
+        puts "Keys already exist."
       end
     end
 

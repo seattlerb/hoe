@@ -24,6 +24,7 @@ class TestHoe < Test::Unit::TestCase
                   default
                   docs
                   email
+                  generate_key
                   install
                   install_gem
                   multi
