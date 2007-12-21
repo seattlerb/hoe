@@ -1,3 +1,10 @@
+=== 1.4.0 / 2007-12-20
+
+* 1 major enhancement:
+  * rake package now supports NATIVE=1 and FORCE_PLATFORM=whatever.
+    * Supports both ruby_inline and extconf extensions.
+    * Contributed by Luis Lavena. Thanks Luis!
+
 === 1.3.0 / 2007-08-13
 
 * 1 major enhancement:

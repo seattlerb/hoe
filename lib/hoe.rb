@@ -96,8 +96,28 @@ require 'yaml'
 #   data.tar.gz.sig
 #   metadata.gz
 #   metadata.gz.sig
+#
+# === Platform awareness
+#
+# Hoe allows bundling of pre-compiled extensions in the +package+ task.
+#
+# To create a package for your current platform:
+#
+#   rake package NATIVE=1
+#
+# This will force Hoe analize your +Inline+ and +extconf+ already compiled
+# extensions and include them in your gem.
+#
+# If somehow you need to force a specific platform:
+#
+#   rake package NATIVE=1 FORCE_PLATFORM=mswin32
+#
+# This will set the +Gem::Specification+ platform to the one indicated in
+# +FORCE_PLATFORM+ (instead of default Gem::Platform::CURRENT)
+#
+
 class Hoe
-  VERSION = '1.3.0'
+  VERSION = '1.4.0'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -133,7 +153,9 @@ class Hoe
               File.join(PREFIX, sitelibdir[ruby_prefix.size..-1])
             end
 
-  WINDOZE = /win32/ =~ RUBY_PLATFORM unless defined? WINDOZE
+  DLEXT = Config::CONFIG['DLEXT']
+
+  WINDOZE = /djgpp|(cyg|ms|bcc)win|mingw/ =~ RUBY_PLATFORM unless defined? WINDOZE
 
   DIFF = if WINDOZE
            'diff.exe'
@@ -387,6 +409,38 @@ class Hoe
       if signing_key and cert_chain then
         s.signing_key = signing_key
         s.cert_chain = cert_chain
+      end
+
+      ############################################################
+      # Allow automatic inclusion of compiled extensions
+      if ENV['NATIVE'] then
+        s.platform = ENV['FORCE_PLATFORM'] || Gem::Platform::CURRENT
+
+        # Try collecting Inline extensions for +name+
+        if defined?(Inline) then
+          directory 'lib/inline'
+          Dir.glob("#{Inline::directory}/Inline_#{name}_*.#{DLEXT}").each do |ext|
+            ext_so = File.basename(ext)
+
+            # add the inlined extension to the spec files
+            s.files += ["lib/inline/#{ext_so}"]
+
+            # include the file in the tasks
+            file "lib/inline/#{ext_so}" => ["lib/inline"] do
+              cp ext, "lib/inline"
+            end
+          end
+        end
+
+        # Now collects standard extensions form +lib+
+        if extensions = Dir.glob("lib/*.#{DLEXT}") then
+
+          # add to the spec files
+          extensions.each { |ext| s.files += [ext] }
+
+          # avoid rubygems trying to build extensions
+          s.extensions.clear
+        end
       end
 
       # Do any extra stuff the user wants
