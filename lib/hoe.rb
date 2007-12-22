@@ -103,14 +103,14 @@ require 'yaml'
 #
 # To create a package for your current platform:
 #
-#   rake package NATIVE=1
+#   rake package INLINE=1
 #
-# This will force Hoe analize your +Inline+ and +extconf+ already compiled
+# This will force Hoe analize your +Inline+ already compiled
 # extensions and include them in your gem.
 #
 # If somehow you need to force a specific platform:
 #
-#   rake package NATIVE=1 FORCE_PLATFORM=mswin32
+#   rake package INLINE=1 FORCE_PLATFORM=mswin32
 #
 # This will set the +Gem::Specification+ platform to the one indicated in
 # +FORCE_PLATFORM+ (instead of default Gem::Platform::CURRENT)
@@ -413,33 +413,33 @@ class Hoe
 
       ############################################################
       # Allow automatic inclusion of compiled extensions
-      if ENV['NATIVE'] then
+      if ENV['INLINE'] then
         s.platform = ENV['FORCE_PLATFORM'] || Gem::Platform::CURRENT
+        # name of the extension is CamelCase
+        if name =~ /[A-Z]/
+          # ClassName => class_name
+          alternate_name = name.reverse.scan(%r/[A-Z]+|[^A-Z]*[A-Z]+?/).reverse.map { |word| word.reverse.downcase }.join('_')
+        elsif name =~ /_/
+          # class_name = ClassName
+          alternate_name = name.strip.split(/\s*_+\s*/).map! { |w| w.downcase.sub(/^./) { |c| c.upcase } }.join
+        end
 
         # Try collecting Inline extensions for +name+
         if defined?(Inline) then
           directory 'lib/inline'
-          Dir.glob("#{Inline::directory}/Inline_#{name}_*.#{DLEXT}").each do |ext|
-            ext_so = File.basename(ext)
 
+          extensions = Dir.chdir(Inline::directory) {
+            Dir["Inline_{#{name},#{alternate_name}}_*.#{DLEXT}"]
+          }
+          extensions.each do |ext|
             # add the inlined extension to the spec files
-            s.files += ["lib/inline/#{ext_so}"]
+            s.files += ["lib/inline/#{ext}"]
 
             # include the file in the tasks
-            file "lib/inline/#{ext_so}" => ["lib/inline"] do
-              cp ext, "lib/inline"
+            file "lib/inline/#{ext}" => ["lib/inline"] do
+              cp File.join(Inline::directory, ext), "lib/inline"
             end
           end
-        end
-
-        # Now collects standard extensions form +lib+
-        if extensions = Dir.glob("lib/*.#{DLEXT}") then
-
-          # add to the spec files
-          extensions.each { |ext| s.files += [ext] }
-
-          # avoid rubygems trying to build extensions
-          s.extensions.clear
         end
       end
 
