@@ -7,7 +7,7 @@ Hoe.new("hoe", Hoe::VERSION) do |p|
   p.summary = "Hoe is a way to write Rakefiles much easier and cleaner."
   p.description = p.paragraphs_of('README.txt', 2..5).join("\n\n")
   p.url = p.paragraphs_of('README.txt', 1).first.gsub(/^\* /, '').split(/\n/)
-  p.changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
+  p.changes = p.paragraphs_of('History.txt', 0..2).join("\n\n")
 end
 
 # vim: syntax=Ruby
