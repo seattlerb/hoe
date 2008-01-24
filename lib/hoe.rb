@@ -483,7 +483,7 @@ class Hoe
 
     desc 'Install the package as a gem'
     task :install_gem => [:clean, :package] do
-      sh "#{'sudo ' unless WINDOZE}gem install pkg/*.gem"
+      sh "#{'sudo ' unless WINDOZE}gem install --local pkg/*.gem"
     end
 
     desc 'Uninstall the package.'
