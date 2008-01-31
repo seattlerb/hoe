@@ -1,4 +1,4 @@
-Hoe
+= Hoe
 
 * http://rubyforge.org/projects/seattlerb/
 * http://seattlerb.rubyforge.org/hoe/
@@ -38,7 +38,7 @@ Tasks Provided:
 See class rdoc for help. Hint: ri Hoe
 
 == FEATURES/PROBLEMS:
-  
+
 * Provides 'sow' for quick project directory creation.
 * Make making and maintaining Rakefiles fun and easy.
 

@@ -117,7 +117,7 @@ require 'yaml'
 #
 
 class Hoe
-  VERSION = '1.4.0'
+  VERSION = '1.5.0'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -181,7 +181,7 @@ class Hoe
   attr_accessor :bin_files # :nodoc:
 
   ##
-  # *Recommended*: A description of the release's latest changes.
+  # Optional: A description of the release's latest changes. Auto-populates.
 
   attr_accessor :changes
 
@@ -191,9 +191,14 @@ class Hoe
   attr_accessor :clean_globs
 
   ##
-  # *Recommended*: A description of the project.
+  # Optional: A description of the project. Auto-populates.
 
   attr_accessor :description
+
+  ##
+  # Optional: What sections from the readme to use for auto-description. Defaults to %w(description).
+
+  attr_accessor :description_sections
 
   ##
   # *Recommended*: The author's email address(es). (can be array)
@@ -256,9 +261,14 @@ class Hoe
   attr_accessor :spec_extras
 
   ##
-  # *Recommended*: A short summary of the project.
+  # Optional: A short summary of the project. Auto-populates.
 
   attr_accessor :summary
+
+  ##
+  # Optional: Number of sentences from description for summary. Defaults to 1.
+
+  attr_accessor :summary_sentences
 
   ##
   # Populated automatically from the manifest. List of tests.
@@ -271,7 +281,7 @@ class Hoe
   attr_accessor :test_globs
 
   ##
-  # *Recommended*: The url(s) of the project. (can be array)
+  # Optional: The url(s) of the project. (can be array). Auto-populates.
 
   attr_accessor :url
 
@@ -285,11 +295,10 @@ class Hoe
     self.version = version
 
     # Defaults
-    self.author = "Ryan Davis"
-    self.changes = "The author was too lazy to write a changeset"
+    self.author = []
     self.clean_globs = %w(diff diff.txt email.txt ri *.gem **/*~)
-    self.description = "The author was too lazy to write a description"
-    self.email = "ryand-ruby@zenspider.com"
+    self.description_sections = %w(description)
+    self.email = []
     self.extra_deps = []
     self.need_tar = true
     self.need_zip = false
@@ -298,11 +307,36 @@ class Hoe
     self.rsync_args = '-av --delete'
     self.rubyforge_name = name.downcase
     self.spec_extras = {}
-    self.summary = "The author was too lazy to write a summary"
+    self.summary_sentences = 1
     self.test_globs = ['test/**/test_*.rb']
-    self.url = "http://www.zenspider.com/ZSS/Products/#{name}/"
 
     yield self if block_given?
+
+    # Intuit values:
+
+    history  = File.read("History.txt").split(/^(===.*)/)
+    readme   = File.read("README.txt").split(/^(=+ .*)$/)[1..-1]
+    sections = readme.map { |s| s =~ /^=/ ? s.strip.downcase.chomp(':').split.last : s.strip }
+    sections = Hash[*sections]
+    desc = sections.values_at(*description_sections).join("\n\n")
+    summ = desc.split(/\.\s+/).first(summary_sentences).join(". ")
+
+    self.description ||= desc
+    self.changes ||= history[0..2].join.strip
+    self.summary ||= summ
+    self.url ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
+
+    %w(email author).each do |field|
+      value = self.send(field)
+      if value.nil? or value.empty? then
+        if Time.now < Time.local(2008, 4, 1) then
+          warn "Hoe #{field} value not set - Fix by 2008-04-01!"
+          self.send "#{field}=", "doofus"
+        else
+          abort "Hoe #{field} value not set"
+        end
+      end
+    end
 
     hoe_deps = {
       'rake' => ">= #{RAKEVERSION}",
@@ -321,6 +355,12 @@ class Hoe
 
     define_tasks
   end
+
+  def developer name, email
+    self.author << email
+    self.email << email
+  end
+  alias :[]= :developer
 
   def define_tasks # :nodoc:
     def with_config # :nodoc:

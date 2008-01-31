@@ -1,3 +1,17 @@
+=== 1.5.0 / 2008-01-30
+
+* 9 Minor Enhancements:
+
+  * Added autopopulation of changes from History.txt.
+  * Added autopopulation of urls from History.txt.
+  * Added autopopulation of description from History.txt
+  * Added autopopulation of summary from description.
+  * Added description_sections to declare what sections of readme to use.
+  * Added summary_sentences to declare how many sentences you want in summary.
+  * Added developer(name, email) to cleanly populate both author/email arrays.
+  * author and email now default to "doofus".
+  * author and email warn that they'll blow up on 2008-04-01.
+
 === 1.4.0 / 2007-12-20
 
 * 1 Major Enhancement:
