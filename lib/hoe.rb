@@ -357,10 +357,9 @@ class Hoe
   end
 
   def developer name, email
-    self.author << email
+    self.author << name
     self.email << email
   end
-  alias :[]= :developer
 
   def define_tasks # :nodoc:
     def with_config # :nodoc:

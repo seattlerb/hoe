@@ -39,7 +39,13 @@ class TestHoe < Test::Unit::TestCase
                   uninstall)
     expected += boring
 
-    Hoe.new('blah', '1.0.0')
+    spec = Hoe.new('blah', '1.0.0') do |h|
+      h.developer("name", "email")
+    end
+
+    assert_equal ["name"], spec.author
+    assert_equal ["email"], spec.email
+
     tasks = Rake.application.tasks
     public_tasks = tasks.reject { |t| t.comment.nil? }.map { |t| t.name }.sort
 
