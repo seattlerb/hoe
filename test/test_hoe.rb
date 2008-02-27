@@ -25,7 +25,6 @@ class TestHoe < Test::Unit::TestCase
                   docs
                   email
                   generate_key
-                  install
                   install_gem
                   multi
                   package
@@ -35,8 +34,7 @@ class TestHoe < Test::Unit::TestCase
                   release
                   ridocs
                   test
-                  test_deps
-                  uninstall)
+                  test_deps)
     expected += boring
 
     spec = Hoe.new('blah', '1.0.0') do |h|
