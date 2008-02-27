@@ -34,28 +34,27 @@ require 'yaml'
 #
 # === Tasks Provided:
 #
-# announce::       Generate email announcement file and post to rubyforge.
-# audit::          Run ZenTest against the package
-# check_manifest:: Verify the manifest
-# clean::          Clean up all the extras
-# config_hoe::     Create a fresh ~/.hoerc file
+# announce::       Create news email file and post to rubyforge.
+# audit::          Run ZenTest against the package.
+# check_manifest:: Verify the manifest.
+# clean::          Clean up all the extras.
+# config_hoe::     Create a fresh ~/.hoerc file.
 # debug_gem::      Show information about the gem.
-# default::        Run the default tasks
+# default::        Run the default tasks.
 # docs::           Build the docs HTML Files
 # email::          Generate email announcement file.
-# gem::            Build the gem file only.
-# install::        Install the package. Uses PREFIX and RUBYLIB
-# install_gem::    Install the package as a gem
-# multi::          Run the test suite using multiruby
+# gem::            Build the gem file hoe-1.5.0.gem
+# generate_key::   Generate a key for signing your gems.
+# install_gem::    Install the package as a gem.
+# multi::          Run the test suite using multiruby.
 # package::        Build all the packages
 # post_blog::      Post announcement to blog.
 # post_news::      Post announcement to rubyforge.
-# publish_docs::   Publish RDoc to RubyForge
+# publish_docs::   Publish RDoc to RubyForge.
 # release::        Package and upload the release to rubyforge.
-# ridocs::         Generate ri locally for testing
-# test::           Run the test suite. Use FILTER to add to the command line.
+# ridocs::         Generate ri locally for testing.
+# test::           Run the test suite.
 # test_deps::      Show which test files fail when run alone.
-# uninstall::      Uninstall the package.
 #
 # === Extra Configuration Options:
 #
@@ -117,7 +116,7 @@ require 'yaml'
 #
 
 class Hoe
-  VERSION = '1.5.0'
+  VERSION = '1.5.1'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -314,17 +313,23 @@ class Hoe
 
     # Intuit values:
 
-    history  = File.read("History.txt").split(/^(===.*)/)
     readme   = File.read("README.txt").split(/^(=+ .*)$/)[1..-1]
-    sections = readme.map { |s| s =~ /^=/ ? s.strip.downcase.chomp(':').split.last : s.strip }
-    sections = Hash[*sections]
-    desc = sections.values_at(*description_sections).join("\n\n")
-    summ = desc.split(/\.\s+/).first(summary_sentences).join(". ")
+    unless readme.empty? then
+      sections = readme.map { |s|
+        s =~ /^=/ ? s.strip.downcase.chomp(':').split.last : s.strip
+      }
+      sections = Hash[*sections]
+      desc = sections.values_at(*description_sections).join("\n\n")
+      summ = desc.split(/\.\s+/).first(summary_sentences).join(". ")
 
-    self.description ||= desc
-    self.changes ||= history[0..2].join.strip
-    self.summary ||= summ
-    self.url ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
+      self.description ||= desc
+      self.changes ||= File.read("History.txt").split(/^(===.*)/)[1..2].join.strip
+      self.summary ||= summ
+      self.url ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
+    else
+      warn "** README.txt is in the wrong format for auto-intuiting."
+      warn "   run sow blah and look at it's text files"
+    end
 
     %w(email author).each do |field|
       value = self.send(field)
@@ -369,7 +374,7 @@ class Hoe
       yield(config, rc)
     end
 
-    desc 'Run the default tasks'
+    desc 'Run the default tasks.'
     task :default => :test
 
     desc 'Run the test suite. Use FILTER to add to the command line.'
@@ -388,7 +393,7 @@ class Hoe
       end
     end
 
-    desc 'Run the test suite using multiruby'
+    desc 'Run the test suite using multiruby.'
     task :multi do
       run_tests :multi
     end
@@ -507,32 +512,9 @@ class Hoe
       pkg.need_zip = @need_zip
     end
 
-    desc 'Install the package. Uses PREFIX and RUBYLIB'
-    task :install do
-      [
-       [lib_files + test_files, RUBYLIB, 0444],
-       [bin_files, File.join(PREFIX, 'bin'), 0555]
-      ].each do |files, dest, mode|
-        FileUtils.mkdir_p dest unless test ?d, dest
-        files.each do |file|
-          install file, dest, :mode => mode
-        end
-      end
-    end
-
-    desc 'Install the package as a gem'
+    desc 'Install the package as a gem.'
     task :install_gem => [:clean, :package] do
       sh "#{'sudo ' unless WINDOZE}gem install --local pkg/*.gem"
-    end
-
-    desc 'Uninstall the package.'
-    task :uninstall do
-      Dir.chdir RUBYLIB do
-        rm_f((lib_files + test_files).map { |f| File.basename f })
-      end
-      Dir.chdir File.join(PREFIX, 'bin') do
-        rm_f bin_files.map { |f| File.basename f }
-      end
     end
 
     desc 'Package and upload the release to rubyforge.'
@@ -575,17 +557,17 @@ class Hoe
       rd.rdoc_files.push(*files)
 
       title = "#{name}-#{version} Documentation"
-      title = "#{rubyforge_name}'s " + title if rubyforge_name != title
+      title = "#{rubyforge_name}'s " + title if rubyforge_name != name
 
       rd.options << "-t #{title}"
     end
 
-    desc "Generate ri locally for testing"
+    desc 'Generate ri locally for testing.'
     task :ridocs => :clean do
       sh %q{ rdoc --ri -o ri . }
     end
 
-    desc "Publish RDoc to RubyForge"
+    desc 'Publish RDoc to RubyForge.'
     task :publish_docs => [:clean, :docs] do
       config = YAML.load(File.read(File.expand_path("~/.rubyforge/user-config.yml")))
       host = "#{config["username"]}@rubyforge.org"
@@ -606,13 +588,13 @@ class Hoe
     ############################################################
     # Misc/Maintenance:
 
-    desc 'Run ZenTest against the package'
+    desc 'Run ZenTest against the package.'
     task :audit do
       libs = %w(lib test ext).join(File::PATH_SEPARATOR)
       sh "zentest -I=#{libs} #{spec.files.grep(/^(lib|test)/).join(' ')}"
     end
 
-    desc 'Clean up all the extras'
+    desc 'Clean up all the extras.'
     task :clean => [ :clobber_docs, :clobber_package ] do
       clean_globs.each do |pattern|
         files = Dir[pattern]
@@ -620,7 +602,7 @@ class Hoe
       end
     end
 
-    desc 'Create a fresh ~/.hoerc file'
+    desc 'Create a fresh ~/.hoerc file.'
     task :config_hoe do
       with_config do |config, path|
         default_config = {
@@ -701,10 +683,10 @@ class Hoe
       puts "Posted to rubyforge"
     end
 
-    desc 'Generate email announcement file and post to rubyforge.'
+    desc 'Create news email file and post to rubyforge.'
     task :announce => [:email, :post_news, :post_blog, :publish_on_announce ]
 
-    desc "Verify the manifest"
+    desc 'Verify the manifest.'
     task :check_manifest => :clean do
       f = "Manifest.tmp"
       require 'find'

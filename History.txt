@@ -1,3 +1,15 @@
+=== 1.5.1 / 2008-02-26
+
+* 1 Minor Enhancement:
+
+  * Removed install/uninstall tasks. Too buggy. Gems do a better job.
+
+* 2 Bug Fixes:
+
+  * Correctly deal with errors intuiting history and readme files. Thanks Aaron!
+  * Fixed rdoc title. Thanks, Sander!
+  * Fixed sow to match new Rakefile and History format. Thanks, me!
+
 === 1.5.0 / 2008-01-30
 
 * 9 Minor Enhancements:

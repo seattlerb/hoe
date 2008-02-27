@@ -12,28 +12,27 @@ testing, packaging, and deployment.
 
 Tasks Provided:
 
-* announce         - Generate email announcement file and post to rubyforge.
-* audit            - Run ZenTest against the package
-* check_manifest   - Verify the manifest
-* clean            - Clean up all the extras
-* config_hoe       - Create a fresh ~/.hoerc file
-* debug_gem        - Show information about the gem.
-* default          - Run the default tasks
-* docs             - Build the docs HTML Files
-* email            - Generate email announcement file.
-* gem              - Build the gem file only.
-* install          - Install the package. Uses PREFIX and RUBYLIB
-* install_gem      - Install the package as a gem
-* multi            - Run the test suite using multiruby
-* package          - Build all the packages
-* post_blog        - Post announcement to blog.
-* post_news        - Post announcement to rubyforge.
-* publish_docs     - Publish RDoc to RubyForge
-* release          - Package and upload the release to rubyforge.
-* ridocs           - Generate ri locally for testing
-* test             - Run the test suite. Use FILTER to add to the command line.
-* test_deps        - Show which test files fail when run alone.
-* uninstall        - Uninstall the package.
+* announce       - Create news email file and post to rubyforge.
+* audit          - Run ZenTest against the package.
+* check_manifest - Verify the manifest.
+* clean          - Clean up all the extras.
+* config_hoe     - Create a fresh ~/.hoerc file.
+* debug_gem      - Show information about the gem.
+* default        - Run the default tasks.
+* docs           - Build the docs HTML Files
+* email          - Generate email announcement file.
+* gem            - Build the gem file hoe-1.5.0.gem
+* generate_key   - Generate a key for signing your gems.
+* install_gem    - Install the package as a gem.
+* multi          - Run the test suite using multiruby.
+* package        - Build all the packages
+* post_blog      - Post announcement to blog.
+* post_news      - Post announcement to rubyforge.
+* publish_docs   - Publish RDoc to RubyForge.
+* release        - Package and upload the release to rubyforge.
+* ridocs         - Generate ri locally for testing.
+* test           - Run the test suite.
+* test_deps      - Show which test files fail when run alone.
 
 See class rdoc for help. Hint: ri Hoe
 
