@@ -295,7 +295,8 @@ class Hoe
 
     # Defaults
     self.author = []
-    self.clean_globs = %w(diff diff.txt email.txt ri *.gem **/*~)
+    self.clean_globs = %w(diff diff.txt email.txt ri
+                          *.gem *~ **/*~ *.rbc **/*.rbc)
     self.description_sections = %w(description)
     self.email = []
     self.extra_deps = []
