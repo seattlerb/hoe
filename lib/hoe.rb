@@ -351,8 +351,8 @@ class Hoe
     self.extra_deps = Array(extra_deps).map { |o| String === o ? [o] : o }
 
     if name == 'hoe' then
-      hoe_deps.each do |pkg, version|
-        extra_deps << [pkg, version]
+      hoe_deps.each do |pkg, vers|
+        extra_deps << [pkg, vers]
       end
     else
       extra_deps << ['hoe', ">= #{VERSION}"] unless hoe_deps.has_key? name
@@ -773,7 +773,7 @@ class Hoe
     cmd = if test ?f, 'test/test_all.rb' then
             "#{RUBY_FLAGS} test/test_all.rb #{FILTER}"
           else
-            tests = test_globs.map { |g| Dir.glob(g) }.flatten << 'test/unit'
+            tests = ['test/unit'] + test_globs.map { |g| Dir.glob(g) }.flatten
             tests.map! {|f| %Q(require "#{f}")}
             "#{RUBY_FLAGS} -e '#{tests.join("; ")}' #{FILTER}"
           end
