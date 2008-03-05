@@ -1,14 +1,17 @@
-=== 1.5.1 / 2008-02-26
+=== 1.5.1 / 2008-03-04
 
-* 1 Minor Enhancement:
+* 2 Minor Enhancements:
 
   * Removed install/uninstall tasks. Too buggy. Gems do a better job.
+  *	Added cleaning of rbc files to default list
 
-* 2 Bug Fixes:
+* 5 Bug Fixes:
 
   * Correctly deal with errors intuiting history and readme files. Thanks Aaron!
   * Fixed rdoc title. Thanks, Sander!
   * Fixed sow to match new Rakefile and History format. Thanks, me!
+  *	Moved test/unit to the front for rake test. Fixes use of miniunit.
+  * Renamed shadowed variable.
 
 === 1.5.0 / 2008-01-30
 
