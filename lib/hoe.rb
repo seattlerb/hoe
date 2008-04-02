@@ -784,7 +784,9 @@ class Hoe
             "#{RUBY_FLAGS} -e '#{tests.join("; ")}' #{FILTER}"
           end
 
-    cmd = "EXCLUDED_VERSIONS=#{multiruby_skip.join(":")} #{cmd}" if multi
+    excludes = multiruby_skip.join(":")
+    cmd = "EXCLUDED_VERSIONS=#{excludes} multiruby #{cmd}" if multi
+
     send msg, cmd
   end
 
