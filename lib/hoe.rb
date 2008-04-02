@@ -785,7 +785,8 @@ class Hoe
           end
 
     excludes = multiruby_skip.join(":")
-    cmd = "EXCLUDED_VERSIONS=#{excludes} multiruby #{cmd}" if multi
+    ENV['EXCLUDED_VERSIONS'] = excludes
+    cmd = "multiruby #{cmd}" if multi
 
     send msg, cmd
   end
