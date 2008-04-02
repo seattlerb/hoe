@@ -7,9 +7,10 @@ Hoe.new("hoe", Hoe::VERSION) do |hoe|
   hoe.developer("Ryan Davis", "ryand-ruby@zenspider.com")
 end
 
+desc "Generate a list of tasks for doco. RDOC=1 for commented output"
 task :tasks do
   tasks = `rake -T`.scan(/rake (\w+)\s+# (.*)/)
-  tasks.reject! { |t,d| t =~ /^(clobber|re(package|docs))/ }
+  tasks.reject! { |t,d| t =~ /^(clobber|tasks|re(package|docs))/ }
   max   = tasks.map { |x,y| x.size }.max
 
   tasks.each do |t,d|

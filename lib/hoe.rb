@@ -2,7 +2,6 @@
 
 require 'rubygems'
 require 'rake'
-require 'rake/contrib/sshpublisher'
 require 'rake/gempackagetask'
 require 'rake/rdoctask'
 require 'rake/testtask'
@@ -116,7 +115,7 @@ require 'yaml'
 #
 
 class Hoe
-  VERSION = '1.5.1'
+  VERSION = '1.5.2'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -215,6 +214,11 @@ class Hoe
   attr_accessor :lib_files # :nodoc:
 
   ##
+  # Optional: Array of incompatible versions for multiruby filtering. Used as a regex.
+
+  attr_accessor :multiruby_skip
+
+  ##
   # *MANDATORY*: The name of the release.
 
   attr_accessor :name
@@ -300,6 +304,7 @@ class Hoe
     self.description_sections = %w(description)
     self.email = []
     self.extra_deps = []
+    self.multiruby_skip = []
     self.need_tar = true
     self.need_zip = false
     self.rdoc_pattern = /^(lib|bin|ext)|txt$/
@@ -599,7 +604,7 @@ class Hoe
     task :clean => [ :clobber_docs, :clobber_package ] do
       clean_globs.each do |pattern|
         files = Dir[pattern]
-        rm_rf files unless files.empty?
+        rm_rf files, :verbose => true unless files.empty?
       end
     end
 
@@ -778,7 +783,8 @@ class Hoe
             tests.map! {|f| %Q(require "#{f}")}
             "#{RUBY_FLAGS} -e '#{tests.join("; ")}' #{FILTER}"
           end
-    cmd = "multiruby #{cmd}" if multi
+
+    cmd = "EXCLUDED_VERSIONS=#{multiruby_skip.join(":")} #{cmd}" if multi
     send msg, cmd
   end
 

@@ -1,3 +1,13 @@
+=== 1.5.2 / 2008-04-01
+
+* 1 Minor Enhancement:
+
+  * Added multiruby_skip attribute for 'rake multi' version invalidation.
+
+* 1 Bug Fix:
+
+  * Removed require of rake/contrib/sshpublisher to fix 1.9.
+
 === 1.5.1 / 2008-03-04
 
 * 2 Minor Enhancements:
