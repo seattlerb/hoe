@@ -319,7 +319,7 @@ class Hoe
 
     # Intuit values:
 
-    readme   = File.read("README.txt").split(/^(=+ .*)$/)[1..-1]
+    readme   = File.read("README.txt").split(/^(=+ .*)$/)[1..-1] rescue ''
     unless readme.empty? then
       sections = readme.map { |s|
         s =~ /^=/ ? s.strip.downcase.chomp(':').split.last : s.strip
@@ -333,8 +333,8 @@ class Hoe
       self.summary ||= summ
       self.url ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
     else
-      warn "** README.txt is in the wrong format for auto-intuiting."
-      warn "   run sow blah and look at it's text files"
+      warn "** README.txt is missing or in the wrong format for auto-intuiting."
+      warn "   run `sow blah` and look at it's text files"
     end
 
     %w(email author).each do |field|
