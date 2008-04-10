@@ -319,6 +319,11 @@ class Hoe
 
     # Intuit values:
 
+    def missing name
+      warn "** #{name} is missing or in the wrong format for auto-intuiting."
+      warn "   run `sow blah` and look at it's text files"
+    end
+
     readme   = File.read("README.txt").split(/^(=+ .*)$/)[1..-1] rescue ''
     unless readme.empty? then
       sections = readme.map { |s|
@@ -329,13 +334,19 @@ class Hoe
       summ = desc.split(/\.\s+/).first(summary_sentences).join(". ")
 
       self.description ||= desc
-      self.changes ||= File.read("History.txt").split(/^(===.*)/)[1..2].join.strip
       self.summary ||= summ
       self.url ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
     else
-      warn "** README.txt is missing or in the wrong format for auto-intuiting."
-      warn "   run `sow blah` and look at it's text files"
+      missing 'README.txt'
     end
+
+    self.changes ||= begin
+                       h = File.read("History.txt")
+                       h.split(/^(===.*)/)[1..2].join.strip
+                     rescue
+                       missing 'History.txt'
+                       ''
+                     end
 
     %w(email author).each do |field|
       value = self.send(field)
@@ -344,7 +355,7 @@ class Hoe
           warn "Hoe #{field} value not set - Fix by 2008-04-01!"
           self.send "#{field}=", "doofus"
         else
-          abort "Hoe #{field} value not set"
+          abort "Hoe #{field} value not set. aborting"
         end
       end
     end
