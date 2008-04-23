@@ -63,8 +63,8 @@ require 'yaml'
 # exclude::             A regular expression of files to exclude from
 #                       +check_manifest+.
 # publish_on_announce:: Run +publish_docs+ when you run +release+.
-# signing_key_file:: Signs your gems with this private key.
-# signing_cert_file:: Signs your gem with this certificate.
+# signing_key_file::    Signs your gems with this private key.
+# signing_cert_file::   Signs your gem with this certificate.
 # blogs::               An array of hashes of blog settings.
 #
 # Run +config_hoe+ and see ~/.hoerc for examples.
@@ -709,7 +709,8 @@ class Hoe
       require 'find'
       files = []
       with_config do |config, _|
-        exclusions = config["exclude"] || /tmp$|CVS|\.svn/
+        exclusions = config["exclude"]
+        abort "exclude entry missing from .hoerc. Aborting." if exclusions.nil?
         Find.find '.' do |path|
           next unless File.file? path
           next if path =~ exclusions

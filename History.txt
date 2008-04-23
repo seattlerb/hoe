@@ -1,8 +1,9 @@
-=== 1.5.2 / 2008-04-01
+=== 1.5.2 / 2008-04-22
 
-* 1 Minor Enhancement:
+* 2 Minor Enhancements:
 
   * Added multiruby_skip attribute for 'rake multi' version invalidation.
+  * Improved error messages when files are missing.
 
 * 1 Bug Fix:
 
