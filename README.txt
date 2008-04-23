@@ -69,7 +69,7 @@ or
 
 (The MIT License)
 
-Copyright (c) 2006 Ryan Davis, Zen Spider Software
+Copyright (c) Ryan Davis, Zen Spider Software
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

@@ -234,6 +234,11 @@ class Hoe
   attr_accessor :need_zip
 
   ##
+  # Optional: A post-install message to be displayed when gem is installed.
+
+  attr_accessor :post_install_message
+
+  ##
   # Optional: A regexp to match documentation files against the manifest.
 
   attr_accessor :rdoc_pattern
@@ -314,6 +319,7 @@ class Hoe
     self.spec_extras = {}
     self.summary_sentences = 1
     self.test_globs = ['test/**/test_*.rb']
+    self.post_install_message = nil
 
     yield self if block_given?
 
@@ -460,6 +466,8 @@ class Hoe
       s.rdoc_options = ['--main', 'README.txt']
       s.extra_rdoc_files = s.files.grep(/txt$/)
       s.has_rdoc = true
+
+      s.post_install_message = post_install_message
 
       if test ?f, "test/test_all.rb" then
         s.test_file = "test/test_all.rb"
