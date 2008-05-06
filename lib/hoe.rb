@@ -485,13 +485,11 @@ class Hoe
       if ENV['INLINE'] then
         s.platform = ENV['FORCE_PLATFORM'] || Gem::Platform::CURRENT
         # name of the extension is CamelCase
-        if name =~ /[A-Z]/
-          # ClassName => class_name
-          alternate_name = name.reverse.scan(%r/[A-Z]+|[^A-Z]*[A-Z]+?/).reverse.map { |word| word.reverse.downcase }.join('_')
-        elsif name =~ /_/
-          # class_name = ClassName
-          alternate_name = name.strip.split(/\s*_+\s*/).map! { |w| w.downcase.sub(/^./) { |c| c.upcase } }.join
-        end
+        alternate_name = if name =~ /[A-Z]/ then
+                           name.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
+                         elsif name =~ /_/ then
+                           name.capitalize.gsub(/_([a-z])/) { $1.upcase }
+                         end
 
         # Try collecting Inline extensions for +name+
         if defined?(Inline) then
