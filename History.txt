@@ -1,10 +1,11 @@
 === 1.5.2 / 2008-04-22
 
-* 3 Minor Enhancements:
+* 4 Minor Enhancements:
 
   * Added multiruby_skip attribute for 'rake multi' version invalidation.
   * Improved error messages when files are missing.
   * Added rubygems post_install_message accessor. Thanks to Dr. Nic.
+  * Cleaned up alternative_name... I didn't get it.
 
 * 1 Bug Fix:
 
