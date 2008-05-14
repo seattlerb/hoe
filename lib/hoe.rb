@@ -327,7 +327,7 @@ class Hoe
 
     def missing name
       warn "** #{name} is missing or in the wrong format for auto-intuiting."
-      warn "   run `sow blah` and look at it's text files"
+      warn "   run `sow blah` and look at its text files"
     end
 
     readme   = File.read("README.txt").split(/^(=+ .*)$/)[1..-1] rescue ''
