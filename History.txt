@@ -1,3 +1,9 @@
+=== 1.5.3 / 2008-05-20
+
+* 1 Bug Fix
+
+  * hoe really really needs better tests. I suck. :/
+
 === 1.5.2 / 2008-05-20
 
 * 4 Minor Enhancements:

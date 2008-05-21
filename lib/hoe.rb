@@ -115,7 +115,7 @@ require 'yaml'
 #
 
 class Hoe
-  VERSION = '1.5.2'
+  VERSION = '1.5.3'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -551,7 +551,7 @@ class Hoe
         puts "rf.add_file #{rubyforge_name.inspect}, #{name.inspect}, release_id, \"#{pkg}.gem\""
       end
 
-      rf = RubyForge.new
+      rf = RubyForge.new.configure
       puts "Logging in"
       rf.login
 
@@ -700,7 +700,7 @@ class Hoe
       require 'rubyforge'
       subject, title, body, urls = announcement
 
-      rf = RubyForge.new
+      rf = RubyForge.new.configure
       rf.login
       rf.post_news(rubyforge_name, subject, "#{title}\n\n#{body}")
       puts "Posted to rubyforge"
@@ -755,7 +755,7 @@ class Hoe
 
         puts "Installed key and certificate."
 
-        rf = RubyForge.new
+        rf = RubyForge.new.configure
         rf.login
 
         cert_package = "#{rubyforge_name}-certificates"
