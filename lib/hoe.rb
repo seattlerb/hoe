@@ -115,7 +115,7 @@ require 'yaml'
 #
 
 class Hoe
-  VERSION = '1.5.3'
+  VERSION = '1.6.0'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -177,6 +177,11 @@ class Hoe
   # Populated automatically from the manifest. List of executables.
 
   attr_accessor :bin_files # :nodoc:
+
+  ##
+  # *Optional*: An array of the project's blog categories. Defaults to project name.
+
+  attr_accessor :blog_categories
 
   ##
   # Optional: A description of the release's latest changes. Auto-populates.
@@ -307,6 +312,7 @@ class Hoe
     self.clean_globs = %w(diff diff.txt email.txt ri
                           *.gem *~ **/*~ *.rbc **/*.rbc)
     self.description_sections = %w(description)
+    self.blog_categories = [name]
     self.email = []
     self.extra_deps = []
     self.multiruby_skip = []
@@ -537,7 +543,8 @@ class Hoe
 
     desc 'Install the package as a gem.'
     task :install_gem => [:clean, :package] do
-      sh "#{'sudo ' unless WINDOZE}gem install --local pkg/*.gem"
+      gem = Dir['pkg/*.gem'].first
+      sh "#{'sudo ' unless WINDOZE}gem install --local #{gem}"
     end
 
     desc 'Package and upload the release to rubyforge.'
@@ -684,7 +691,9 @@ class Hoe
         config['blogs'].each do |site|
           server = XMLRPC::Client.new2(site['url'])
           content = site['extra_headers'].merge(:title => title,
-                                                :description => body)
+                                                :description => body,
+                                                :categories => blog_categories)
+
           result = server.call('metaWeblog.newPost',
                                site['blog_id'],
                                site['user'],
@@ -783,11 +792,10 @@ class Hoe
 
   def announcement # :nodoc:
     changes = self.changes.rdoc_to_markdown
-
     subject = "#{name} #{version} Released"
-    title = "#{name} version #{version} has been released!"
-    body = "#{description}\n\nChanges:\n\n#{changes}".rdoc_to_markdown
-    urls = Array(url).map { |s| "* <#{s.strip.rdoc_to_markdown}>" }.join("\n")
+    title   = "#{name} version #{version} has been released!"
+    body    = "#{description}\n\nChanges:\n\n#{changes}".rdoc_to_markdown
+    urls    = Array(url).map { |s| "* <#{s.strip.rdoc_to_markdown}>" }.join("\n")
 
     return subject, title, body, urls
   end

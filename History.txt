@@ -1,3 +1,9 @@
+=== 1.6.0 / 2008-06-18
+
+* 1 minor enhancement
+
+  * blog categories! Defaults to array with project's name. Thanks Aaron!
+
 === 1.5.3 / 2008-05-20
 
 * 1 Bug Fix

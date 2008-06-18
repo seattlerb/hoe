@@ -4,9 +4,10 @@ require './lib/hoe.rb'
 
 Hoe.new("hoe", Hoe::VERSION) do |hoe|
   hoe.rubyforge_name = "seattlerb"
+
   hoe.developer("Ryan Davis", "ryand-ruby@zenspider.com")
 
-  hoe.multiruby_skip << "rubinius"
+  hoe.blog_categories << "Seattle.rb" << "Ruby"
 end
 
 desc "Generate a list of tasks for doco. RDOC=1 for commented output"
