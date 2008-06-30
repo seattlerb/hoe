@@ -9,6 +9,11 @@ require 'rbconfig'
 require 'rubyforge'
 require 'yaml'
 
+begin
+  gem 'rdoc'
+rescue Gem::LoadError
+end
+
 ##
 # hoe - a tool to help rake
 #
