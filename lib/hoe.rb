@@ -219,6 +219,11 @@ class Hoe
   attr_accessor :extra_deps
 
   ##
+  # Optional: An array of rubygem developer dependencies.
+
+  attr_accessor :extra_dev_deps
+
+  ##
   # Populated automatically from the manifest. List of library files.
 
   attr_accessor :lib_files # :nodoc:
@@ -308,6 +313,15 @@ class Hoe
 
   attr_accessor :version
 
+  def normalize_deps deps
+    Array(deps).map { |o| String === o ? [o] : o }
+  end
+
+  def missing name
+    warn "** #{name} is missing or in the wrong format for auto-intuiting."
+    warn "   run `sow blah` and look at its text files"
+  end
+
   def initialize(name, version) # :nodoc:
     self.name = name
     self.version = version
@@ -320,6 +334,7 @@ class Hoe
     self.blog_categories = [name]
     self.email = []
     self.extra_deps = []
+    self.extra_dev_deps = []
     self.multiruby_skip = []
     self.need_tar = true
     self.need_zip = false
@@ -335,11 +350,6 @@ class Hoe
     yield self if block_given?
 
     # Intuit values:
-
-    def missing name
-      warn "** #{name} is missing or in the wrong format for auto-intuiting."
-      warn "   run `sow blah` and look at its text files"
-    end
 
     readme   = File.read("README.txt").split(/^(=+ .*)$/)[1..-1] rescue ''
     unless readme.empty? then
@@ -382,14 +392,15 @@ class Hoe
       'rubyforge' => ">= #{::RubyForge::VERSION}",
     }
 
-    self.extra_deps = Array(extra_deps).map { |o| String === o ? [o] : o }
+    self.extra_deps     = normalize_deps extra_deps
+    self.extra_dev_deps = normalize_deps extra_dev_deps
 
     if name == 'hoe' then
       hoe_deps.each do |pkg, vers|
         extra_deps << [pkg, vers]
       end
     else
-      extra_deps << ['hoe', ">= #{VERSION}"] unless hoe_deps.has_key? name
+      extra_dev_deps << ['hoe', ">= #{VERSION}"] unless hoe_deps.has_key? name
     end
 
     define_tasks
@@ -400,14 +411,14 @@ class Hoe
     self.email << email
   end
 
-  def define_tasks # :nodoc:
-    def with_config # :nodoc:
-      rc = File.expand_path("~/.hoerc")
-      exists = File.exist? rc
-      config = exists ? YAML.load_file(rc) : {}
-      yield(config, rc)
-    end
+  def with_config # :nodoc:
+    rc = File.expand_path("~/.hoerc")
+    exists = File.exist? rc
+    config = exists ? YAML.load_file(rc) : {}
+    yield(config, rc)
+  end
 
+  def define_tasks # :nodoc:
     desc 'Run the default tasks.'
     task :default => :test
 
@@ -465,6 +476,10 @@ class Hoe
 
       extra_deps.each do |dep|
         s.add_dependency(*dep)
+      end
+
+      extra_dev_deps.each do |dep|
+        s.add_development_dependency(*dep)
       end
 
       s.files = File.read("Manifest.txt").delete("\r").split(/\n/)
