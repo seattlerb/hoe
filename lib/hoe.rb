@@ -120,7 +120,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.6.0'
+  VERSION = '1.7.0'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']

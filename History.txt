@@ -1,3 +1,12 @@
+=== 1.7.0 / 2008-06-30
+
+* 3 minor enhancements:
+
+  * Use rdoc 2.x gem if available. Eric likes his backslashes.
+  * Added extra_dev_deps for new rubygems developer dependencies.
+    * Switched hoe to dev dep. Fork off, bitches.
+  * Finally got a sane test that does something. Hey... it's a start.
+
 === 1.6.0 / 2008-06-18
 
 * 1 minor enhancement
