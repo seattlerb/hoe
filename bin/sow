@@ -4,17 +4,14 @@ $t ||= false
 $d ||= false
 
 if defined? $h then
-  puts "usage: #{File.dirname($0)} [-d|-t] [group] project"
+  puts "usage: #{File.dirname($0)} [-d|-t] project"
   puts "  -t = add project to subdir under 'trunk'"
   puts "  -d = add project to subdir under 'dev'"
 end
 
 abort "You must specify only one of -t or -d" if $t and $d
 
-group = ARGV.shift
 project = ARGV.shift
-
-project ||= group
 
 # prevents false positives on my tag reporter
 X = 'FI' + 'X'
