@@ -120,7 +120,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.7.0'
+  VERSION = '1.8.0'
 
   ruby_prefix = Config::CONFIG['prefix']
   sitelibdir = Config::CONFIG['sitelibdir']
@@ -312,6 +312,15 @@ class Hoe
   # *MANDATORY*: The version. Don't hardcode! use a constant in the project.
 
   attr_accessor :version
+
+  ##
+  # Add extra dirs to both $: and RUBY_FLAGS (for test runs)
+
+  def self.add_include_dirs(*dirs)
+    dirs = dirs.flatten
+    $:.push(*dirs)
+    Hoe::RUBY_FLAGS.sub!(/-I/, "-I#{dirs.join(":")}:")
+  end
 
   def normalize_deps deps
     Array(deps).map { |o| String === o ? [o] : o }
