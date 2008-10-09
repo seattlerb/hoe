@@ -304,6 +304,11 @@ class Hoe
   attr_accessor :test_globs
 
   ##
+  # Optional: What test library to require [default: test/unit]
+
+  attr_accessor :testlib
+
+  ##
   # Optional: The url(s) of the project. (can be array). Auto-populates.
 
   attr_accessor :url
@@ -318,7 +323,7 @@ class Hoe
 
   def self.add_include_dirs(*dirs)
     dirs = dirs.flatten
-    $:.push(*dirs)
+    $:.unshift(*dirs)
     Hoe::RUBY_FLAGS.sub!(/-I/, "-I#{dirs.join(":")}:")
   end
 
@@ -354,6 +359,7 @@ class Hoe
     self.spec_extras = {}
     self.summary_sentences = 1
     self.test_globs = ['test/**/test_*.rb']
+    self.testlib = 'test/unit'
     self.post_install_message = nil
 
     yield self if block_given?
@@ -834,7 +840,8 @@ class Hoe
     cmd = if test ?f, 'test/test_all.rb' then
             "#{RUBY_FLAGS} test/test_all.rb #{FILTER}"
           else
-            tests = ['test/unit'] + test_globs.map { |g| Dir.glob(g) }.flatten
+            tests = ["rubygems", self.testlib] +
+              test_globs.map { |g| Dir.glob(g) }.flatten
             tests.map! {|f| %Q(require "#{f}")}
             "#{RUBY_FLAGS} -e '#{tests.join("; ")}' #{FILTER}"
           end
