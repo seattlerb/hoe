@@ -38,27 +38,31 @@ end
 #
 # === Tasks Provided:
 #
-# announce::       Create news email file and post to rubyforge.
-# audit::          Run ZenTest against the package.
-# check_manifest:: Verify the manifest.
-# clean::          Clean up all the extras.
-# config_hoe::     Create a fresh ~/.hoerc file.
-# debug_gem::      Show information about the gem.
-# default::        Run the default tasks.
-# docs::           Build the docs HTML Files
-# email::          Generate email announcement file.
-# gem::            Build the gem file hoe-1.5.0.gem
-# generate_key::   Generate a key for signing your gems.
-# install_gem::    Install the package as a gem.
-# multi::          Run the test suite using multiruby.
-# package::        Build all the packages
-# post_blog::      Post announcement to blog.
-# post_news::      Post announcement to rubyforge.
-# publish_docs::   Publish RDoc to RubyForge.
-# release::        Package and upload the release to rubyforge.
-# ridocs::         Generate ri locally for testing.
-# test::           Run the test suite.
-# test_deps::      Show which test files fail when run alone.
+# announce::          Create news email file and post to rubyforge.
+# audit::             Run ZenTest against the package.
+# check_manifest::    Verify the manifest.
+# clean::             Clean up all the extras.
+# config_hoe::        Create a fresh ~/.hoerc file.
+# debug_gem::         Show information about the gem.
+# default::           Run the default tasks.
+# deps:email::        Print a contact list for gems dependent on this gem
+# deps:fetch::        Fetch all the dependent gems of this gem into tarballs
+# deps:list::         List all the dependent gems of this gem
+# docs::              Build the docs HTML Files
+# email::             Generate email announcement file.
+# gem::               Build the gem file hoe-1.8.0.gem
+# generate_key::      Generate a key for signing your gems.
+# install_gem::       Install the package as a gem.
+# multi::             Run the test suite using multiruby.
+# package::           Build all the packages
+# post_blog::         Post announcement to blog.
+# post_news::         Post announcement to rubyforge.
+# publish_docs::      Publish RDoc to RubyForge.
+# release::           Package and upload the release to rubyforge.
+# ridocs::            Generate ri locally for testing.
+# tasks::             Generate a list of tasks for doco.
+# test::              Run the test suite.
+# test_deps::         Show which test files fail when run alone.
 #
 # === Extra Configuration Options:
 #
@@ -1006,5 +1010,11 @@ end
 
 if $0 == __FILE__ then
   out = `rake -T | egrep -v "redocs|repackage|clobber|trunk"`
-  puts out.gsub(/\#/, '-').gsub(/^rake /, '# * ')
+  if ARGV.empty? then
+    # # default::        Run the default tasks.
+    puts out.gsub(/(\s*)\#/, '::\1').gsub(/^rake /, '# ')
+  else
+    # * default        - Run the default tasks.
+    puts out.gsub(/\#/, '-').gsub(/^rake /, '* ')
+  end
 end
