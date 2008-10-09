@@ -1,3 +1,14 @@
+=== 1.8.0 / 2008-10-09
+
+* 5 minor enhancements:
+
+  * Added Hoe.add_include_dirs to make setting up rake deps easier.
+  * Removed unused optional group arg in sow.
+  * Added testlib variable so you can specify what test library to use.
+  * Added deps:list to help you review dependent projects.
+  * Added deps:email to help you communicate with dependent projects.
+  * Added deps:fetch to help you search through dependent projects.
+
 === 1.7.0 / 2008-06-30
 
 * 3 minor enhancements:
