@@ -22,6 +22,9 @@ class TestHoe < Test::Unit::TestCase
                   config_hoe
                   debug_gem
                   default
+                  deps:email
+                  deps:fetch
+                  deps:list
                   docs
                   email
                   generate_key
