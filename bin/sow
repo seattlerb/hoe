@@ -64,7 +64,7 @@ Dir.chdir project do
   end
 end
 
-WINDOZE = /win32/ =~ RUBY_PLATFORM
+WINDOZE = /mswin|mingw/ =~ RUBY_PLATFORM
 
 puts "... done, now go fix all occurrences of '#{X}'"
 if WINDOZE then
@@ -72,4 +72,3 @@ if WINDOZE then
 else
   puts `find #{project} -type f | xargs grep -n #{X}`.gsub(/\A|\n/, "\n  ")
 end
-

@@ -163,7 +163,7 @@ class Hoe
 
   DLEXT = Config::CONFIG['DLEXT']
 
-  WINDOZE = /djgpp|(cyg|ms|bcc)win|mingw/ =~ RUBY_PLATFORM unless defined? WINDOZE
+  WINDOZE = /mswin|mingw/ =~ RUBY_PLATFORM unless defined? WINDOZE
 
   DIFF = if WINDOZE
            'diff.exe'
@@ -329,7 +329,8 @@ class Hoe
   def self.add_include_dirs(*dirs)
     dirs = dirs.flatten
     $:.unshift(*dirs)
-    Hoe::RUBY_FLAGS.sub!(/-I/, "-I#{dirs.join(":")}:")
+    s = File::PATH_SEPARATOR
+    Hoe::RUBY_FLAGS.sub!(/-I/, "-I#{dirs.join(s)}#{s}")
   end
 
   def normalize_deps deps
@@ -451,8 +452,11 @@ class Hoe
     task :test_deps do
       tests = Dir["test/**/test_*.rb"]  +  Dir["test/**/*_test.rb"]
 
+      paths = ['bin', 'lib', 'test'].join(File::PATH_SEPARATOR)
+      null_dev = WINDOZE ? '> NUL 2>&1' : '&> /dev/null'
+
       tests.each do |test|
-        if not system "ruby -Ibin:lib:test #{test} &> /dev/null" then
+        if not system "ruby -I#{paths} #{test} #{null_dev}" then
           puts "Dependency Issues: #{test}"
         end
       end
@@ -620,7 +624,8 @@ class Hoe
 
     Rake::RDocTask.new(:docs) do |rd|
       rd.main = "README.txt"
-      rd.options << '-d' if RUBY_PLATFORM !~ /win32/ and `which dot` =~ /\/dot/ and not ENV['NODOT']
+      rd.options << '-d' if
+        `which dot` =~ /\/dot/ unless ENV['NODOT'] unless WINDOZE
       rd.rdoc_dir = 'doc'
       files = spec.files.grep(rdoc_pattern)
       files -= ['Manifest.txt']

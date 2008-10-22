@@ -1,3 +1,9 @@
+=== 1.8.1 / 2008-10-22
+
+* 1 bug fix:
+
+  * Fixes for windows compatibility from Luis Lavena.
+
 === 1.8.0 / 2008-10-09
 
 * 5 minor enhancements:
