@@ -1,3 +1,9 @@
+=== 1.8.2 / 2008-10-24:
+
+* 1 minor enhancement:
+
+  * Now asks Inline for known inlined classes if you package w/ INLINE=1.
+
 === 1.8.1 / 2008-10-22
 
 * 1 bug fix:
