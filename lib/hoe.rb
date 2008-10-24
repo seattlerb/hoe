@@ -534,27 +534,32 @@ class Hoe
       # Allow automatic inclusion of compiled extensions
       if ENV['INLINE'] then
         s.platform = ENV['FORCE_PLATFORM'] || Gem::Platform::CURRENT
-        # name of the extension is CamelCase
-        alternate_name = if name =~ /[A-Z]/ then
-                           name.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
-                         elsif name =~ /_/ then
-                           name.capitalize.gsub(/_([a-z])/) { $1.upcase }
-                         end
 
         # Try collecting Inline extensions for +name+
         if defined?(Inline) then
           directory 'lib/inline'
 
-          extensions = Dir.chdir(Inline::directory) {
-            Dir["Inline_{#{name},#{alternate_name}}_*.#{DLEXT}"]
-          }
-          extensions.each do |ext|
-            # add the inlined extension to the spec files
-            s.files += ["lib/inline/#{ext}"]
+          Inline.registered_inline_classes.each do |cls|
+            name = cls.name # TODO: what about X::Y::Z?
+            # name of the extension is CamelCase
+            alternate_name = if name =~ /[A-Z]/ then
+                               name.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
+                             elsif name =~ /_/ then
+                               name.capitalize.gsub(/_([a-z])/) { $1.upcase }
+                             end
 
-            # include the file in the tasks
-            file "lib/inline/#{ext}" => ["lib/inline"] do
-              cp File.join(Inline::directory, ext), "lib/inline"
+            extensions = Dir.chdir(Inline::directory) {
+              Dir["Inline_{#{name},#{alternate_name}}_*.#{DLEXT}"]
+            }
+
+            extensions.each do |ext|
+              # add the inlined extension to the spec files
+              s.files += ["lib/inline/#{ext}"]
+
+              # include the file in the tasks
+              file "lib/inline/#{ext}" => ["lib/inline"] do
+                cp File.join(Inline::directory, ext), "lib/inline"
+              end
             end
           end
         end
