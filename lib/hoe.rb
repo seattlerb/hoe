@@ -333,6 +333,14 @@ class Hoe
     Hoe::RUBY_FLAGS.sub!(/-I/, "-I#{dirs.join(s)}#{s}")
   end
 
+  def self.normalize_names project
+    project   = project.tr('-', '_').gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
+    klass     = project.gsub(/(?:^|_)([a-z])/) { $1.upcase }
+    file_name = project
+
+    return project, file_name, klass
+  end
+
   def normalize_deps deps
     Array(deps).map { |o| String === o ? [o] : o }
   end

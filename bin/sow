@@ -3,6 +3,9 @@
 $t ||= false
 $d ||= false
 
+require 'rubygems'
+require 'hoe'
+
 if defined? $h then
   puts "usage: #{File.dirname($0)} [-d|-t] project"
   puts "  -t = add project to subdir under 'trunk'"
@@ -20,15 +23,7 @@ abort "You must supply a project name on the commandline" unless project
 abort "Project #{project} seems to exist" if test ?d, project
 puts "creating project #{project}"
 
-case project
-when /_/ then
-  file_name = project
-  project = project.capitalize.gsub(/_([a-z])/) {$1.upcase}
-  klass = project
-else
-  file_name = project.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
-  klass = project.capitalize.gsub(/_([a-z])/) {$1.upcase}
-end
+project, file_name, klass = Hoe.normalize_names project
 
 Dir.mkdir project
 Dir.chdir project do

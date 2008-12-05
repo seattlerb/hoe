@@ -94,4 +94,15 @@ class TestHoe < Test::Unit::TestCase
     assert_equal :development, dep.type
     assert_equal ">= #{Hoe::VERSION}", dep.version_requirements.to_s
   end
+
+  def test_rename
+    # project, file_name, klass = Hoe.normalize_names 'project_name'
+
+    assert_equal %w(    word      word     Word),  Hoe.normalize_names('word')
+    assert_equal %w(    word      word     Word),  Hoe.normalize_names('Word')
+    assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('TwoWords')
+    assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('twoWords')
+    assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('two-words')
+    assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('two_words')
+  end
 end
