@@ -1,3 +1,10 @@
+=== 1.8.3 / 2009-01-20:
+
+* 1 minor enhancement:
+
+  * Refactored sow's naming code to Hoe.normalize_names and wrote some
+    tests to flush out inconsistencies.
+
 === 1.8.2 / 2008-10-24:
 
 * 1 minor enhancement:

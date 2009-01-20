@@ -124,7 +124,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.8.2'
+  VERSION = '1.8.3'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
