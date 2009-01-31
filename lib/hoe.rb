@@ -124,7 +124,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.8.3'
+  VERSION = '1.8.4'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
@@ -229,6 +229,13 @@ class Hoe
   attr_accessor :extra_dev_deps
 
   ##
+  # Optional: Extra files you want to add to RDoc.
+  #
+  # .txt files in the root directory are automatically included.
+
+  attr_accessor :extra_rdoc_files
+
+  ##
   # Populated automatically from the manifest. List of library files.
 
   attr_accessor :lib_files # :nodoc:
@@ -257,11 +264,6 @@ class Hoe
   # Optional: A post-install message to be displayed when gem is installed.
 
   attr_accessor :post_install_message
-
-  ##
-  # Optional: A regexp to match documentation files against the manifest.
-
-  attr_accessor :rdoc_pattern
 
   ##
   # Optional: Name of RDoc destination directory on Rubyforge. [default: +name+]
@@ -363,10 +365,10 @@ class Hoe
     self.email = []
     self.extra_deps = []
     self.extra_dev_deps = []
+    self.extra_rdoc_files = []
     self.multiruby_skip = []
     self.need_tar = true
     self.need_zip = false
-    self.rdoc_pattern = /^(lib|bin|ext)|txt$/
     self.remote_rdoc_dir = name
     self.rsync_args = '-av --delete'
     self.rubyforge_name = name.downcase
@@ -522,7 +524,8 @@ class Hoe
       s.require_paths = dirs unless dirs.empty?
 
       s.rdoc_options = ['--main', 'README.txt']
-      s.extra_rdoc_files = s.files.grep(/txt$/)
+      s.extra_rdoc_files += s.files.grep(/txt$/)
+      s.extra_rdoc_files += @extra_rdoc_files
       s.has_rdoc = true
 
       s.post_install_message = post_install_message
@@ -640,9 +643,9 @@ class Hoe
       rd.options << '-d' if
         `which dot` =~ /\/dot/ unless ENV['NODOT'] unless WINDOZE
       rd.rdoc_dir = 'doc'
-      files = spec.files.grep(rdoc_pattern)
-      files -= ['Manifest.txt']
-      rd.rdoc_files.push(*files)
+
+      rd.rdoc_files += spec.require_paths
+      rd.rdoc_files += spec.extra_rdoc_files
 
       title = "#{name}-#{version} Documentation"
       title = "#{rubyforge_name}'s " + title if rubyforge_name != name

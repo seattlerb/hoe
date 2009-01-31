@@ -1,3 +1,10 @@
+=== 1.8.4 / ??:
+
+* 1 minor enhancement:
+
+  * Match RubyGems' RDoc behavior and removed rdoc_pattern attribute.  Use
+    extra_rdoc_files instead.
+
 === 1.8.3 / 2009-01-20:
 
 * 1 minor enhancement:
