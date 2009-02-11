@@ -524,7 +524,7 @@ class Hoe
       s.require_paths = dirs unless dirs.empty?
 
       s.rdoc_options = ['--main', 'README.txt']
-      s.extra_rdoc_files += s.files.grep(/txt$/)
+      s.extra_rdoc_files += s.files.grep(/^[^#{File::SEPARATOR}]*txt$/)
       s.extra_rdoc_files += @extra_rdoc_files
       s.has_rdoc = true
 
