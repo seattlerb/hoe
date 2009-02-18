@@ -237,7 +237,7 @@ class Hoe
   ##
   # Optional: Extra files you want to add to RDoc.
   #
-  # .txt files in the root directory are automatically included.
+  # .txt files are automatically included (excluding the obvious).
 
   attr_accessor :extra_rdoc_files
 
@@ -629,7 +629,9 @@ class Hoe
       s.require_paths = dirs unless dirs.empty?
 
       s.rdoc_options = ['--main', readme_file]
+
       s.extra_rdoc_files += s.files.grep(/txt$/)
+      s.extra_rdoc_files.reject! { |f| f =~ %|^(test|spec|vendor|data|tmp)/| }
       s.extra_rdoc_files += @extra_rdoc_files
       s.has_rdoc = true
 
