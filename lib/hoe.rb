@@ -28,9 +28,11 @@ end
 # Use this as a minimal starting point:
 #
 #   require 'hoe'
+#   require './lib/project.rb'
 #
-#   Hoe.new("project_name", '1.0.0') do |p|
+#   Hoe.new("project_name", Project::VERSION) do |p|
 #     p.rubyforge_name = "rf_project"
+#     p.developer("Joe Blow", "joe@example.com")
 #     # add other details here
 #   end
 #
@@ -124,7 +126,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.8.4'
+  VERSION = '1.9.0'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
@@ -236,6 +238,11 @@ class Hoe
   attr_accessor :extra_rdoc_files
 
   ##
+  # Optional: The filename for the project history. [default: History.txt]
+
+  attr_accessor :history_file
+
+  ##
   # Populated automatically from the manifest. List of library files.
 
   attr_accessor :lib_files # :nodoc:
@@ -266,9 +273,24 @@ class Hoe
   attr_accessor :post_install_message
 
   ##
+  # Optional: The filename for the project readme. [default: README.txt]
+
+  attr_accessor :readme_file
+
+  ##
   # Optional: Name of RDoc destination directory on Rubyforge. [default: +name+]
 
   attr_accessor :remote_rdoc_dir
+
+  ##
+  # Optional: RSpec dirs. [default: %w(spec lib)]
+
+  attr_accessor :rspec_dirs
+
+  ##
+  # Optional: RSpec options. [default: []]
+
+  attr_accessor :rspec_options
 
   ##
   # Optional: Flags for RDoc rsync. [default: "-av --delete"]
@@ -358,31 +380,35 @@ class Hoe
 
     # Defaults
     self.author = []
+    self.blog_categories = [name]
     self.clean_globs = %w(diff diff.txt email.txt ri deps .source_index
                           *.gem *~ **/*~ *.rbc **/*.rbc)
     self.description_sections = %w(description)
-    self.blog_categories = [name]
     self.email = []
     self.extra_deps = []
     self.extra_dev_deps = []
     self.extra_rdoc_files = []
+    self.history_file = "History.txt"
     self.multiruby_skip = []
     self.need_tar = true
     self.need_zip = false
+    self.post_install_message = nil
+    self.readme_file = "README.txt"
     self.remote_rdoc_dir = name
+    self.rspec_dirs = %w(spec lib)
+    self.rspec_options = []
     self.rsync_args = '-av --delete'
     self.rubyforge_name = name.downcase
     self.spec_extras = {}
     self.summary_sentences = 1
     self.test_globs = ['test/**/test_*.rb']
     self.testlib = 'test/unit'
-    self.post_install_message = nil
 
     yield self if block_given?
 
     # Intuit values:
 
-    readme   = File.read("README.txt").split(/^(=+ .*)$/)[1..-1] rescue ''
+    readme = File.read(readme_file).split(/^(=+ .*)$/)[1..-1] rescue ''
     unless readme.empty? then
       sections = readme.map { |s|
         s =~ /^=/ ? s.strip.downcase.chomp(':').split.last : s.strip
@@ -395,14 +421,14 @@ class Hoe
       self.summary ||= summ
       self.url ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
     else
-      missing 'README.txt'
+      missing readme_file
     end
 
     self.changes ||= begin
-                       h = File.read("History.txt")
+                       h = File.read(history_file)
                        h.split(/^(===.*)/)[1..2].join.strip
                      rescue
-                       missing 'History.txt'
+                       missing history_file
                        ''
                      end
 
@@ -450,32 +476,53 @@ class Hoe
   end
 
   def define_tasks # :nodoc:
-    desc 'Run the default tasks.'
-    task :default => :test
+    default_tasks = []
 
-    desc 'Run the test suite. Use FILTER to add to the command line.'
-    task :test do
-      run_tests
-    end
+    if File.directory? "test" then
+      desc 'Run the test suite. Use FILTER to add to the command line.'
+      task :test do
+        run_tests
+      end
 
-    desc 'Show which test files fail when run alone.'
-    task :test_deps do
-      tests = Dir["test/**/test_*.rb"]  +  Dir["test/**/*_test.rb"]
+      desc 'Show which test files fail when run alone.'
+      task :test_deps do
+        tests = Dir["test/**/test_*.rb"]  +  Dir["test/**/*_test.rb"]
 
-      paths = ['bin', 'lib', 'test'].join(File::PATH_SEPARATOR)
-      null_dev = WINDOZE ? '> NUL 2>&1' : '&> /dev/null'
+        paths = ['bin', 'lib', 'test'].join(File::PATH_SEPARATOR)
+        null_dev = WINDOZE ? '> NUL 2>&1' : '&> /dev/null'
 
-      tests.each do |test|
-        if not system "ruby -I#{paths} #{test} #{null_dev}" then
-          puts "Dependency Issues: #{test}"
+        tests.each do |test|
+          if not system "ruby -I#{paths} #{test} #{null_dev}" then
+            puts "Dependency Issues: #{test}"
+          end
         end
       end
+
+      desc 'Run the test suite using multiruby.'
+      task :multi do
+        run_tests :multi
+      end
+
+      default_tasks << :test
     end
 
-    desc 'Run the test suite using multiruby.'
-    task :multi do
-      run_tests :multi
+    if File.directory? "spec" then
+      begin
+        require 'spec/rake/spectask'
+
+        desc "Run all specifications"
+        Spec::Rake::SpecTask.new(:spec) do |t|
+          t.libs = self.rspec_dirs
+          t.spec_opts = self.rspec_options
+        end
+      rescue LoadError
+        # do nothing
+      end
+      default_tasks << :spec
     end
+
+    desc 'Run the default task(s).'
+    task :default => default_tasks
 
     ############################################################
     # Packaging and Installing
@@ -523,7 +570,7 @@ class Hoe
       dirs = Dir['{lib,ext}']
       s.require_paths = dirs unless dirs.empty?
 
-      s.rdoc_options = ['--main', 'README.txt']
+      s.rdoc_options = ['--main', readme_file]
       s.extra_rdoc_files += s.files.grep(/^[^#{File::SEPARATOR}]*txt$/)
       s.extra_rdoc_files += @extra_rdoc_files
       s.has_rdoc = true
@@ -639,7 +686,7 @@ class Hoe
     # Doco
 
     Rake::RDocTask.new(:docs) do |rd|
-      rd.main = "README.txt"
+      rd.main = readme_file
       rd.options << '-d' if
         `which dot` =~ /\/dot/ unless ENV['NODOT'] unless WINDOZE
       rd.rdoc_dir = 'doc'
