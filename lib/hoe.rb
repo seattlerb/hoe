@@ -375,34 +375,34 @@ class Hoe
   end
 
   def initialize(name, version) # :nodoc:
-    self.name = name
+    self.name    = name
     self.version = version
 
     # Defaults
-    self.author = []
-    self.blog_categories = [name]
-    self.clean_globs = %w(diff diff.txt email.txt ri deps .source_index
-                          *.gem *~ **/*~ *.rbc **/*.rbc)
+    self.author               = []
+    self.blog_categories      = [name]
+    self.clean_globs          = %w(diff diff.txt email.txt ri deps .source_index
+                                   *.gem *~ **/*~ *.rbc **/*.rbc)
     self.description_sections = %w(description)
-    self.email = []
-    self.extra_deps = []
-    self.extra_dev_deps = []
-    self.extra_rdoc_files = []
-    self.history_file = "History.txt"
-    self.multiruby_skip = []
-    self.need_tar = true
-    self.need_zip = false
+    self.email                = []
+    self.extra_deps           = []
+    self.extra_dev_deps       = []
+    self.extra_rdoc_files     = []
+    self.history_file         = "History.txt"
+    self.multiruby_skip       = []
+    self.need_tar             = true
+    self.need_zip             = false
     self.post_install_message = nil
-    self.readme_file = "README.txt"
-    self.remote_rdoc_dir = name
-    self.rspec_dirs = %w(spec lib)
-    self.rspec_options = []
-    self.rsync_args = '-av --delete'
-    self.rubyforge_name = name.downcase
-    self.spec_extras = {}
-    self.summary_sentences = 1
-    self.test_globs = ['test/**/test_*.rb']
-    self.testlib = 'test/unit'
+    self.readme_file          = "README.txt"
+    self.remote_rdoc_dir      = name
+    self.rspec_dirs           = %w(spec lib)
+    self.rspec_options        = []
+    self.rsync_args           = '-av --delete'
+    self.rubyforge_name       = name.downcase
+    self.spec_extras          = {}
+    self.summary_sentences    = 1
+    self.test_globs           = ['test/**/test_*.rb']
+    self.testlib              = 'test/unit'
 
     yield self if block_given?
 
@@ -418,8 +418,8 @@ class Hoe
       summ = desc.split(/\.\s+/).first(summary_sentences).join(". ")
 
       self.description ||= desc
-      self.summary ||= summ
-      self.url ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
+      self.summary     ||= summ
+      self.url         ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
     else
       missing readme_file
     end
@@ -639,8 +639,8 @@ class Hoe
       puts spec.to_ruby
     end
 
-    self.lib_files = spec.files.grep(/^(lib|ext)/)
-    self.bin_files = spec.files.grep(/^bin/)
+    self.lib_files  = spec.files.grep(/^(lib|ext)/)
+    self.bin_files  = spec.files.grep(/^bin/)
     self.test_files = spec.files.grep(/^test/)
 
     Rake::GemPackageTask.new spec do |pkg|
