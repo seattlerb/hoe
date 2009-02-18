@@ -697,7 +697,7 @@ class Hoe
       title = "#{name}-#{version} Documentation"
       title = "#{rubyforge_name}'s " + title if rubyforge_name != name
 
-      rd.options << "-t #{title}"
+      rd.options << "-t" << title
     end
 
     desc 'Generate ri locally for testing.'
