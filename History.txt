@@ -2,6 +2,7 @@
 
 * N minor enhancement:
 
+  * install_gem automatically installs missing dependencies. From Dr. Nic.
   * Parameterized history and readme paths for github users (*sigh*).
   * Added rspec support including having both tests and specs.
   * Match RubyGems' RDoc behavior and removed rdoc_pattern attribute.  Use

@@ -649,7 +649,7 @@ class Hoe
     end
 
     desc 'Install the package as a gem.'
-    task :install_gem => [:clean, :package] do
+    task :install_gem => [:clean, :package, :check_extra_deps] do
       gem = Dir['pkg/*.gem'].first
       sh "#{'sudo ' unless WINDOZE}gem install --local #{gem}"
     end
@@ -864,6 +864,18 @@ class Hoe
       clean_globs.each do |pattern|
         files = Dir[pattern]
         rm_rf files, :verbose => true unless files.empty?
+      end
+    end
+
+    desc 'Check dependent gems are installed locally else install from rubyforge'
+    task :check_extra_deps do
+      # extra_deps = [["rubyforge", ">= 1.0.0"], ["rake", ">= 0.8.1"]]
+      extra_deps.each do |dep_gem, dep_version|
+        begin
+          gem dep_gem, dep_version
+        rescue Gem::LoadError
+          sh "#{'sudo ' unless WINDOZE}gem install #{dep_gem} --version '#{dep_version}'"
+        end
       end
     end
 
