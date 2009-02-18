@@ -1,14 +1,16 @@
 === 1.9.0 / ??:
 
-* N minor enhancement:
+* 6 minor enhancement:
 
+  * Added flog, flay, and rdoc tasks.
+  * Added ~/.hoe_template and basic erb templating to sow.
   * install_gem automatically installs missing dependencies. From Dr. Nic.
   * Parameterized history and readme paths for github users (*sigh*).
   * Added rspec support including having both tests and specs.
   * Match RubyGems' RDoc behavior and removed rdoc_pattern attribute.  Use
     extra_rdoc_files instead.
 
-* N bug fixes:
+* 1 bug fixes:
 
   * Fixed rdoc title command-line parameters.
 

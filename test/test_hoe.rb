@@ -14,9 +14,15 @@ class TestHoe < Test::Unit::TestCase
   # everything is forked out.
 
   def test_basics
-    boring   = %w(clobber_docs clobber_package gem redocs repackage)
+    boring   = %w(clobber_docs
+                  clobber_package
+                  clobber_rcov
+                  gem
+                  redocs
+                  repackage)
     expected = %w(audit
                   announce
+                  check_extra_deps
                   check_manifest
                   clean
                   config_hoe
@@ -27,6 +33,8 @@ class TestHoe < Test::Unit::TestCase
                   deps:list
                   docs
                   email
+                  flay
+                  flog
                   generate_key
                   install_gem
                   multi
@@ -34,6 +42,7 @@ class TestHoe < Test::Unit::TestCase
                   post_blog
                   post_news
                   publish_docs
+                  rcov
                   release
                   ridocs
                   test

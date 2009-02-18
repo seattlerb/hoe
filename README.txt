@@ -12,31 +12,35 @@ testing, packaging, and deployment.
 
 Tasks Provided:
 
-* announce         - Create news email file and post to rubyforge.
-* audit            - Run ZenTest against the package.
-* check_manifest   - Verify the manifest.
-* clean            - Clean up all the extras.
-* config_hoe       - Create a fresh ~/.hoerc file.
-* debug_gem        - Show information about the gem.
-* default          - Run the default tasks.
-* deps:email       - Print a contact list for gems dependent on this gem
-* deps:fetch       - Fetch all the dependent gems of this gem into tarballs
-* deps:list        - List all the dependent gems of this gem
-* docs             - Build the docs HTML Files
-* email            - Generate email announcement file.
-* gem              - Build the gem file hoe-1.8.0.gem
-* generate_key     - Generate a key for signing your gems.
-* install_gem      - Install the package as a gem.
-* multi            - Run the test suite using multiruby.
-* package          - Build all the packages
-* post_blog        - Post announcement to blog.
-* post_news        - Post announcement to rubyforge.
-* publish_docs     - Publish RDoc to RubyForge.
-* release          - Package and upload the release to rubyforge.
-* ridocs           - Generate ri locally for testing.
-* tasks            - Generate a list of tasks for doco.
-* test             - Run the test suite.
-* test_deps        - Show which test files fail when run alone.
+* announce          - Create news email file and post to rubyforge.
+* audit             - Run ZenTest against the package.
+* check_extra_deps  - Install missing dependencies.
+* check_manifest    - Verify the manifest.
+* clean             - Clean up all the extras.
+* config_hoe        - Create a fresh ~/.hoerc file.
+* debug_gem         - Show information about the gem.
+* default           - Run the default task(s).
+* deps:email        - Print a contact list for gems dependent on this gem
+* deps:fetch        - Fetch all the dependent gems of this gem into tarballs
+* deps:list         - List all the dependent gems of this gem
+* docs              - Build the docs HTML Files
+* email             - Generate email announcement file.
+* flay              - Analyze for code duplication.
+* flog              - Analyze code complexity.
+* gem               - Build the gem file hoe-1.9.0.gem
+* generate_key      - Generate a key for signing your gems.
+* install_gem       - Install the package as a gem.
+* multi             - Run the test suite using multiruby.
+* package           - Build all the packages
+* post_blog         - Post announcement to blog.
+* post_news         - Post announcement to rubyforge.
+* publish_docs      - Publish RDoc to RubyForge.
+* rcov              - Analyze code coverage with tests
+* release           - Package and upload the release to rubyforge.
+* ridocs            - Generate ri locally for testing.
+* tasks             - Generate a list of tasks for doco.
+* test              - Run the test suite.
+* test_deps         - Show which test files fail when run alone.
 
 See class rdoc for help. Hint: ri Hoe
 

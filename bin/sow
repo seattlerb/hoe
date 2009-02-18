@@ -1,69 +1,69 @@
 #!/usr/bin/env ruby -ws
 
+$h ||= false
 $t ||= false
 $d ||= false
 
 require 'rubygems'
 require 'hoe'
+require 'fileutils'
+require 'erb'
 
-if defined? $h then
-  puts "usage: #{File.dirname($0)} [-d|-t] project"
+if $h || ARGV.empty? || ($t && $d) then
+  puts "usage: #{File.dirname $0} [-d|-t] project"
   puts "  -t = add project to subdir under 'trunk'"
   puts "  -d = add project to subdir under 'dev'"
+  exit
 end
-
-abort "You must specify only one of -t or -d" if $t and $d
 
 project = ARGV.shift
 
-# prevents false positives on my tag reporter
-X = 'FI' + 'X'
-
-abort "You must supply a project name on the commandline" unless project
 abort "Project #{project} seems to exist" if test ?d, project
 puts "creating project #{project}"
 
+# variables for erb:
+XIF                       = 'FI' + 'X' # prevents extra hits on my TAG reporter
 project, file_name, klass = Hoe.normalize_names project
+template_path             = File.expand_path("~/.hoe_template")
+source_path               = File.join(File.dirname(File.dirname(__FILE__)),
+                                      "template")
 
-Dir.mkdir project
+FileUtils.cp_r source_path, template_path, :verbose => true unless
+  File.directory? template_path
+
+FileUtils.cp_r template_path, project, :verbose => true
+
 Dir.chdir project do
+  paths = (Dir["**/?*"] + Dir["**/.*"]).select { |f| File.file? f }.sort
 
-  if $d then
-    Dir.mkdir "dev"
-    Dir.chdir "dev"
-  elsif $t then
-    Dir.mkdir "trunk"
-    Dir.chdir "trunk"
-  end
+  paths.each do |path|
+    file = File.read path
 
-  %w(bin lib test).each do |path|
-    Dir.mkdir path
-  end
+    warn "erb: #{path}"
 
-  files = {
-    "History.txt" => "=== 1.0.0 / #{Time.new.strftime("%Y-%m-%d")}\n\n* 1 major enhancement\n\n  * Birthday!\n\n",
-    "README.txt" => "= #{project}\n\n* #{X} (url)\n\n== DESCRIPTION:\n\n#{X} (describe your package)\n\n== FEATURES/PROBLEMS:\n\n* #{X} (list of features or problems)\n\n== SYNOPSIS:\n\n  #{X} (code sample of usage)\n\n== REQUIREMENTS:\n\n* #{X} (list of requirements)\n\n== INSTALL:\n\n* #{X} (sudo gem install, anything else)\n\n== LICENSE:\n\n(The MIT License)\n\nCopyright (c) #{Time.new.strftime("%Y")} #{X}\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n'Software'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
-    "Manifest.txt" => "",
-    "bin/#{file_name}" => "",
-    "lib/#{file_name}.rb" => "class #{klass}\n  VERSION = '1.0.0'\nend",
-    "test/test_#{file_name}.rb" => "require \"test/unit\"\n\nclass Test#{project} < Test::Unit::TestCase\n  def test_sanity\n    flunk \"write tests or I will kneecap you\"\n  end\nend\n",
-    "Rakefile" => "# -*- ruby -*-\n\nrequire 'rubygems'\nrequire 'hoe'\nrequire './lib/#{file_name}.rb'\n\nHoe.new('#{project}', #{klass}::VERSION) do |p|\n  # p.rubyforge_name = '#{project}x' # if different than lowercase project name\n  # p.developer('#{X}', '#{X}@example.com')\nend\n\n# vim: syntax=Ruby\n"
-  }
-
-  files["Manifest.txt"] = files.keys.sort.join("\n")
-
-  files.each do |file, content|
-    File.open(file, "w") do |f|
-      f.write content
+    File.open path, "w" do |f|
+      f.puts ERB.new(file).result(binding)
     end
   end
+
+  paths.grep(/file_name/).each do |file|
+    FileUtils.mv file, file.gsub(/file_name/, file_name), :verbose => true
+  end
+end
+
+if $d || $t then
+  temp_dir = "#{project}.#{$$}"
+  FileUtils.mv project, temp_dir, :verbose => true
+  FileUtils.mkdir project, :verbose => true
+  FileUtils.mv temp_dir, "#{project}/#{$d ? 'dev' : 'trunk'}", :verbose => true
 end
 
 WINDOZE = /mswin|mingw/ =~ RUBY_PLATFORM
 
-puts "... done, now go fix all occurrences of '#{X}'"
+puts
+puts "... done, now go fix all occurrences of '#{XIF}':"
 if WINDOZE then
-  puts `findstr /N /S /C:#{X} #{project}\\*`
+  puts `findstr /N /S /C:#{XIF} #{project}\\*`
 else
-  puts `find #{project} -type f | xargs grep -n #{X}`.gsub(/\A|\n/, "\n  ")
+  puts `find #{project} -type f | xargs grep -n #{XIF}`.gsub(/\A|\n/, "\n  ")
 end

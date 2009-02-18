@@ -40,31 +40,35 @@ end
 #
 # === Tasks Provided:
 #
-# announce::          Create news email file and post to rubyforge.
-# audit::             Run ZenTest against the package.
-# check_manifest::    Verify the manifest.
-# clean::             Clean up all the extras.
-# config_hoe::        Create a fresh ~/.hoerc file.
-# debug_gem::         Show information about the gem.
-# default::           Run the default tasks.
-# deps:email::        Print a contact list for gems dependent on this gem
-# deps:fetch::        Fetch all the dependent gems of this gem into tarballs
-# deps:list::         List all the dependent gems of this gem
-# docs::              Build the docs HTML Files
-# email::             Generate email announcement file.
-# gem::               Build the gem file hoe-1.8.0.gem
-# generate_key::      Generate a key for signing your gems.
-# install_gem::       Install the package as a gem.
-# multi::             Run the test suite using multiruby.
-# package::           Build all the packages
-# post_blog::         Post announcement to blog.
-# post_news::         Post announcement to rubyforge.
-# publish_docs::      Publish RDoc to RubyForge.
-# release::           Package and upload the release to rubyforge.
-# ridocs::            Generate ri locally for testing.
-# tasks::             Generate a list of tasks for doco.
-# test::              Run the test suite.
-# test_deps::         Show which test files fail when run alone.
+# announce::           Create news email file and post to rubyforge.
+# audit::              Run ZenTest against the package.
+# check_extra_deps::   Install missing dependencies.
+# check_manifest::     Verify the manifest.
+# clean::              Clean up all the extras.
+# config_hoe::         Create a fresh ~/.hoerc file.
+# debug_gem::          Show information about the gem.
+# default::            Run the default task(s).
+# deps:email::         Print a contact list for gems dependent on this gem
+# deps:fetch::         Fetch all the dependent gems of this gem into tarballs
+# deps:list::          List all the dependent gems of this gem
+# docs::               Build the docs HTML Files
+# email::              Generate email announcement file.
+# flay::               Analyze for code duplication.
+# flog::               Analyze code complexity.
+# gem::                Build the gem file hoe-1.9.0.gem
+# generate_key::       Generate a key for signing your gems.
+# install_gem::        Install the package as a gem.
+# multi::              Run the test suite using multiruby.
+# package::            Build all the packages
+# post_blog::          Post announcement to blog.
+# post_news::          Post announcement to rubyforge.
+# publish_docs::       Publish RDoc to RubyForge.
+# rcov::               Analyze code coverage with tests
+# release::            Package and upload the release to rubyforge.
+# ridocs::             Generate ri locally for testing.
+# tasks::              Generate a list of tasks for doco.
+# test::               Run the test suite.
+# test_deps::          Show which test files fail when run alone.
 #
 # === Extra Configuration Options:
 #
@@ -382,7 +386,7 @@ class Hoe
     self.author               = []
     self.blog_categories      = [name]
     self.clean_globs          = %w(diff diff.txt email.txt ri deps .source_index
-                                   *.gem *~ **/*~ *.rbc **/*.rbc)
+                                   *.gem **/*~ **/.*~ **/*.rbc)
     self.description_sections = %w(description)
     self.email                = []
     self.extra_deps           = []
@@ -523,6 +527,60 @@ class Hoe
 
     desc 'Run the default task(s).'
     task :default => default_tasks
+
+    begin # take a whack at defining rcov tasks
+      require 'rcov/rcovtask'
+
+      Rcov::RcovTask.new do |t|
+        pattern = ENV['PATTERN'] || 'test/test_*.rb'
+
+        t.test_files = FileList[pattern]
+        t.verbose = true
+        t.rcov_opts << "--threshold 80"
+        t.rcov_opts << "--no-color"
+        t.rcov_opts << "--test-unit-only"
+        t.rcov_opts << "--spec-only"
+        t.rcov_opts << "-x ^/"
+      end
+
+      # this is for autotest's rcov... also used by my emacs integration
+      task :rcov_info do
+        pattern = ENV['PATTERN'] || "test/test_*.rb"
+        ruby "-Ilib -S rcov --text-report --save coverage.info --test-unit-only #{pattern}"
+      end
+
+      # this is for my emacs rcov overlay stuff on emacswiki.
+      task :rcov_overlay do
+        rcov, eol = Marshal.load(File.read("coverage.info")).last[ENV["FILE"]], 1
+        puts rcov[:lines].zip(rcov[:coverage]).map { |line, coverage|
+          bol, eol = eol, eol + line.length
+          [bol, eol, "#ffcccc"] unless coverage
+        }.compact.inspect
+      end
+    rescue LoadError
+      # skip
+    end
+
+    desc "Analyze for code duplication."
+    task :flay do
+      sh "find lib test -name \*.rb | xargs flay"
+    end
+
+    desc "Analyze code complexity."
+    task :flog do
+      print "lib : "
+      sh "flog -s lib"
+
+      if File.directory? "test" then
+        print "test: "
+        sh "flog -s test"
+      end
+
+      if File.directory? "spec" then
+        print "spec: "
+        sh "flog -s spec"
+      end
+    end
 
     ############################################################
     # Packaging and Installing
@@ -687,8 +745,8 @@ class Hoe
 
     Rake::RDocTask.new(:docs) do |rd|
       rd.main = readme_file
-      rd.options << '-d' if
-        `which dot` =~ /\/dot/ unless ENV['NODOT'] unless WINDOZE
+      rd.options << '-d' if (`which dot` =~ /\/dot/) unless
+        ENV['NODOT'] || WINDOZE
       rd.rdoc_dir = 'doc'
 
       rd.rdoc_files += spec.require_paths
@@ -859,15 +917,17 @@ class Hoe
       sh "zentest -I=#{libs} #{spec.files.grep(/^(lib|test)/).join(' ')}"
     end
 
+    task :clobber_rcov # in case rcov didn't load
+
     desc 'Clean up all the extras.'
-    task :clean => [ :clobber_docs, :clobber_package ] do
+    task :clean => [ :clobber_docs, :clobber_package, :clobber_rcov ] do
       clean_globs.each do |pattern|
         files = Dir[pattern]
         rm_rf files, :verbose => true unless files.empty?
       end
     end
 
-    desc 'Check dependent gems are installed locally else install from rubyforge'
+    desc 'Install missing dependencies.'
     task :check_extra_deps do
       # extra_deps = [["rubyforge", ">= 1.0.0"], ["rake", ">= 0.8.1"]]
       extra_deps.each do |dep_gem, dep_version|
