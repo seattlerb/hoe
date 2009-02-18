@@ -1,6 +1,6 @@
 === 1.9.0 / ??:
 
-* 6 minor enhancement:
+* 7 minor enhancement:
 
   * Added flog, flay, and rdoc tasks.
   * Added ~/.hoe_template and basic erb templating to sow.
@@ -9,6 +9,7 @@
   * Added rspec support including having both tests and specs.
   * Match RubyGems' RDoc behavior and removed rdoc_pattern attribute.  Use
     extra_rdoc_files instead.
+  * Replaced my hand rolled test/multi tasks with TestTask versions. From:JB
 
 * 1 bug fixes:
 

@@ -483,10 +483,27 @@ class Hoe
     default_tasks = []
 
     if File.directory? "test" then
-      desc 'Run the test suite. Use FILTER to add to the command line.'
-      task :test do
-        run_tests
+      test_task = Rake::TestTask.new do |t|
+        flags = RUBY_FLAGS.split(/\s+/)
+        flags << "-r#{testlib}"
+
+        t.name       = :test
+        t.options    = FILTER if FILTER
+        t.loader     = :direct
+        t.ruby_opts  = flags
+        t.test_files = test_globs
+        t.verbose    = true
       end
+
+      multi = test_task.dup
+      multi.name = :multi
+
+      def multi.ruby *args, &block
+        args.unshift("-S", "multiruby")
+        super
+      end
+
+      multi.define
 
       desc 'Show which test files fail when run alone.'
       task :test_deps do
@@ -500,11 +517,6 @@ class Hoe
             puts "Dependency Issues: #{test}"
           end
         end
-      end
-
-      desc 'Run the test suite using multiruby.'
-      task :multi do
-        run_tests :multi
       end
 
       default_tasks << :test
@@ -631,7 +643,7 @@ class Hoe
       s.rdoc_options = ['--main', readme_file]
 
       s.extra_rdoc_files += s.files.grep(/txt$/)
-      s.extra_rdoc_files.reject! { |f| f =~ %|^(test|spec|vendor|data|tmp)/| }
+      s.extra_rdoc_files.reject! { |f| f =~ %r%^(test|spec|vendor|data|tmp)/% }
       s.extra_rdoc_files += @extra_rdoc_files
       s.has_rdoc = true
 
@@ -1107,24 +1119,6 @@ class Hoe
     urls    = Array(url).map { |s| "* <#{s.strip.rdoc_to_markdown}>" }.join("\n")
 
     return subject, title, body, urls
-  end
-
-  def run_tests(multi=false) # :nodoc:
-    msg = multi ? :sh : :ruby
-    cmd = if test ?f, 'test/test_all.rb' then
-            "#{RUBY_FLAGS} test/test_all.rb #{FILTER}"
-          else
-            tests = ["rubygems", self.testlib] +
-              test_globs.map { |g| Dir.glob(g) }.flatten
-            tests.map! {|f| %Q(require "#{f}")}
-            "#{RUBY_FLAGS} -e '#{tests.join("; ")}' #{FILTER}"
-          end
-
-    excludes = multiruby_skip.join(":")
-    ENV['EXCLUDED_VERSIONS'] = excludes
-    cmd = "multiruby #{cmd}" if multi
-
-    send msg, cmd
   end
 
   ##
