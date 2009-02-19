@@ -72,6 +72,8 @@ class TestHoe < Test::Unit::TestCase
 
     spec = hoe.spec
 
+    text_files = files.grep(/txt$/).reject { |f| f =~ /template/ }
+
     assert_equal 'blah', spec.name
     assert_equal '1.2.3', spec.version.to_s
     assert_equal '>= 0', spec.required_rubygems_version.to_s
@@ -82,7 +84,7 @@ class TestHoe < Test::Unit::TestCase
     assert_match(/Hoe.*Rakefiles/, spec.description)
     assert_equal ['email'], spec.email
     assert_equal ['sow'], spec.executables
-    assert_equal files.grep(/txt$/), spec.extra_rdoc_files
+    assert_equal text_files, spec.extra_rdoc_files
     assert_equal files, spec.files
     assert_equal true, spec.has_rdoc
     assert_equal "http://rubyforge.org/projects/seattlerb/", spec.homepage

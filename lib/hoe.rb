@@ -479,31 +479,30 @@ class Hoe
     yield(config, rc)
   end
 
+  def define_test_task name = :test
+    Rake::TestTask.new do |t|
+      t.name       = name
+      t.options    = FILTER if FILTER
+      t.loader     = :direct
+      t.ruby_opts  = RUBY_FLAGS.split(/\s+/) << "-r#{testlib}"
+      t.test_files = test_globs
+      t.verbose    = true
+    end
+  end
+
   def define_tasks # :nodoc:
     default_tasks = []
 
     if File.directory? "test" then
-      test_task = Rake::TestTask.new do |t|
-        flags = RUBY_FLAGS.split(/\s+/)
-        flags << "-r#{testlib}"
+      define_test_task :test
 
-        t.name       = :test
-        t.options    = FILTER if FILTER
-        t.loader     = :direct
-        t.ruby_opts  = flags
-        t.test_files = test_globs
-        t.verbose    = true
-      end
-
-      multi = test_task.dup
-      multi.name = :multi
-
-      def multi.ruby *args, &block
+      # I am a baaaad bad person.
+      def (define_test_task :multi).ruby *args, &block
         args.unshift("-S", "multiruby")
         super
       end
 
-      multi.define
+      ENV['EXCLUDED_VERSIONS'] = multiruby_skip.join(":")
 
       desc 'Show which test files fail when run alone.'
       task :test_deps do
@@ -643,7 +642,7 @@ class Hoe
       s.rdoc_options = ['--main', readme_file]
 
       s.extra_rdoc_files += s.files.grep(/txt$/)
-      s.extra_rdoc_files.reject! { |f| f =~ %r%^(test|spec|vendor|data|tmp)/% }
+      s.extra_rdoc_files.reject! { |f| f =~ %r%^(test|spec|vendor|template|data|tmp)/% }
       s.extra_rdoc_files += @extra_rdoc_files
       s.has_rdoc = true
 
