@@ -479,7 +479,7 @@ class Hoe
     yield(config, rc)
   end
 
-  def define_test_task name = :test
+  def define_test_task name
     Rake::TestTask.new do |t|
       t.name       = name
       t.options    = FILTER if FILTER
