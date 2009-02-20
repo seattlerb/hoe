@@ -137,9 +137,12 @@ class Hoe
   sitelibdir = Config::CONFIG['sitelibdir']
 
   ##
-  # Used to specify a custom install location (for rake install).
+  # Configuration for the supported test frameworks for test task.
 
-  PREFIX = ENV['PREFIX'] || ruby_prefix
+  SUPPORTED_TEST_FRAMEWORKS = {
+    :testunit => "test/unit",
+    :minitest => "minitest/autorun",
+  }
 
   ##
   # Used to add extra flags to RUBY_FLAGS.
@@ -156,16 +159,12 @@ class Hoe
 
   ##
   # Used to add flags to test_unit (e.g., -n test_borked).
+  #
+  # eg FILTER="-n test_blah"
 
-  FILTER = ENV['FILTER'] # for tests (eg FILTER="-n test_blah")
+  FILTER = ENV['FILTER'] || ENV['TESTOPTS']
 
   # :stopdoc:
-
-  RUBYLIB = if PREFIX == ruby_prefix then
-              sitelibdir
-            else
-              File.join(PREFIX, sitelibdir[ruby_prefix.size..-1])
-            end
 
   DLEXT = Config::CONFIG['DLEXT']
 
@@ -184,8 +183,7 @@ class Hoe
   # :startdoc:
 
   ##
-  # *Recommended*: The author(s) of the package. (can be array)
-  # Really. Set this or we'll tease you.
+  # *MANDATORY*: The author(s) of the package. (can be array)
 
   attr_accessor :author
 
@@ -220,7 +218,7 @@ class Hoe
   attr_accessor :description_sections
 
   ##
-  # *Recommended*: The author's email address(es). (can be array)
+  # *MANDATORY*: The author's email address(es). (can be array)
 
   attr_accessor :email
 
@@ -337,7 +335,7 @@ class Hoe
   attr_accessor :test_globs
 
   ##
-  # Optional: What test library to require [default: test/unit]
+  # Optional: What test library to require [default: :testunit]
 
   attr_accessor :testlib
 
@@ -406,7 +404,7 @@ class Hoe
     self.spec_extras          = {}
     self.summary_sentences    = 1
     self.test_globs           = ['test/**/test_*.rb']
-    self.testlib              = 'test/unit'
+    self.testlib              = :testunit
 
     yield self if block_given?
 
@@ -479,30 +477,19 @@ class Hoe
     yield(config, rc)
   end
 
-  def define_test_task name
-    Rake::TestTask.new do |t|
-      t.name       = name
-      t.options    = FILTER if FILTER
-      t.loader     = :direct
-      t.ruby_opts  = RUBY_FLAGS.split(/\s+/) << "-r#{testlib}"
-      t.test_files = test_globs
-      t.verbose    = true
-    end
-  end
-
   def define_tasks # :nodoc:
     default_tasks = []
 
     if File.directory? "test" then
-      define_test_task :test
-
-      # I am a baaaad bad person.
-      def (define_test_task :multi).ruby *args, &block
-        args.unshift("-S", "multiruby")
-        super
+      desc 'Run the test suite. Use FILTER or TESTOPTS to add flags/args.'
+      task :test do
+        run_tests
       end
 
-      ENV['EXCLUDED_VERSIONS'] = multiruby_skip.join(":")
+      desc 'Run the test suite using multiruby.'
+      task :multi do
+        run_tests :multi
+      end
 
       desc 'Show which test files fail when run alone.'
       task :test_deps do
@@ -549,8 +536,6 @@ class Hoe
         t.verbose = true
         t.rcov_opts << "--threshold 80"
         t.rcov_opts << "--no-color"
-        t.rcov_opts << "--test-unit-only"
-        t.rcov_opts << "--spec-only"
         t.rcov_opts << "-x ^/"
       end
 
@@ -651,7 +636,7 @@ class Hoe
       if test ?f, "test/test_all.rb" then
         s.test_file = "test/test_all.rb"
       else
-        s.test_files = Dir[*test_globs]
+        s.test_files = Dir[*self.test_globs]
       end
 
       if signing_key and cert_chain then
@@ -1109,6 +1094,24 @@ class Hoe
     end
 
   end # end define
+
+  def run_tests(multi=false) # :nodoc:
+    framework = SUPPORTED_TEST_FRAMEWORKS[testlib]
+    raise "unsupported test framework #{testlib}" unless framework
+
+    tests = ["rubygems", framework] +
+      test_globs.map { |g| Dir.glob(g) }.flatten
+    tests.map! {|f| %(require "#{f}")}
+
+    cmd = "#{RUBY_FLAGS} -e '#{tests.join("; ")}' #{FILTER}"
+
+    if multi then
+      ENV['EXCLUDED_VERSIONS'] = multiruby_skip.join ":"
+      cmd = "-S multiruby #{cmd}"
+    end
+
+    ruby cmd
+  end
 
   def announcement # :nodoc:
     changes = self.changes.rdoc_to_markdown
