@@ -4,13 +4,13 @@ README.txt
 Rakefile
 bin/sow
 lib/hoe.rb
-template/.autotest
-template/History.txt
-template/Manifest.txt
-template/README.txt
-template/Rakefile
-template/bin/file_name
-template/lib/file_name.rb
-template/test/test_file_name.rb
+template/.autotest.erb
+template/History.txt.erb
+template/Manifest.txt.erb
+template/README.txt.erb
+template/Rakefile.erb
+template/bin/file_name.erb
+template/lib/file_name.rb.erb
+template/test/test_file_name.rb.erb
 test/test_hoe.rb
 

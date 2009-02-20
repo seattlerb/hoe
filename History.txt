@@ -9,7 +9,7 @@
   * Added rspec support including having both tests and specs.
   * Match RubyGems' RDoc behavior and removed rdoc_pattern attribute.  Use
     extra_rdoc_files instead.
-  * Replaced my hand rolled test/multi tasks with TestTask versions. From:JB
+  * Added testlib and SUPPORTED_TEST_FRAMEWORKS to switch your testing library.
 
 * 1 bug fixes:
 

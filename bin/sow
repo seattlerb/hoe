@@ -50,7 +50,13 @@ Dir.chdir project do
     end
   end
 
-  paths.grep(/file_name/).each do |file|
+  paths.grep(/file_name|\.erb$/).each do |file|
+    new_file = file.sub(/file_name/, file_name).sub(/\.erb$/, '')
+    FileUtils.mv file, new_file, :verbose => true
+  end
+
+  dirs = (Dir["**/*"] + Dir["**/.*"]).select { |f| File.directory? f }.sort
+  dirs.grep(/file_name/).each do |file|
     FileUtils.mv file, file.gsub(/file_name/, file_name), :verbose => true
   end
 end
