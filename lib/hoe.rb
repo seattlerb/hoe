@@ -928,11 +928,13 @@ class Hoe
     desc 'Install missing dependencies.'
     task :check_extra_deps do
       # extra_deps = [["rubyforge", ">= 1.0.0"], ["rake", ">= 0.8.1"]]
-      extra_deps.each do |dep_gem, dep_version|
+      extra_deps.each do |dep|
         begin
-          gem dep_gem, dep_version
+          gem(*dep)
         rescue Gem::LoadError
-          sh "#{'sudo ' unless WINDOZE}gem install #{dep_gem} --version '#{dep_version}'"
+          dep_gem, dep_version = dep
+          dep_version = "--version '#{dep_version}'" if dep_version
+          sh "#{'sudo ' unless WINDOZE}gem install #{dep_gem} #{dep_version}"
         end
       end
     end

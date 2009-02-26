@@ -11,9 +11,10 @@
     extra_rdoc_files instead.
   * Added testlib and SUPPORTED_TEST_FRAMEWORKS to switch your testing library.
 
-* 1 bug fixes:
+* 2 bug fixes:
 
   * Fixed rdoc title command-line parameters.
+  * Fixed check_extra_deps crash with versionless extra deps.
 
 === 1.8.3 / 2009-01-20:
 
