@@ -1,6 +1,6 @@
-=== 1.9.0 / ??:
+=== 1.9.0 / 2009-02-26:
 
-* 7 minor enhancement:
+* 7 minor enhancements:
 
   * Added flog, flay, and rdoc tasks.
   * Added ~/.hoe_template and basic erb templating to sow.
@@ -11,10 +11,9 @@
     extra_rdoc_files instead.
   * Added testlib and SUPPORTED_TEST_FRAMEWORKS to switch your testing library.
 
-* 2 bug fixes:
+* 1 bug fix:
 
   * Fixed rdoc title command-line parameters.
-  * Fixed check_extra_deps crash with versionless extra deps.
 
 === 1.8.3 / 2009-01-20:
 
