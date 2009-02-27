@@ -13,4 +13,3 @@ template/bin/file_name.erb
 template/lib/file_name.rb.erb
 template/test/test_file_name.rb.erb
 test/test_hoe.rb
-
