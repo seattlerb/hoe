@@ -1047,7 +1047,7 @@ class Hoe
 
     desc 'Generate a key for signing your gems.'
     task :generate_key do
-      email = spec.email
+      email = Array(spec.email)
       abort "No email in your gemspec" if email.nil? or email.empty?
 
       key_file = with_config { |config, _| config['signing_key_file'] }
@@ -1065,7 +1065,9 @@ class Hoe
       cert_file = File.expand_path cert_file
 
       unless File.exist? key_file or File.exist? cert_file then
-        sh "gem cert --build #{email}"
+        warn "NOTICE: using #{email.first} for certificate" if email.size > 1
+
+        sh "gem cert --build #{email.first}"
         mv "gem-private_key.pem", key_file, :verbose => true
         mv "gem-public_cert.pem", cert_file, :verbose => true
 
@@ -1086,15 +1088,15 @@ class Hoe
           rf.lookup('release', cert_package)['certificates']
           rf.add_file rubyforge_name, cert_package, 'certificates', cert_file
         rescue
+          rf.create_package rubyforge_name, cert_package
           rf.add_release rubyforge_name, cert_package, 'certificates', cert_file
         end
 
         puts "Uploaded certificate to release \"certificates\" in package #{cert_package}"
       else
-        puts "Keys already exist."
+        puts "Keys already exist: #{key_file} and #{cert_file}"
       end
     end
-
   end # end define
 
   def run_tests(multi=false) # :nodoc:
