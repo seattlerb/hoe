@@ -240,6 +240,11 @@ class Hoe
   attr_accessor :extra_rdoc_files
 
   ##
+  # Optional: flay threshold to determine threshold failure. [default: 200]
+
+  attr_accessor :flay_threshold
+
+  ##
   # Optional: The filename for the project history. [default: History.txt]
 
   attr_accessor :history_file
@@ -390,6 +395,7 @@ class Hoe
     self.extra_deps           = []
     self.extra_dev_deps       = []
     self.extra_rdoc_files     = []
+    self.flay_threshold       = 200
     self.history_file         = "History.txt"
     self.multiruby_skip       = []
     self.need_tar             = true
@@ -557,9 +563,11 @@ class Hoe
       # skip
     end
 
-    desc "Analyze for code duplication."
-    task :flay do
-      sh "find lib test -name \*.rb | xargs flay"
+    begin
+      require 'flay_task'
+      FlayTask.new :flay, self.flay_threshold
+    rescue LoadError
+      # skip
     end
 
     desc "Analyze code complexity."
