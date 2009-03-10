@@ -1,10 +1,9 @@
-
-require 'test/unit/testcase'
+require 'minitest/autorun'
 require 'hoe'
 
 $rakefile = nil # shuts up a warning in rdoctask.rb
 
-class TestHoe < Test::Unit::TestCase
+class TestHoe < MiniTest::Unit::TestCase
   def setup
     Rake.application.clear
   end
@@ -48,6 +47,8 @@ class TestHoe < Test::Unit::TestCase
                   test
                   test_deps)
     expected += boring
+
+    expected.delete "flay" unless defined? ::FlayTask
 
     spec = Hoe.new('blah', '1.0.0') do |h|
       h.developer("name", "email")

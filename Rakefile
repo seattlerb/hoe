@@ -7,6 +7,7 @@ Hoe.new("hoe", Hoe::VERSION) do |hoe|
 
   hoe.developer("Ryan Davis", "ryand-ruby@zenspider.com")
 
+  hoe.testlib = :minitest
   hoe.blog_categories << "Seattle.rb" << "Ruby"
 end
 
