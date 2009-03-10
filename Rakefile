@@ -2,6 +2,8 @@
 
 require './lib/hoe.rb'
 
+Hoe.add_include_dirs("../../minitest/dev/lib")
+
 Hoe.new("hoe", Hoe::VERSION) do |hoe|
   hoe.rubyforge_name = "seattlerb"
 
