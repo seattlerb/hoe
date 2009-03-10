@@ -130,7 +130,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.9.0'
+  VERSION = '1.10.0'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
