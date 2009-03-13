@@ -240,9 +240,14 @@ class Hoe
   attr_accessor :extra_rdoc_files
 
   ##
-  # Optional: flay threshold to determine threshold failure. [default: 200]
+  # Optional: flay threshold to determine threshold failure. [default: 1200-100]
 
   attr_accessor :flay_threshold
+
+  ##
+  # Optional: flog threshold to determine threshold failure. [default: 1500-200]
+
+  attr_accessor :flog_threshold
 
   ##
   # Optional: The filename for the project history. [default: History.txt]
@@ -381,6 +386,15 @@ class Hoe
     warn "   run `sow blah` and look at its text files"
   end
 
+  def timebomb n, m, finis = '2010-04-01', start = '2009-03-14'
+    finis = Time.parse finis
+    start = Time.parse start
+    rest  = (finis - Time.now)
+    full  = (finis - start)
+
+    ((n - m) * rest / full).to_i + m
+  end
+
   def initialize(name, version) # :nodoc:
     self.name    = name
     self.version = version
@@ -395,7 +409,8 @@ class Hoe
     self.extra_deps           = []
     self.extra_dev_deps       = []
     self.extra_rdoc_files     = []
-    self.flay_threshold       = 200
+    self.flay_threshold       = timebomb 1200, 100  # 80% of average :(
+    self.flog_threshold       = timebomb 1500, 1000 # 80% of average :(
     self.history_file         = "History.txt"
     self.multiruby_skip       = []
     self.need_tar             = true
@@ -570,20 +585,11 @@ class Hoe
       # skip
     end
 
-    desc "Analyze code complexity."
-    task :flog do
-      print "lib : "
-      sh "flog -s lib"
-
-      if File.directory? "test" then
-        print "test: "
-        sh "flog -s test"
-      end
-
-      if File.directory? "spec" then
-        print "spec: "
-        sh "flog -s spec"
-      end
+    begin
+      require 'flog_task'
+      FlogTask.new :flog, self.flog_threshold
+    rescue LoadError
+      # skip
     end
 
     ############################################################

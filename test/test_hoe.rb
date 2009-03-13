@@ -49,6 +49,7 @@ class TestHoe < MiniTest::Unit::TestCase
     expected += boring
 
     expected.delete "flay" unless defined? ::FlayTask
+    expected.delete "flog" unless defined? ::FlogTask
 
     spec = Hoe.new('blah', '1.0.0') do |h|
       h.developer("name", "email")
