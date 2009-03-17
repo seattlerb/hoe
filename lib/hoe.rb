@@ -579,6 +579,7 @@ class Hoe
     end
 
     begin
+      require 'flay'
       require 'flay_task'
       FlayTask.new :flay, self.flay_threshold
     rescue LoadError
@@ -586,6 +587,7 @@ class Hoe
     end
 
     begin
+      require 'flog'
       require 'flog_task'
       FlogTask.new :flog, self.flog_threshold
     rescue LoadError
