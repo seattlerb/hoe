@@ -1,8 +1,15 @@
+=== 1.11.0 / 2009-03-16
+
+* 2 minor enhancements:
+
+  * Added timebomb method. Set flay/flog thresholds to degrade over time.
+  * Switched to flog's new FlogTask, added flog_threshold.
+
 === 1.10.0 / 2009-03-09
 
 * 2 minor enhancements:
 
-  * Switched to flay's new FlayTask, added flay_threshold
+  * Switched to flay's new FlayTask, added flay_threshold.
   * generate_key now creates the certificate package automatically.
 
 * 1 bug fix:
