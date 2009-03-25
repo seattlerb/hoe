@@ -1,3 +1,9 @@
+=== 1.? / ?
+
+* N minor enhancements:
+
+  * Use RDoc::Task instead of Rake::RDocTask, if available.
+
 === 1.11.0 / 2009-03-16
 
 * 2 minor enhancements:
