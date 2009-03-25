@@ -3,7 +3,11 @@
 require 'rubygems'
 require 'rake'
 require 'rake/gempackagetask'
-require 'rake/rdoctask'
+begin
+  require 'rdoc/task'
+rescue LoadError
+  require 'rake/rdoctask'
+end
 require 'rake/testtask'
 require 'rbconfig'
 require 'rubyforge'
