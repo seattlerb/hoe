@@ -963,7 +963,7 @@ class Hoe
     task :config_hoe do
       with_config do |config, path|
         default_config = {
-          "exclude" => /tmp$|CVS|\.svn/,
+          "exclude" => /tmp$|CVS|\.svn|\.log$/,
           "publish_on_announce" => false,
           "signing_key_file" => "~/.gem/gem-private_key.pem",
           "signing_cert_file" => "~/.gem/gem-public_cert.pem",
