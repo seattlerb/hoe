@@ -10,7 +10,7 @@ require 'fileutils'
 require 'erb'
 
 if $h || ARGV.empty? || ($t && $d) then
-  puts "usage: #{File.dirname $0} [-d|-t] project"
+  puts "usage: #{File.basename $0} [-d|-t] project"
   puts "  -t = add project to subdir under 'trunk'"
   puts "  -d = add project to subdir under 'dev'"
   exit
