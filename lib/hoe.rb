@@ -134,7 +134,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.11.0'
+  VERSION = '1.12.0'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
@@ -508,12 +508,12 @@ class Hoe
     if File.directory? "test" then
       desc 'Run the test suite. Use FILTER or TESTOPTS to add flags/args.'
       task :test do
-        run_tests
+        ruby make_test_cmd
       end
 
       desc 'Run the test suite using multiruby.'
       task :multi do
-        run_tests :multi
+        ruby make_test_cmd(:multi)
       end
 
       desc 'Show which test files fail when run alone.'
@@ -1119,7 +1119,7 @@ class Hoe
     end
   end # end define
 
-  def run_tests(multi=false) # :nodoc:
+  def make_test_cmd multi = false # :nodoc:
     framework = SUPPORTED_TEST_FRAMEWORKS[testlib]
     raise "unsupported test framework #{testlib}" unless framework
 
@@ -1134,7 +1134,7 @@ class Hoe
       cmd = "-S multiruby #{cmd}"
     end
 
-    ruby cmd
+    cmd
   end
 
   def announcement # :nodoc:
