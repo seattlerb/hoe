@@ -1,8 +1,17 @@
-=== 1.? / ?
+=== 1.12.0 / 2009-03-31
 
-* N minor enhancements:
+* 6 minor enhancements:
 
+  * Added Rake.undo.
+  * Added from vlad: Rake.application.all_tasks and Rake.clear_tasks.
+  * Added log files to default excludes. (technonancy)
+  * Refactored gem install code and extended to work with jruby
+  * Refactored run_tests into make_test_cmd, enabling use in tasks. (jbarnette)
   * Use RDoc::Task instead of Rake::RDocTask, if available.
+
+* 1 bug fix:
+
+  * Fixed incorrect usage. (jmhodges)
 
 === 1.11.0 / 2009-03-16
 
