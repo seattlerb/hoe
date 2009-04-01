@@ -134,7 +134,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.12.0'
+  VERSION = '1.12.1'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
@@ -1173,6 +1173,12 @@ module Rake
   end
 
   ##
+  # Simple shortcut for Rake.application.all_tasks
+  def self.all_tasks
+    Rake.application.all_tasks
+  end
+
+  ##
   # Hooks into rake and allows us to clear out a task by name or
   # regexp. Use this if you want to completely override a task instead
   # of extend it.
@@ -1180,9 +1186,9 @@ module Rake
     tasks.flatten.each do |name|
       case name
       when Regexp then
-        Rake.application.all_tasks.delete_if { |k,_| k =~ name }
+        all_tasks.delete_if { |k,_| k =~ name }
       else
-        Rake.application.all_tasks.delete(name)
+        all_tasks.delete(name)
       end
     end
   end
@@ -1195,7 +1201,6 @@ module Rake
   #   require 'hoe'
   #   require 'tasks/rails'
   #   Rake.undo("test") # rolls out rails' test task
-
   def self.undo(*names)
     names.each do |name|
       all_tasks[name].actions.delete_at(-1)
