@@ -726,8 +726,7 @@ class Hoe
 
     desc 'Install the package as a gem.'
     task :install_gem => [:clean, :package, :check_extra_deps] do
-      gem = Dir['pkg/*.gem'].first
-      sh "#{'sudo ' unless WINDOZE}gem install --local #{gem}"
+      install_gem Dir['pkg/*.gem'].first
     end
 
     desc 'Package and upload the release to rubyforge.'
@@ -952,9 +951,7 @@ class Hoe
         begin
           gem(*dep)
         rescue Gem::LoadError
-          dep_gem, dep_version = dep
-          dep_version = "--version '#{dep_version}'" if dep_version
-          sh "#{'sudo ' unless WINDOZE}gem install #{dep_gem} #{dep_version}"
+          install_gem(*dep)
         end
       end
     end
@@ -1118,6 +1115,14 @@ class Hoe
       end
     end
   end # end define
+
+  def install_gem name, version = nil
+    gem_cmd = Gem.default_exec_format % 'gem'
+    sudo    = 'sudo '                  unless WINDOZE
+    local   = '--local'                unless version
+    version = "--version '#{version}'" if     version
+    sh "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
+  end
 
   def make_test_cmd multi = false # :nodoc:
     framework = SUPPORTED_TEST_FRAMEWORKS[testlib]
