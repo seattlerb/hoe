@@ -1,3 +1,10 @@
+=== 1.12.1 / 2009-03-31
+
+* 1 bug fix:
+
+  * Added Rake.all_tasks because rake architecture sucks.
+    * YAY! Go view http://technonancy.us/ !!
+
 === 1.12.0 / 2009-03-31
 
 * 6 minor enhancements:
