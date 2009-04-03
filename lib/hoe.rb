@@ -134,7 +134,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.12.1'
+  VERSION = '1.12.2'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
@@ -407,7 +407,7 @@ class Hoe
     self.author               = []
     self.blog_categories      = [name]
     self.clean_globs          = %w(diff diff.txt email.txt ri deps .source_index
-                                   *.gem **/*~ **/.*~ **/*.rbc)
+                                   *.gem **/*~ **/.*~ **/*.rbc coverage*)
     self.description_sections = %w(description)
     self.email                = []
     self.extra_deps           = []
@@ -559,20 +559,15 @@ class Hoe
 
         t.test_files = FileList[pattern]
         t.verbose = true
-        t.rcov_opts << "--threshold 80"
         t.rcov_opts << "--no-color"
+        t.rcov_opts << "--save coverage.info"
         t.rcov_opts << "-x ^/"
-      end
-
-      # this is for autotest's rcov... also used by my emacs integration
-      task :rcov_info do
-        pattern = ENV['PATTERN'] || "test/test_*.rb"
-        ruby "-Ilib -S rcov --text-report --save coverage.info --test-unit-only #{pattern}"
       end
 
       # this is for my emacs rcov overlay stuff on emacswiki.
       task :rcov_overlay do
-        rcov, eol = Marshal.load(File.read("coverage.info")).last[ENV["FILE"]], 1
+        path = ENV["FILE"]
+        rcov, eol = Marshal.load(File.read("coverage.info")).last[path], 1
         puts rcov[:lines].zip(rcov[:coverage]).map { |line, coverage|
           bol, eol = eol, eol + line.length
           [bol, eol, "#ffcccc"] unless coverage
