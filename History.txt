@@ -1,3 +1,14 @@
+=== 1.12.2 / 2009-04-16
+
+* 1 minor enhancement:
+
+  * Removed rcov_info.
+
+* 2 bug fixes:
+
+  * clean globs should have coverage* glob.
+  * rcov task should create coverage.info file for tools.
+
 === 1.12.1 / 2009-03-31
 
 * 1 bug fix:
