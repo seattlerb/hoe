@@ -955,19 +955,21 @@ class Hoe
     task :config_hoe do
       with_config do |config, path|
         default_config = {
-          "exclude" => /tmp$|CVS|\.svn|\.log$/,
+          "exclude"             => /tmp$|CVS|\.svn|\.log$/,
           "publish_on_announce" => false,
-          "signing_key_file" => "~/.gem/gem-private_key.pem",
-          "signing_cert_file" => "~/.gem/gem-public_cert.pem",
-          "blogs" => [ {
-                         "user" => "user",
-                         "url" => "url",
-                         "extra_headers" => {
-                           "mt_convert_breaks" => "markdown"
-                         },
-                         "blog_id" => "blog_id",
-                         "password"=>"password",
-                       } ],
+          "signing_key_file"    => "~/.gem/gem-private_key.pem",
+          "signing_cert_file"   => "~/.gem/gem-public_cert.pem",
+          "blogs" => [
+                      {
+                        "user"     => "user",
+                        "password" => "password",
+                        "url"      => "url",
+                        "blog_id"  => "blog_id",
+                        "extra_headers" => {
+                          "mt_convert_breaks" => "markdown"
+                        },
+                      }
+                     ],
         }
         File.open(path, "w") do |f|
           YAML.dump(default_config.merge(config), f)
