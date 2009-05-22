@@ -134,7 +134,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.12.2'
+  VERSION = '1.13.0'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
@@ -623,6 +623,7 @@ class Hoe
       s.rubyforge_project = rubyforge_name
 
       s.description = description
+      s.description += "\n\n#{changes}" if changes
 
       extra_deps.each do |dep|
         s.add_dependency(*dep)
