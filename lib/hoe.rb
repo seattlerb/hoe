@@ -2,7 +2,7 @@
 
 require 'rubygems'
 require 'rake'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 begin
   require 'rdoc/task'
 rescue LoadError
@@ -715,7 +715,7 @@ class Hoe
     self.bin_files  = spec.files.grep(/^bin/)
     self.test_files = spec.files.grep(/^test/)
 
-    Rake::GemPackageTask.new spec do |pkg|
+    Gem::PackageTask.new spec do |pkg|
       pkg.need_tar = @need_tar
       pkg.need_zip = @need_zip
     end
