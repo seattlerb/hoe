@@ -32,8 +32,6 @@ class TestHoe < MiniTest::Unit::TestCase
                   deps:list
                   docs
                   email
-                  flay
-                  flog
                   generate_key
                   install_gem
                   multi
@@ -48,9 +46,6 @@ class TestHoe < MiniTest::Unit::TestCase
                   test_deps)
     expected += boring
 
-    expected.delete "flay" unless defined? ::FlayTask
-    expected.delete "flog" unless defined? ::FlogTask
-
     spec = Hoe.new('blah', '1.0.0') do |h|
       h.developer("name", "email")
     end
@@ -60,6 +55,7 @@ class TestHoe < MiniTest::Unit::TestCase
 
     tasks = Rake.application.tasks
     public_tasks = tasks.reject { |t| t.comment.nil? }.map { |t| t.name }.sort
+    public_tasks -= %w(flay flog)
 
     assert_equal expected.sort, public_tasks
   end
