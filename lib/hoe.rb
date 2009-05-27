@@ -2,7 +2,7 @@
 
 require 'rubygems'
 require 'rake'
-require 'rubygems/package_task'
+require 'rake/gempackagetask'
 begin
   require 'rdoc/task'
 rescue LoadError
@@ -134,7 +134,7 @@ end
 #
 
 class Hoe
-  VERSION = '1.13.0'
+  VERSION = '1.12.2'
   GEMURL = URI.parse 'http://gems.rubyforge.org' # for namespace :deps below
 
   ruby_prefix = Config::CONFIG['prefix']
@@ -581,7 +581,7 @@ class Hoe
       require 'flay'
       require 'flay_task'
       FlayTask.new :flay, self.flay_threshold
-    rescue LoadError
+    rescue Exception
       # skip
     end
 
@@ -589,7 +589,7 @@ class Hoe
       require 'flog'
       require 'flog_task'
       FlogTask.new :flog, self.flog_threshold
-    rescue LoadError
+    rescue Exception
       # skip
     end
 
@@ -623,7 +623,6 @@ class Hoe
       s.rubyforge_project = rubyforge_name
 
       s.description = description
-      s.description += "\n\n#{changes}" if changes
 
       extra_deps.each do |dep|
         s.add_dependency(*dep)
@@ -715,7 +714,7 @@ class Hoe
     self.bin_files  = spec.files.grep(/^bin/)
     self.test_files = spec.files.grep(/^test/)
 
-    Gem::PackageTask.new spec do |pkg|
+    Rake::GemPackageTask.new spec do |pkg|
       pkg.need_tar = @need_tar
       pkg.need_zip = @need_zip
     end

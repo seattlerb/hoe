@@ -11,7 +11,6 @@ Hoe.new("hoe", Hoe::VERSION) do |hoe|
 
   hoe.testlib = :minitest
   hoe.blog_categories << "Seattle.rb" << "Ruby"
-  hoe.spec_extras['required_rubygems_version'] = '> 1.3.3'
 end
 
 desc "Generate a list of tasks for doco. RDOC=1 for commented output"
