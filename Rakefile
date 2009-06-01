@@ -1,31 +1,24 @@
 # -*- ruby -*-
 
+$: << 'lib'
+
 require './lib/hoe.rb'
+
+# TODO:
+# Hoe.plugin :perforce
+# Hoe.plugin :minitest
 
 Hoe.add_include_dirs("../../minitest/dev/lib")
 
-Hoe.new("hoe", Hoe::VERSION) do |hoe|
-  hoe.rubyforge_name = "seattlerb"
+Hoe.spec "hoe" do
+  developer "Ryan Davis", "ryand-ruby@zenspider.com"
 
-  hoe.developer("Ryan Davis", "ryand-ruby@zenspider.com")
+  self.rubyforge_name = "seattlerb"
+  self.testlib        = :minitest
 
-  hoe.testlib = :minitest
-  hoe.blog_categories << "Seattle.rb" << "Ruby"
-end
+  blog_categories << "Seattle.rb" << "Ruby"
 
-desc "Generate a list of tasks for doco. RDOC=1 for commented output"
-task :tasks do
-  tasks = `rake -T`.scan(/rake (\w+)\s+# (.*)/)
-  tasks.reject! { |t,d| t =~ /^(clobber|tasks|re(package|docs))/ }
-  max   = tasks.map { |x,y| x.size }.max
-
-  tasks.each do |t,d|
-    if ENV['RDOC'] then
-      puts "# %-#{max+2}s %s" % [t + "::", d]
-    else
-      puts "* %-#{max}s - %s" % [t, d]
-    end
-  end
+  pluggable!
 end
 
 # vim: syntax=Ruby

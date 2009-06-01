@@ -6,58 +6,45 @@
 
 == DESCRIPTION:
 
-Hoe is a simple rake/rubygems helper for project Rakefiles. It
-generates all the usual tasks for projects including rdoc generation,
-testing, packaging, and deployment.
+Hoe is a rake/rubygems helper for project Rakefiles. It helps generate
+rubygems and includes a dynamic plug-in system allowing for easy
+extensibility. Hoe ships with plug-ins for all your usual project
+tasks including rdoc generation, testing, packaging, and deployment.
 
-Tasks Provided:
+Plug-ins Provided:
 
-* announce          - Create news email file and post to rubyforge.
-* audit             - Run ZenTest against the package.
-* check_extra_deps  - Install missing dependencies.
-* check_manifest    - Verify the manifest.
-* clean             - Clean up all the extras.
-* config_hoe        - Create a fresh ~/.hoerc file.
-* debug_gem         - Show information about the gem.
-* default           - Run the default task(s).
-* deps:email        - Print a contact list for gems dependent on this gem
-* deps:fetch        - Fetch all the dependent gems of this gem into tarballs
-* deps:list         - List all the dependent gems of this gem
-* docs              - Build the docs HTML Files
-* email             - Generate email announcement file.
-* flay              - Analyze for code duplication.
-* flog              - Analyze code complexity.
-* gem               - Build the gem file hoe-1.9.0.gem
-* generate_key      - Generate a key for signing your gems.
-* install_gem       - Install the package as a gem.
-* multi             - Run the test suite using multiruby.
-* package           - Build all the packages
-* post_blog         - Post announcement to blog.
-* post_news         - Post announcement to rubyforge.
-* publish_docs      - Publish RDoc to RubyForge.
-* rcov              - Analyze code coverage with tests
-* release           - Package and upload the release to rubyforge.
-* ridocs            - Generate ri locally for testing.
-* tasks             - Generate a list of tasks for doco.
-* test              - Run the test suite.
-* test_deps         - Show which test files fail when run alone.
+* Hoe::Clean
+* Hoe::Debug
+* Hoe::Deps
+* Hoe::Flay
+* Hoe::Flog
+* Hoe::Inline
+* Hoe::Package
+* Hoe::Publish
+* Hoe::RCov
+* Hoe::Signing
+* Hoe::Test
 
 See class rdoc for help. Hint: ri Hoe
 
 == FEATURES/PROBLEMS:
 
+* Includes a dynamic plug-in system allowing for easy extensibility.
+* Auto-intuits changes, description, summary, and version.
+* Uses a manifest for safe and secure deployment.
 * Provides 'sow' for quick project directory creation.
-* Make making and maintaining Rakefiles fun and easy.
+* Sow uses a simple ERB templating system allowing you to capture your
+  project patterns
 
 == SYNOPSIS:
 
   % sow [group] project
 
-or
+or:
 
   require 'hoe'
   
-  Hoe.new(projectname, version) do |p|
+  Hoe.spec projectname do
     # ... project specific data ...
   end
 

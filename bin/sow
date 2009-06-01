@@ -67,11 +67,9 @@ if $d || $t then
   FileUtils.mv temp_dir, "#{project}/#{$d ? 'dev' : 'trunk'}", :verbose => true
 end
 
-WINDOZE = /mswin|mingw/ =~ RUBY_PLATFORM
-
 puts
 puts "... done, now go fix all occurrences of '#{XIF}':"
-if WINDOZE then
+if Hoe::WINDOZE then
   puts `findstr /N /S /C:#{XIF} #{project}\\*`
 else
   puts `find #{project} -type f | xargs grep -n #{XIF}`.gsub(/\A|\n/, "\n  ")

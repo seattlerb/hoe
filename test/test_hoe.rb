@@ -46,8 +46,9 @@ class TestHoe < MiniTest::Unit::TestCase
                   test_deps)
     expected += boring
 
-    spec = Hoe.new('blah', '1.0.0') do |h|
-      h.developer("name", "email")
+    spec = Hoe.spec('blah') do
+      self.version = '1.0.0'
+      developer("name", "email")
     end
 
     assert_equal ["name"], spec.author
@@ -62,8 +63,9 @@ class TestHoe < MiniTest::Unit::TestCase
 
   def test_possibly_better
     t = Gem::Specification::TODAY
-    hoe = Hoe.new("blah", '1.2.3') do |h|
-      h.developer 'author', 'email'
+    hoe = Hoe.spec("blah") do
+      self.version = '1.2.3'
+      developer 'author', 'email'
     end
 
     files = File.read("Manifest.txt").split(/\n/)
