@@ -1,3 +1,22 @@
+=== 2.0.0 / 2009-06-02
+
+* 3 major enhancements:
+
+  * Added a plugin system and extracted nearly everything into separate plugins.
+  * Added Clean, Debug, Deps, Flay, Flog, Inline, Package, Publish, Rake, Rcov, Signing, and Test plugins
+
+* 9 minor enhancements:
+
+  * Added Hoe::spec replacing old Hoe.new spec form. Now with DSL flavors!
+  * Added DEFAULT_CONFIG so plugins can add to it.
+  * Added pluggable! to declare your package depends on rubygems 1.3.1+.
+  * Changes are now included in the gem's description.
+  * Deprecated Hoe.new spec form.
+  * Filled in all the blanks on rdoc.
+  * Refactored nearly all the spec logic down to much smaller/cleaner pieces.
+  * Updated templates to use new form. No clue how best to update yours. :P
+  * Version number is now auto-searchable by grepping in all the files.
+
 === 1.12.2 / 2009-04-16
 
 * 1 minor enhancement:
