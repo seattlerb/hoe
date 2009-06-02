@@ -54,11 +54,11 @@ end
 # Hoe can be extended via its plugin system. Hoe searches out all
 # installed files matching <tt>'hoe/*.rb'</tt> and loads them. Those files are
 # expected to define a module matching the file name. The module must
-# define a define task method and can optionally define an initalize
+# define a define task method and can optionally define an initialize
 # method. Both methods must be named to match the file. eg
 #
 #   module Hoe::Blah
-#     def initialize_blah
+#     def initialize_blah # optional
 #       # ...
 #     end
 #
@@ -359,6 +359,7 @@ class Hoe
       version = nil
 
       spec.files.each do |file|
+        next unless File.exist? file
         version = File.read(file)[/VERSION = ([\"\'])([\d\.]+)\1/, 2]
         break if version
       end
@@ -481,7 +482,7 @@ class Hoe
 
   def pluggable!
     abort "update rubygems to >= 1.3.1" unless  Gem.respond_to? :find_files
-    spec_extras[:rubygems_version] = Gem::VERSION # FIX: broken
+    spec_extras[:required_rubygems_version] = '>= 1.3.1'
   end
 
   ##
