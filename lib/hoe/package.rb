@@ -32,6 +32,8 @@ module Hoe::Package
 
   def define_package_tasks
     Rake::GemPackageTask.new spec do |pkg|
+      abort "Fix your version before you release" if
+        spec.version.version =~ /borked/
       pkg.need_tar = @need_tar
       pkg.need_zip = @need_zip
     end

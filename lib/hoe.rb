@@ -69,7 +69,7 @@ end
 
 class Hoe
   # duh
-  VERSION = '2.0.0'
+  VERSION = '2.0.1'
 
   ##
   # Used to add extra flags to RUBY_FLAGS.
@@ -219,6 +219,7 @@ class Hoe
     loaded = {}
 
     Gem.find_files("hoe/*.rb").each do |plugin|
+      warn plugin if $DEBUG
       name = File.basename plugin
       next if loaded[name]
       begin
@@ -316,7 +317,7 @@ class Hoe
       s.homepage             = Array(url).first
       s.rubyforge_project    = rubyforge_name
       s.description          = description
-      s.files                = File.read("Manifest.txt").split(/\r?\n\r?/)
+      s.files                = File.read_utf("Manifest.txt").split(/\r?\n\r?/)
       s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
       s.bindir               = "bin"
       s.require_paths        = dirs unless dirs.empty?
@@ -360,14 +361,17 @@ class Hoe
 
       spec.files.each do |file|
         next unless File.exist? file
-        version = File.read(file)[/VERSION = ([\"\'])([\d\.]+)\1/, 2]
+        version = File.read(file)[/VERSION = ([\"\'])([\d][\d\w\.]+)\1/, 2]
         break if version
       end
 
-      spec.version = self.version = version
-    end
+      spec.version = self.version = version if version
 
-    raise "Need version" unless self.version
+      unless self.version then
+        spec.version = self.version = "0.borked"
+        warn "Add 'VERSION = \"x.y.z\"' to your code or fix your hoe spec"
+      end
+    end
   end
 
   ##
@@ -418,7 +422,7 @@ class Hoe
   # Intuit values from the readme and history files.
 
   def intuit_values
-    readme = File.read(readme_file).split(/^(=+ .*)$/)[1..-1] rescue ''
+    readme = File.read_utf(readme_file).split(/^(=+ .*)$/)[1..-1] rescue ''
     unless readme.empty? then
       sections = readme.map { |s|
         s =~ /^=/ ? s.strip.downcase.chomp(':').split.last : s.strip
@@ -435,7 +439,7 @@ class Hoe
     end
 
     self.changes ||= begin
-                       h = File.read(history_file)
+                       h = File.read_utf(history_file)
                        h.split(/^(===.*)/)[1..2].join.strip
                      rescue
                        missing history_file
@@ -448,6 +452,7 @@ class Hoe
 
   def load_plugin_tasks
     self.class.plugins.each do |plugin|
+      warn plugin if $DEBUG
       send "define_#{plugin}_tasks"
     end
   end
@@ -474,7 +479,7 @@ class Hoe
   #   summary, *description = p.paragraphs_of('README.txt', 3, 3..8)
 
   def paragraphs_of path, *paragraphs
-    File.read(path).delete("\r").split(/\n\n+/).values_at(*paragraphs)
+    File.read_utf(path).delete("\r").split(/\n\n+/).values_at(*paragraphs)
   end
 
   ##
@@ -529,4 +534,11 @@ class Hoe
   end
 
   Hoe.load_plugins
+end
+
+class File
+  # Like File::read, but strips out a BOM marker if it exists.
+  def self.read_utf path
+    File.read(path).sub(/\A\xEF\xBB\xBF/, '')
+  end
 end
