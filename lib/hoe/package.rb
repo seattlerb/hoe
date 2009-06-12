@@ -43,25 +43,26 @@ module Hoe::Package
       install_gem Dir['pkg/*.gem'].first
     end
 
-    desc 'Package and upload the release to rubyforge.'
-    task :release => [:clean, :package] do |t|
+    desc 'Package and upload the release.'
+    task :release => :release_to_rubyforge
+
+    desc "Sanity checks for release"
+    task :release_sanity do
       v = ENV["VERSION"] or abort "Must supply VERSION=x.y.z"
       abort "Versions don't match #{v} vs #{version}" if v != version
       pkg = "pkg/#{name}-#{version}"
+    end
 
-      if $DEBUG then
-        puts "release_id = rf.add_release #{rubyforge_name.inspect}, #{name.inspect}, #{version.inspect}, \"#{pkg}.tgz\""
-        puts "rf.add_file #{rubyforge_name.inspect}, #{name.inspect}, release_id, \"#{pkg}.gem\""
-      end
-
+    desc 'Release to rubyforge.'
+    task :release_to_rubyforge => [:clean, :package, :release_sanity] do
       rf = RubyForge.new.configure
       puts "Logging in"
       rf.login
 
       c = rf.userconfig
-      c["release_notes"] = description if description
-      c["release_changes"] = changes if changes
-      c["preformatted"] = true
+      c["release_notes"]   = description if description
+      c["release_changes"] = changes     if changes
+      c["preformatted"]    = true
 
       files = [(@need_tar ? "#{pkg}.tgz" : nil),
                (@need_zip ? "#{pkg}.zip" : nil),
@@ -70,6 +71,8 @@ module Hoe::Package
       puts "Releasing #{name} v. #{version}"
       rf.add_release rubyforge_name, name, version, *files
     end
+  end
+
   end
 
   ##
