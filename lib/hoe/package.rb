@@ -73,8 +73,6 @@ module Hoe::Package
     end
   end
 
-  end
-
   ##
   # Install the named gem.
 

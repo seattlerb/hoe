@@ -41,6 +41,8 @@ class TestHoe < MiniTest::Unit::TestCase
                   publish_docs
                   rcov
                   release
+                  release_sanity
+                  release_to_rubyforge
                   ridocs
                   test
                   test_deps)
