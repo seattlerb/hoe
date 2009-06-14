@@ -2,7 +2,7 @@
 
 require './lib/hoe.rb'
 
-# TODO: Hoe.plugin :perforce
+Hoe.plugin :perforce
 Hoe.plugin :minitest
 
 Hoe.spec "hoe" do
