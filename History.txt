@@ -1,3 +1,17 @@
+=== 2.1.0 / 2009-06-14
+
+* 6 minor enhancements:
+
+  * Added File::read_utf to strip out UTF BOM marker. Fixes nokogiri. (tenderlove)
+  * Now using the minitest plugin.
+  * Refactored :release task to facilitate other plugins.
+  * Version intuiting now only bombs on packaging, allowing check_manifest.
+  * release now has prerelease, postrelease deps.
+
+* 1 bug fix:
+
+  * Fixed version intuiting to allow for beta versions (eg, 1.2.3.beta.4)
+
 === 2.0.0 / 2009-06-02
 
 * 3 major enhancements:
