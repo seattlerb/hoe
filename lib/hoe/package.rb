@@ -44,7 +44,16 @@ module Hoe::Package
     end
 
     desc 'Package and upload the release.'
-    task :release => :release_to_rubyforge
+    task :release => [:prerelease, :release_to, :postrelease]
+
+    # no doco, invisible hook
+    task :prerelease
+
+    # no doco, invisible hook
+    task :release_to => :release_to_rubyforge
+
+    # no doco, invisible hook
+    task :postrelease
 
     desc "Sanity checks for release"
     task :release_sanity do
