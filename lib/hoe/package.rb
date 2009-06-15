@@ -59,7 +59,6 @@ module Hoe::Package
     task :release_sanity do
       v = ENV["VERSION"] or abort "Must supply VERSION=x.y.z"
       abort "Versions don't match #{v} vs #{version}" if v != version
-      pkg = "pkg/#{name}-#{version}"
     end
 
     desc 'Release to rubyforge.'
@@ -73,6 +72,7 @@ module Hoe::Package
       c["release_changes"] = changes     if changes
       c["preformatted"]    = true
 
+      pkg   = "pkg/#{name}-#{version}"
       files = [(@need_tar ? "#{pkg}.tgz" : nil),
                (@need_zip ? "#{pkg}.zip" : nil),
                "#{pkg}.gem"].compact
