@@ -19,9 +19,24 @@ module Hoe::Publish
   Hoe.plugin :publish
 
   ##
-  # *Optional*: An array of the project's blog categories. Defaults to project name.
+  # Optional: An array of the project's blog categories. Defaults to project
+  # name.
 
   attr_accessor :blog_categories
+
+  ##
+  # Optional: Name of destination directory for RDoc generated files.
+  # [default: rdoc]
+
+  attr_accessor :local_rdoc_dir
+
+  ##
+  # Optional: Should RDoc and ri generation tasks be defined? [default: true]
+  #
+  # Allows you to define custom RDoc tasks then use the publish_rdoc task to
+  # upload them all.  See also local_rdoc_dir
+
+  attr_accessor :need_rdoc
 
   ##
   # Optional: Name of RDoc destination directory on Rubyforge. [default: +name+]
@@ -51,6 +66,8 @@ module Hoe::Publish
 
   def initialize_publish
     self.blog_categories ||= [self.name]
+    self.local_rdoc_dir  ||= 'doc'
+    self.need_rdoc       ||= true
     self.remote_rdoc_dir ||= self.name
     self.rsync_args      ||= '-av --delete'
   end
@@ -59,24 +76,26 @@ module Hoe::Publish
   # Define tasks for plugin.
 
   def define_publish_tasks
-    Rake::RDocTask.new(:docs) do |rd|
-      rd.main = readme_file
-      rd.options << '-d' if (`which dot` =~ /\/dot/) unless
-        ENV['NODOT'] || Hoe::WINDOZE
-      rd.rdoc_dir = 'doc'
+    if need_rdoc then
+      Rake::RDocTask.new(:docs) do |rd|
+        rd.main = readme_file
+        rd.options << '-d' if (`which dot` =~ /\/dot/) unless
+          ENV['NODOT'] || Hoe::WINDOZE
+        rd.rdoc_dir = 'doc'
 
-      rd.rdoc_files += spec.require_paths
-      rd.rdoc_files += spec.extra_rdoc_files
+        rd.rdoc_files += spec.require_paths
+        rd.rdoc_files += spec.extra_rdoc_files
 
-      title = "#{name}-#{version} Documentation"
-      title = "#{rubyforge_name}'s " + title if rubyforge_name != name
+        title = "#{name}-#{version} Documentation"
+        title = "#{rubyforge_name}'s " + title if rubyforge_name != name
 
-      rd.options << "-t" << title
-    end
+        rd.options << "-t" << title
+      end
 
-    desc 'Generate ri locally for testing.'
-    task :ridocs => :clean do
-      sh %q{ rdoc --ri -o ri . }
+      desc 'Generate ri locally for testing.'
+      task :ridocs => :clean do
+        sh %q{ rdoc --ri -o ri . }
+      end
     end
 
     desc 'Publish RDoc to RubyForge.'
@@ -85,7 +104,7 @@ module Hoe::Publish
       host = "#{config["username"]}@rubyforge.org"
 
       remote_dir = "/var/www/gforge-projects/#{rubyforge_name}/#{remote_rdoc_dir}"
-      local_dir = 'doc'
+      local_dir = local_rdoc_dir
 
       sh %{rsync #{rsync_args} #{local_dir}/ #{host}:#{remote_dir}}
     end
