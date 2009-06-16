@@ -146,12 +146,6 @@ class Hoe
   attr_accessor :history_file
 
   ##
-  # Optional: Name of destination directory for RDoc generated files [default:
-  # rdoc]
-
-  attr_accessor :local_rdoc_dir
-
-  ##
   # *MANDATORY*: The name of the release.
 
   attr_accessor :name
