@@ -82,7 +82,13 @@ module Hoe::Signing
       key_file = File.expand_path key_file
       cert_file = File.expand_path cert_file
 
-      unless File.exist? key_file or File.exist? cert_file then
+      unless File.exist? key_file then
+        puts "Generating certificate"
+
+        if File.exist? key_file then
+          abort "Have #{key_file} but no #{cert_file}, aborting as a precaution"
+        end
+
         warn "NOTICE: using #{email.first} for certificate" if email.size > 1
 
         sh "gem cert --build #{email.first}"
@@ -90,29 +96,25 @@ module Hoe::Signing
         mv "gem-public_cert.pem", cert_file, :verbose => true
 
         puts "Installed key and certificate."
+      end
 
-        rf = RubyForge.new.configure
-        rf.login
+      rf = RubyForge.new.configure
+      rf.login
 
-        cert_package = "#{rubyforge_name}-certificates"
+      cert_package = "#{rubyforge_name}-certificates"
 
-        begin
-          rf.lookup 'package', cert_package
-        rescue
-          rf.create_package rubyforge_name, cert_package
-        end
+      begin
+        rf.lookup 'package', cert_package
+      rescue
+        rf.create_package rubyforge_name, cert_package
+      end
 
-        begin
-          rf.lookup('release', cert_package)['certificates']
-          rf.add_file rubyforge_name, cert_package, 'certificates', cert_file
-        rescue
-          rf.create_package rubyforge_name, cert_package
-          rf.add_release rubyforge_name, cert_package, 'certificates', cert_file
-        end
-
-        puts "Uploaded certificate to release \"certificates\" in package #{cert_package}"
+      unless rf.lookup('release', cert_package)['certificates'] then
+        rf.add_release rubyforge_name, cert_package, 'certificates', cert_file
+        puts "Uploaded certificates to release \"certificates\" in package #{cert_package}"
       else
-        puts "Keys already exist: #{key_file} and #{cert_file}"
+        puts '"certificates" release exists, adding file anyway (will not overwrite)'
+        rf.add_file rubyforge_name, cert_package, 'certificates', cert_file
       end
     end
   end
