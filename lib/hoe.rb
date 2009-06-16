@@ -451,10 +451,17 @@ class Hoe
   # Load activated plugins by calling their define tasks method.
 
   def load_plugin_tasks
+    bad = []
     self.class.plugins.each do |plugin|
       warn plugin if $DEBUG
-      send "define_#{plugin}_tasks"
+      begin
+        send "define_#{plugin}_tasks"
+      rescue NoMethodError => e
+        warn "warning: couldn't activate the #{plugin} plugin, skipping"
+        bad << plugin
+      end
     end
+    @@plugins -= bad
   end
 
   ##
