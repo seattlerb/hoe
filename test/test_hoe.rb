@@ -8,61 +8,6 @@ class TestHoe < MiniTest::Unit::TestCase
     Rake.application.clear
   end
 
-  ##
-  # Yes, these tests suck, but it is damn hard to test this since
-  # everything is forked out.
-
-  def test_basics
-    boring   = %w(clobber_docs
-                  clobber_package
-                  clobber_rcov
-                  gem
-                  redocs
-                  repackage)
-    expected = %w(audit
-                  announce
-                  check_extra_deps
-                  check_manifest
-                  clean
-                  config_hoe
-                  debug_email
-                  debug_gem
-                  default
-                  deps:email
-                  deps:fetch
-                  deps:list
-                  docs
-                  generate_key
-                  install_gem
-                  multi
-                  package
-                  post_blog
-                  post_news
-                  publish_docs
-                  rcov
-                  release
-                  release_sanity
-                  release_to_rubyforge
-                  ridocs
-                  test
-                  test_deps)
-    expected += boring
-
-    spec = Hoe.spec('blah') do
-      self.version = '1.0.0'
-      developer("name", "email")
-    end
-
-    assert_equal ["name"], spec.author
-    assert_equal ["email"], spec.email
-
-    tasks = Rake.application.tasks
-    public_tasks = tasks.reject { |t| t.comment.nil? }.map { |t| t.name }.sort
-    public_tasks -= %w(flay flog)
-
-    assert_equal expected.sort, public_tasks
-  end
-
   def test_possibly_better
     t = Gem::Specification::TODAY
     hoe = Hoe.spec("blah") do
