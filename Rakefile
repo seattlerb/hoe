@@ -1,9 +1,10 @@
 # -*- ruby -*-
 
+$: << 'lib'
+
 require './lib/hoe.rb'
 
-Hoe.plugin :perforce
-Hoe.plugin :minitest
+Hoe.plugin :seattlerb
 
 Hoe.spec "hoe" do
   developer "Ryan Davis", "ryand-ruby@zenspider.com"
@@ -15,4 +16,4 @@ Hoe.spec "hoe" do
   pluggable!
 end
 
-# vim: syntax=Ruby
+# vim: syntax=ruby
