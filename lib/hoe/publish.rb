@@ -116,24 +116,6 @@ module Hoe::Publish
       end
     end
 
-    def generate_email full = nil
-      abort "No email 'to' entry. Run `rake config_hoe` to fix." unless
-        !full || email_to
-
-      from_name, from_email      = author.first, email.first
-      subject, title, body, urls = announcement
-
-      [
-       full && "From: #{from_name} <#{from_email}>",
-       full && "To: #{email_to.join(", ")}",
-       full && "Date: #{Time.now.rfc2822}",
-       "Subject: [ANN] #{subject}",
-       "", title,
-       "", urls,
-       "", body,
-      ].compact.join("\n")
-    end
-
     desc 'Generate email announcement file.'
     task :debug_email do
       puts generate_email
@@ -178,6 +160,24 @@ module Hoe::Publish
 
     desc 'Announce your release.'
     task :announce => [:post_news, :post_blog, :publish_on_announce ]
+  end
+
+  def generate_email full = nil
+    abort "No email 'to' entry. Run `rake config_hoe` to fix." unless
+      !full || email_to
+
+    from_name, from_email      = author.first, email.first
+    subject, title, body, urls = announcement
+
+    [
+     full && "From: #{from_name} <#{from_email}>",
+     full && "To: #{email_to.join(", ")}",
+     full && "Date: #{Time.now.rfc2822}",
+     "Subject: [ANN] #{subject}",
+     "", title,
+     "", urls,
+     "", body,
+    ].compact.join("\n")
   end
 
   def announcement # :nodoc:
