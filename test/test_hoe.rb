@@ -25,13 +25,13 @@ class TestHoe < MiniTest::Unit::TestCase
                   check_manifest
                   clean
                   config_hoe
+                  debug_email
                   debug_gem
                   default
                   deps:email
                   deps:fetch
                   deps:list
                   docs
-                  email
                   generate_key
                   install_gem
                   multi
