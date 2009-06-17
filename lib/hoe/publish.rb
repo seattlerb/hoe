@@ -4,7 +4,7 @@
 # === Tasks Provided:
 #
 # announce::           Create news email file and post to rubyforge.
-# email::              Generate email announcement file.
+# debug_email::        Generate email announcement file.
 # post_blog::          Post announcement to blog.
 # post_news::          Post announcement to rubyforge.
 # publish_docs::       Publish RDoc to RubyForge.
@@ -49,17 +49,17 @@ module Hoe::Publish
   attr_accessor :rsync_args
 
   Hoe::DEFAULT_CONFIG["publish_on_announce"] = true
-  Hoe::DEFAULT_CONFIG["blog"] = [
-                                 {
-                                   "user"     => "user",
-                                   "password" => "password",
-                                   "url"      => "url",
-                                   "blog_id"  => "blog_id",
-                                   "extra_headers" => {
-                                     "mt_convert_breaks" => "markdown"
-                                   },
-                                 }
-                                ]
+  Hoe::DEFAULT_CONFIG["blogs"] = [
+                                  {
+                                    "user"     => "user",
+                                    "password" => "password",
+                                    "url"      => "url",
+                                    "blog_id"  => "blog_id",
+                                    "extra_headers" => {
+                                      "mt_convert_breaks" => "markdown"
+                                    },
+                                  }
+                                 ]
 
   ##
   # Initialize variables for plugin.
@@ -116,23 +116,27 @@ module Hoe::Publish
       end
     end
 
-    desc 'Generate email announcement file.'
-    task :email do
-      require 'rubyforge'
+    def generate_email full = nil
+      abort "No email 'to' entry. Run `rake config_hoe` to fix." unless
+        !full || email_to
+
+      from_name, from_email      = author.first, email.first
       subject, title, body, urls = announcement
 
-      File.open("email.txt", "w") do |mail|
-        mail.puts "Subject: [ANN] #{subject}"
-        mail.puts
-        mail.puts title
-        mail.puts
-        mail.puts urls
-        mail.puts
-        mail.puts body
-        mail.puts
-        mail.puts urls
-      end
-      puts "Created email.txt"
+      [
+       full && "From: #{from_name} <#{from_email}>",
+       full && "To: #{email_to.join(", ")}",
+       full && "Date: #{Time.now.rfc2822}",
+       "Subject: [ANN] #{subject}",
+       "", title,
+       "", urls,
+       "", body,
+      ].compact.join("\n")
+    end
+
+    desc 'Generate email announcement file.'
+    task :debug_email do
+      puts generate_email
     end
 
     desc 'Post announcement to blog.'
@@ -172,8 +176,8 @@ module Hoe::Publish
       puts "Posted to rubyforge"
     end
 
-    desc 'Create news email file and post to rubyforge.'
-    task :announce => [:email, :post_news, :post_blog, :publish_on_announce ]
+    desc 'Announce your release.'
+    task :announce => [:post_news, :post_blog, :publish_on_announce ]
   end
 
   def announcement # :nodoc:
