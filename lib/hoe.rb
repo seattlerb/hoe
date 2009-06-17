@@ -452,13 +452,24 @@ class Hoe
 
   def load_plugin_tasks
     bad = []
+
+    $plugin_max = self.class.plugins.map { |s| s.to_s.size }.max
+
     self.class.plugins.each do |plugin|
       warn plugin if $DEBUG
+
+      old_tasks = Rake::Task.tasks.dup
+
       begin
         send "define_#{plugin}_tasks"
       rescue NoMethodError => e
         warn "warning: couldn't activate the #{plugin} plugin, skipping"
         bad << plugin
+        next
+      end
+
+      (Rake::Task.tasks - old_tasks).each do |task|
+        task.plugin = plugin # "%-#{max}s" % plugin
       end
     end
     @@plugins -= bad
@@ -547,5 +558,15 @@ class File
   # Like File::read, but strips out a BOM marker if it exists.
   def self.read_utf path
     File.read(path).sub(/\A\xEF\xBB\xBF/, '')
+  end
+end
+
+module Rake
+  class Task
+    attr_accessor :plugin
+    alias :old_comment :comment
+    def comment
+      "%-#{$plugin_max}s # %s" % [plugin, old_comment] if old_comment
+    end
   end
 end
