@@ -69,7 +69,7 @@ end
 
 class Hoe
   # duh
-  VERSION = '2.1.0'
+  VERSION = '2.2.0'
 
   ##
   # Used to add extra flags to RUBY_FLAGS.

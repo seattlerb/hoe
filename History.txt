@@ -1,3 +1,22 @@
+=== 2.2.0 / 2009-06-17
+
+* 8 minor enhancements:
+
+  * Alter task descriptions to say what plugin they come from. jbarnette
+  * Fix and improve generate_key task.  Patch #20441 by Matthew Kent.
+  * Hoe.plugin can take multiple names. jbarnette
+  * Increase configurability of RDoc tasks.  Patch #19597 by Sylvain Joyeux.
+  * Refactored and renamed email task to debug_email, removed from announce.
+  * Removed email task from announce task.
+  * Switched to seattlerb plugin
+  * check_extra_deps now installs developer dependencies as well
+
+* 3 bug fixes:
+
+  * Fixed blogs entry in DEFAULT_CONFIG.
+  * activated but missing plugins are properly skipped now
+  * exclude field was missing from DEFAULT_CONFIG
+
 === 2.1.0 / 2009-06-14
 
 * 6 minor enhancements:
