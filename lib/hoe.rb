@@ -245,10 +245,10 @@ class Hoe
   end
 
   ##
-  # Activate a plugin.
+  # Activate plugins.
 
-  def self.plugin name
-    self.plugins << name
+  def self.plugin *names
+    self.plugins.concat names
   end
 
   ##

@@ -108,6 +108,15 @@ class TestHoe < MiniTest::Unit::TestCase
     assert_equal ">= #{Hoe::VERSION}", dep.version_requirements.to_s
   end
 
+  def test_plugins
+    before = Hoe.plugins.dup
+    Hoe.plugin :first, :second
+    assert_equal before + [:first, :second], Hoe.plugins
+  ensure
+    # FIX: maybe add Hoe.reset
+    Hoe.plugins.replace before
+  end
+
   def test_rename
     # project, file_name, klass = Hoe.normalize_names 'project_name'
 
