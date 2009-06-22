@@ -16,11 +16,14 @@
 # +FORCE_PLATFORM+ (instead of default Gem::Platform::CURRENT)
 
 module Hoe::Inline
-
   ##
   # Define tasks for plugin.
 
   def define_inline_tasks
+    extra_deps  << 'RubyInline'
+    clean_globs << File.expand_path("~/.ruby_inline")
+    task :test => :clean
+
     if ENV['INLINE'] then
       s.platform = ENV['FORCE_PLATFORM'] || Gem::Platform::CURRENT
 
