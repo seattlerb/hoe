@@ -273,11 +273,15 @@ class Hoe
   # Activate plugin modules and add them to the current instance.
 
   def activate_plugins
-    self.class.constants.reject { |n| n =~ /^[A-Z_]+$/ }.each do |name|
+    nested = self.class.constants.reject { |n| n =~ /^[A-Z_]+$/ }
+
+    nested.each do |name|
+      next unless Hoe.plugins.include? name.sub(/^.*Hoe::/, '').downcase.intern
+
       self.extend Hoe.const_get(name)
     end
 
-    self.class.plugins.each do |plugin|
+    Hoe.plugins.each do |plugin|
       send "initialize_#{plugin}" rescue nil
     end
   end
