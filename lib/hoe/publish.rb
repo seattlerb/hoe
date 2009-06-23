@@ -1,3 +1,14 @@
+begin
+  gem 'rdoc'
+rescue Gem::LoadError
+end
+
+begin
+  require 'rdoc/task'
+rescue LoadError
+  require 'rake/rdoctask'
+end
+
 ##
 # Publish plugin for hoe.
 #
@@ -24,7 +35,7 @@ module Hoe::Publish
 
   ##
   # Optional: Name of destination directory for RDoc generated files.
-  # [default: rdoc]
+  # [default: doc]
 
   attr_accessor :local_rdoc_dir
 
@@ -84,10 +95,20 @@ module Hoe::Publish
         rd.rdoc_files += spec.require_paths
         rd.rdoc_files += spec.extra_rdoc_files
 
-        title = "#{name}-#{version} Documentation"
-        title = "#{rubyforge_name}'s " + title if rubyforge_name != name
+        title = spec.rdoc_options.grep(/^(-t|--title)=?$/).first
 
-        rd.options << "-t" << title
+        if title then
+          rd.options << title
+
+          unless title =~ /=/ then # for ['-t', 'title here']
+            title_index = spec.rdoc_options.index(title)
+            rd.options << spec.rdoc_options[title_index + 1]
+          end
+        else
+          title = "#{name}-#{version} Documentation"
+          title = "#{rubyforge_name}'s " + title if rubyforge_name != name
+          rd.options << '--title' << title
+        end
       end
 
       desc 'Generate ri locally for testing.'

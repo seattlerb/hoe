@@ -3,19 +3,9 @@
 require 'rubygems'
 require 'rake'
 require 'rake/gempackagetask'
-begin
-  require 'rdoc/task'
-rescue LoadError
-  require 'rake/rdoctask'
-end
 require 'rake/testtask'
 require 'rubyforge'
 require 'yaml'
-
-begin
-  gem 'rdoc'
-rescue Gem::LoadError
-end
 
 require 'hoe/rake'
 
@@ -361,15 +351,6 @@ class Hoe
       s.extra_rdoc_files.reject! { |f| f =~ %r%^(test|spec|vendor|template|data|tmp)/% }
       s.extra_rdoc_files += @extra_rdoc_files
 
-      # Do any extra stuff the user wants
-      spec_extras.each do |msg, val|
-        case val
-        when Proc
-          val.call(s.send(msg))
-        else
-          s.send "#{msg}=", val
-        end
-      end
     end
 
     unless self.version then
@@ -386,6 +367,16 @@ class Hoe
       unless self.version then
         spec.version = self.version = "0.borked"
         warn "Add 'VERSION = \"x.y.z\"' to your code or fix your hoe spec"
+      end
+    end
+
+    # Do any extra stuff the user wants
+    spec_extras.each do |msg, val|
+      case val
+      when Proc
+        val.call spec.send(msg)
+      else
+        spec.send "#{msg}=", val
       end
     end
   end
