@@ -437,12 +437,13 @@ class Hoe
   # Intuit values from the readme and history files.
 
   def intuit_values
-    readme = File.read_utf(readme_file).split(/^(=+ .*)$/)[1..-1] rescue ''
+    header_re = /^((?:=+|#+) .*)$/
+    readme    = File.read_utf(readme_file).split(header_re)[1..-1] rescue ''
+
     unless readme.empty? then
-      sections = readme.map { |s|
-        s =~ /^=/ ? s.strip.downcase.chomp(':').split.last : s.strip
-      }
-      sections = Hash[*sections]
+      sections = Hash[*readme.map { |s|
+        s =~ /^[=#]/ ? s.strip.downcase.chomp(':').split.last : s.strip
+      }]
       desc     = sections.values_at(*description_sections).join("\n\n")
       summ     = desc.split(/\.\s+/).first(summary_sentences).join(". ")
 
@@ -455,7 +456,7 @@ class Hoe
 
     self.changes ||= begin
                        h = File.read_utf(history_file)
-                       h.split(/^(===.*)/)[1..2].join.strip
+                       h.split(/^(={2,}|\#{2,})/)[1..2].join.strip
                      rescue
                        missing history_file
                        ''
