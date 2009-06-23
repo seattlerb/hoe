@@ -220,11 +220,13 @@ class Hoe
   # It is called at the end of hoe.rb
 
   def self.load_plugins
-    loaded = {}
-    found  = Gem.find_files("hoe/*.rb")
+    loaded, found = {}, {}
 
-    :keep_doing_this while found.map { |plugin|
-      name = File.basename(plugin, '.rb').intern
+    Gem.find_files("hoe/*.rb").reverse.each do |path|
+      found[File.basename(path, ".rb").intern] = path
+    end
+
+    :keep_doing_this while found.map { |name, plugin|
       next unless Hoe.plugins.include? name
       next if loaded[name]
       begin
