@@ -14,7 +14,7 @@ module Hoe::RCov
       require 'rcov/rcovtask'
 
       Rcov::RcovTask.new do |t|
-        pattern = ENV['PATTERN'] || 'test/test_*.rb'
+        pattern = ENV['PATTERN'] || test_globs
 
         t.test_files = FileList[pattern]
         t.verbose = true
