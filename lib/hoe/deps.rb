@@ -11,8 +11,6 @@ require 'rubygems/remote_fetcher'
 # deps:list::          List all the dependent gems of this gem
 
 module Hoe::Deps
-  Hoe.plugin :deps
-
   ##
   # The main rubygems repository.
 

@@ -1,3 +1,5 @@
+require 'rbconfig'
+
 ##
 # Hoe allows bundling of pre-compiled extensions in the +package+ task.
 #

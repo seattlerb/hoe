@@ -37,8 +37,6 @@
 #   metadata.gz.sig
 
 module Hoe::Signing
-  Hoe.plugin :signing
-
   Hoe::DEFAULT_CONFIG["signing_key_file"]  = "~/.gem/gem-private_key.pem"
   Hoe::DEFAULT_CONFIG["signing_cert_file"] = "~/.gem/gem-public_cert.pem"
 

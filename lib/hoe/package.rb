@@ -7,8 +7,6 @@
 # release::            Package and upload the release to rubyforge.
 
 module Hoe::Package
-  Hoe.plugin :package
-
   ##
   # Optional: Should package create a tarball? [default: true]
 

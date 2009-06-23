@@ -10,8 +10,6 @@
 # test_deps::          Show which test files fail when run alone.
 
 module Hoe::Test
-  Hoe.plugin :test # activate globally, fine for general purpose tasks
-
   ##
   # Configuration for the supported test frameworks for test task.
 

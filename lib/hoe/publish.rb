@@ -16,8 +16,6 @@
 # blogs::               An array of hashes of blog settings.
 
 module Hoe::Publish
-  Hoe.plugin :publish
-
   ##
   # Optional: An array of the project's blog categories. Defaults to project
   # name.

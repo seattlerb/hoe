@@ -6,8 +6,6 @@
 # flog::               Analyze code complexity.
 
 module Hoe::Flog
-  Hoe.plugin :flog
-
   ##
   # Optional: flog threshold to determine threshold failure. [default: 1500-200]
 

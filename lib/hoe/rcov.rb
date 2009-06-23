@@ -6,8 +6,6 @@
 # rcov::               Analyze code coverage with tests
 
 module Hoe::RCov
-  Hoe.plugin :rcov
-
   ##
   # Define tasks for plugin.
 

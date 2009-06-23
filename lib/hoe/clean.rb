@@ -6,8 +6,6 @@
 # clean::              Clean up all the extras.
 
 module Hoe::Clean
-  Hoe.plugin :clean # activate globally, fine for general purpose tasks
-
   ##
   # Optional: An array of file patterns to delete on clean.
 

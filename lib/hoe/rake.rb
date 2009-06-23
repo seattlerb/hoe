@@ -1,4 +1,12 @@
 module Rake
+  class Task
+    attr_accessor :plugin
+    alias :old_comment :comment
+    def comment
+      "%-#{$plugin_max}s # %s" % [plugin, old_comment] if old_comment
+    end
+  end
+
   module TaskManager
     ##
     # This gives us access to the tasks already defined in rake.
@@ -41,4 +49,4 @@ module Rake
       all_tasks[name].actions.delete_at(-1)
     end
   end
-end unless Rake.respond_to? :all_tasks
+end

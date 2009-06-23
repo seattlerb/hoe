@@ -9,7 +9,6 @@ rescue LoadError
   require 'rake/rdoctask'
 end
 require 'rake/testtask'
-require 'rbconfig'
 require 'rubyforge'
 require 'yaml'
 
@@ -17,6 +16,8 @@ begin
   gem 'rdoc'
 rescue Gem::LoadError
 end
+
+require 'hoe/rake'
 
 ##
 # Hoe is a simple rake/rubygems helper for project Rakefiles. It helps
@@ -70,6 +71,9 @@ end
 class Hoe
   # duh
   VERSION = '2.2.0'
+
+  @@plugins = [:clean, :debug, :deps, :flay, :flog, :package, :publish,
+               :rcov, :signing, :test]
 
   ##
   # Used to add extra flags to RUBY_FLAGS.
@@ -217,18 +221,19 @@ class Hoe
 
   def self.load_plugins
     loaded = {}
+    found  = Gem.find_files("hoe/*.rb")
 
-    Gem.find_files("hoe/*.rb").each do |plugin|
-      warn plugin if $DEBUG
-      name = File.basename plugin
+    :keep_doing_this while found.map { |plugin|
+      name = File.basename(plugin, '.rb').intern
+      next unless Hoe.plugins.include? name
       next if loaded[name]
       begin
-        load plugin
-        loaded[name] = true
+        warn "loading #{plugin}" if $DEBUG
+        loaded[name] = load plugin
       rescue LoadError => e
         warn "error loading #{plugin.inspect}: #{e.message}. skipping..."
       end
-    end
+    }.any?
   end
 
   ##
@@ -255,13 +260,15 @@ class Hoe
   # Return the list of activated plugins.
 
   def self.plugins
-    @@plugins ||= []
+    @@plugins
   end
 
   ##
   # Create a new hoe-specification executing the supplied block
 
   def self.spec name, &block
+    Hoe.load_plugins
+
     spec = self.new name
     spec.activate_plugins
     spec.instance_eval(&block)
@@ -273,17 +280,19 @@ class Hoe
   # Activate plugin modules and add them to the current instance.
 
   def activate_plugins
-    nested = self.class.constants.map { |s| s.to_s }
-    nested.reject! { |n| n =~ /^[A-Z_]+$/ }
+    names = self.class.constants.map { |s| s.to_s }
+    names.reject! { |n| n =~ /^[A-Z_]+$/ }
 
-    nested.each do |name|
-      next unless Hoe.plugins.include? name.sub(/^.*Hoe::/, '').downcase.intern
-
+    names.each do |name|
+      next unless Hoe.plugins.include? name.downcase.intern
+      warn "extend #{name}" if $DEBUG
       self.extend Hoe.const_get(name)
     end
 
     Hoe.plugins.each do |plugin|
-      send "initialize_#{plugin}" rescue nil
+      msg = "initialize_#{plugin}"
+      warn msg if $DEBUG
+      send msg if self.respond_to? msg
     end
   end
 
@@ -417,6 +426,7 @@ class Hoe
 
     if block_given? then
       warn "Hoe.new {...} deprecated. Switch to Hoe.spec."
+      Hoe.load_plugins
       self.activate_plugins
       yield self
       post_initialize
@@ -474,7 +484,7 @@ class Hoe
       end
 
       (Rake::Task.tasks - old_tasks).each do |task|
-        task.plugin = plugin # "%-#{max}s" % plugin
+        task.plugin = plugin
       end
     end
     @@plugins -= bad
@@ -555,23 +565,11 @@ class Hoe
     config = exists ? YAML.load_file(rc) : {}
     yield(config, rc)
   end
-
-  Hoe.load_plugins
 end
 
 class File
   # Like File::read, but strips out a BOM marker if it exists.
   def self.read_utf path
     File.read(path).sub(/\A\xEF\xBB\xBF/, '')
-  end
-end
-
-module Rake
-  class Task
-    attr_accessor :plugin
-    alias :old_comment :comment
-    def comment
-      "%-#{$plugin_max}s # %s" % [plugin, old_comment] if old_comment
-    end
   end
 end

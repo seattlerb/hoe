@@ -6,8 +6,6 @@
 # flay::               Analyze for code duplication.
 
 module Hoe::Flay
-  Hoe.plugin :flay
-
   ##
   # Optional: flay threshold to determine threshold failure. [default: 1200-100]
 

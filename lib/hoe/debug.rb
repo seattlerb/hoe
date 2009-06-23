@@ -8,8 +8,6 @@
 # debug_gem::          Show information about the gem.
 
 module Hoe::Debug
-  Hoe.plugin :debug
-
   Hoe::DEFAULT_CONFIG["exclude"] = /tmp$|CVS|TAGS|\.(svn|git|DS_Store)/
 
   # :stopdoc:
