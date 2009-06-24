@@ -1,3 +1,11 @@
+begin
+  require 'rubygems/package_task'
+rescue LoadError
+  # rake/gempackagetask will go away some day
+  require 'rake/gempackagetask'
+  Gem::PackageTask = Rake::GemPackageTask
+end
+
 ##
 # Package plugin for hoe.
 #
@@ -29,7 +37,7 @@ module Hoe::Package
   # Define tasks for plugin.
 
   def define_package_tasks
-    Rake::GemPackageTask.new spec do |pkg|
+    Gem::PackageTask.new spec do |pkg|
       abort "Fix your version before you release" if
         spec.version.version =~ /borked/
       pkg.need_tar = @need_tar

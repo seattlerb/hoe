@@ -2,7 +2,6 @@
 
 require 'rubygems'
 require 'rake'
-require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'rubyforge'
 require 'yaml'
