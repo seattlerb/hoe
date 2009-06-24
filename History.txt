@@ -1,3 +1,25 @@
+=== 2.3.0 / 2009-06-23
+
+* 1 major enhancement:
+
+  * Plugins can no longer be self-activating.
+
+* 8 minor enhancements:
+
+  * All hoe plugins are pre-activated.
+  * Allow RDoc title to be set via spec_extras['rdoc_options'].
+  * Cleaned up plugin activation.
+  * History intuition extended for markdown. drnic/jbarnette
+  * Move RDoc task requires to hoe/publish.rb.
+  * Only activated plugins are loaded, extended, and activated.
+  * Plugin loading deferred until hoe-spec creation, allowing proper meta-plugins.
+  * inline plugin adds RubyInline dependency and hooks clean task.
+
+* 2 bug fixes:
+
+  * Fixed developer load order error in load_plugins.
+  * rcov should use test_globs. apatterson
+
 === 2.2.0 / 2009-06-17
 
 * 8 minor enhancements:
