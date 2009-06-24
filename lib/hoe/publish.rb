@@ -182,6 +182,8 @@ module Hoe::Publish
   end
 
   def generate_email full = nil
+    require 'time'
+
     abort "No email 'to' entry. Run `rake config_hoe` to fix." unless
       !full || email_to
 

@@ -532,6 +532,7 @@ class Hoe
   # Provide a linear degrading value from n to m over start to finis dates.
 
   def timebomb n, m, finis = '2010-04-01', start = '2009-03-14'
+    require 'time'
     finis = Time.parse finis
     start = Time.parse start
     rest  = (finis - Time.now)
