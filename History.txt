@@ -1,3 +1,15 @@
+=== 2.3.1 / 2009-06-24
+
+* 2 minor enhancements:
+
+  * Removed email.txt from clean_globs, added TAGS.
+  * Use Gem::PackageTask if available, since Rake's package task will go away
+
+* 2 bug fixes:
+
+  * Added require time where used
+  * JB nitpicks too much. fixed templates.
+
 === 2.3.0 / 2009-06-23
 
 * 1 major enhancement:
