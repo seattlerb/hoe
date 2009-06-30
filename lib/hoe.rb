@@ -564,6 +564,6 @@ end
 class File
   # Like File::read, but strips out a BOM marker if it exists.
   def self.read_utf path
-    File.read(path).sub(/\A\xEF\xBB\xBF/, '')
+    File.read(path).sub(/\A\xEF\xBB\xBF/u, '')
   end
 end

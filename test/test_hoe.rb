@@ -1,4 +1,4 @@
-require 'minitest/autorun'
+﻿require 'minitest/autorun'
 require 'hoe'
 
 $rakefile = nil # shuts up a warning in rdoctask.rb
@@ -6,6 +6,10 @@ $rakefile = nil # shuts up a warning in rdoctask.rb
 class TestHoe < MiniTest::Unit::TestCase
   def setup
     Rake.application.clear
+  end
+
+  def test_file_read_utf
+    assert File.read_utf(__FILE__)
   end
 
   def test_possibly_better
