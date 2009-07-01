@@ -81,7 +81,7 @@ module Hoe::Package
       pkg   = "pkg/#{name}-#{version}"
       files = [(@need_tar ? "#{pkg}.tgz" : nil),
                (@need_zip ? "#{pkg}.zip" : nil),
-               "#{pkg}.gem"].compact
+               Dir["#{pkg}*.gem"]].flatten.compact
 
       puts "Releasing #{name} v. #{version}"
       rf.add_release rubyforge_name, name, version, *files
