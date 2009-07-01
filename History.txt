@@ -1,3 +1,15 @@
+=== 2.3.2 / 2009-06-30
+
+* 1 minor enhancement:
+
+  * splat all gems on release. (luis lavena)
+
+* 3 bug fixes:
+
+  * Fix File.read_utf on ruby 1.9 for UTF-8 files
+  * Force read_utf to open file ascii-8bit. UGH. ruby 1.9 encoding is a PITA.
+  * Version regex needs to allow multiple spaces for OCD coders.
+
 === 2.3.1 / 2009-06-24
 
 * 2 minor enhancements:
