@@ -1,5 +1,6 @@
-﻿require 'minitest/autorun'
+require 'minitest/autorun'
 require 'hoe'
+require 'tempfile'
 
 $rakefile = nil # shuts up a warning in rdoctask.rb
 
@@ -9,7 +10,11 @@ class TestHoe < MiniTest::Unit::TestCase
   end
 
   def test_file_read_utf
-    assert File.read_utf(__FILE__)
+    Tempfile.open 'BOM' do |io|
+      io.write "\xEF\xBB\xBFBOM"
+      io.rewind
+      assert_equal 'BOM', File.read_utf(io.path)
+    end
   end
 
   def test_possibly_better
