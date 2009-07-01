@@ -357,7 +357,7 @@ class Hoe
 
       spec.files.each do |file|
         next unless File.exist? file
-        version = File.read(file)[/VERSION = ([\"\'])([\d][\d\w\.]+)\1/, 2]
+        version = File.read(file)[/VERSION += +([\"\'])([\d][\d\w\.]+)\1/, 2]
         break if version
       end
 
@@ -564,6 +564,8 @@ end
 class File
   # Like File::read, but strips out a BOM marker if it exists.
   def self.read_utf path
-    File.read(path).sub(/\A\xEF\xBB\xBF/u, '')
+    open path, 'rb' do |f|
+      f.read.sub %r/\A\xEF\xBB\xBF/, ''
+    end
   end
 end
