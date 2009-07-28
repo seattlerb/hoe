@@ -59,7 +59,7 @@ require 'hoe/rake'
 
 class Hoe
   # duh
-  VERSION = '2.3.2'
+  VERSION = '2.3.3'
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :package, :publish,
                :rcov, :signing, :test]
@@ -322,7 +322,7 @@ class Hoe
       s.homepage             = Array(url).first
       s.rubyforge_project    = rubyforge_name
       s.description          = description
-      s.files                = File.read_utf("Manifest.txt").split(/\r?\n\r?/)
+      s.files = files        = File.read_utf("Manifest.txt").split(/\r?\n\r?/)
       s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
       s.bindir               = "bin"
       s.require_paths        = dirs unless dirs.empty?
@@ -330,6 +330,8 @@ class Hoe
       s.has_rdoc             = true
       s.post_install_message = post_install_message
       s.test_files           = Dir[*self.test_globs]
+
+      missing "Manifest.txt" if files.empty?
 
       case author
       when Array
@@ -365,7 +367,9 @@ class Hoe
 
       unless self.version then
         spec.version = self.version = "0.borked"
-        warn "Add 'VERSION = \"x.y.z\"' to your code or fix your hoe spec"
+        warn "** Add 'VERSION = \"x.y.z\"' to your code,"
+        warn "   add a version to your hoe spec,"
+        warn "   or fix your Manifest.txt"
       end
     end
 
