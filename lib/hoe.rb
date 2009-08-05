@@ -499,7 +499,14 @@ class Hoe
   # Normalize the dependencies.
 
   def normalize_deps deps
-    Array(deps).map { |o| String === o ? [o] : o }
+    Array(deps).map { |o|
+      if String === o then
+        warn "WAR\NING: HOE DEPRECATION: Add '>= 0' to the '#{o}' dependency."
+        [o, ">= 0"]
+      else
+        o
+      end
+    }
   end
 
   ##
