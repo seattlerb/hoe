@@ -66,6 +66,8 @@ class TestHoe < MiniTest::Unit::TestCase
     before = Hoe.plugins.dup
     Hoe.plugin :first, :second
     assert_equal before + [:first, :second], Hoe.plugins
+    Hoe.plugin :first, :second
+    assert_equal before + [:first, :second], Hoe.plugins
   ensure
     # FIX: maybe add Hoe.reset
     Hoe.plugins.replace before

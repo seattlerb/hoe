@@ -86,12 +86,14 @@ class Hoe
   }
 
   ##
-  # True if you're a masochist developer. Used for building commands.
+  # True if you're a masochistic developer. Used for building commands.
 
   WINDOZE = /mswin|mingw/ =~ RUBY_PLATFORM unless defined? WINDOZE
 
   ##
   # *MANDATORY*: The author(s) of the package. (can be array)
+  #
+  # Use the #developer method to fill in both author and email cleanly.
 
   attr_accessor :author
 
@@ -113,11 +115,15 @@ class Hoe
 
   ##
   # *MANDATORY*: The author's email address(es). (can be array)
+  #
+  # Use the #developer method to fill in both author and email cleanly.
 
   attr_accessor :email
 
   ##
   # Optional: An array of rubygem dependencies.
+  #
+  #   extra_deps << ['blah', '~> 1.0']
 
   attr_accessor :extra_deps
 
@@ -140,6 +146,8 @@ class Hoe
 
   ##
   # *MANDATORY*: The name of the release.
+  #
+  # Set via Hoe.spec.
 
   attr_accessor :name
 
@@ -165,6 +173,10 @@ class Hoe
 
   ##
   # Optional: A hash of extra values to set in the gemspec. Value may be a proc.
+  #
+  #   spec_extras[:required_rubygems_version] = '>= 1.3.2'
+  #
+  # (tho, see #pluggable! if that's all you want to do)
 
   attr_accessor :spec_extras
 
@@ -245,6 +257,7 @@ class Hoe
 
   def self.plugin *names
     self.plugins.concat names
+    self.plugins.uniq!
   end
 
   ##
