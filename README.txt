@@ -2,6 +2,7 @@
 
 * http://rubyforge.org/projects/seattlerb/
 * http://seattlerb.rubyforge.org/hoe/
+* http://www.zenspider.com/~ryand/hoe.pdf
 * mailto:ryand-ruby@zenspider.com
 
 == DESCRIPTION:
