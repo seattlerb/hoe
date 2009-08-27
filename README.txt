@@ -2,8 +2,8 @@
 
 * http://rubyforge.org/projects/seattlerb/
 * http://seattlerb.rubyforge.org/hoe/
-* http://www.zenspider.com/~ryand/hoe.pdf
-* mailto:ryand-ruby@zenspider.com
+* http://seattlerb.rubyforge.org/Hoe.pdf
+* http://github.com/jbarnette/hoe-plugin-examples
 
 == DESCRIPTION:
 
@@ -12,7 +12,19 @@ rubygems and includes a dynamic plug-in system allowing for easy
 extensibility. Hoe ships with plug-ins for all your usual project
 tasks including rdoc generation, testing, packaging, and deployment.
 
-Plug-ins Provided:
+See class rdoc for help. Hint: `ri Hoe` or any of the plugins listed
+below.
+
+== FEATURES/PROBLEMS:
+
+* Includes a dynamic plug-in system allowing for easy extensibility.
+* Auto-intuits changes, description, summary, and version.
+* Uses a manifest for safe and secure deployment.
+* Provides 'sow' for quick project directory creation.
+* Sow uses a simple ERB templating system allowing you to capture your
+  project patterns.
+
+=== Plug-ins Provided:
 
 * Hoe::Clean
 * Hoe::Debug
@@ -23,23 +35,23 @@ Plug-ins Provided:
 * Hoe::Package
 * Hoe::Publish
 * Hoe::RCov
+* Hoe::RubyForge
 * Hoe::Signing
 * Hoe::Test
 
-See class rdoc for help. Hint: ri Hoe
+=== Known 3rd-Party Plugins:
 
-== FEATURES/PROBLEMS:
-
-* Includes a dynamic plug-in system allowing for easy extensibility.
-* Auto-intuits changes, description, summary, and version.
-* Uses a manifest for safe and secure deployment.
-* Provides 'sow' for quick project directory creation.
-* Sow uses a simple ERB templating system allowing you to capture your
-  project patterns
+* Hoe::Seattlerb - email announcements & perforce branching/validation on release.
+* Hoe::Git       - git tagging on release, changelogs, and manifest creation.
+* Hoe::Doofus    - release checklist.
+* Hoe::Debugging - for extensions, run your tests with GDB and Valgrind
 
 == SYNOPSIS:
 
   % sow [group] project
+
+(you can edit a project template in ~/.hoe_template after running sow
+for the first time)
 
 or:
 
@@ -65,7 +77,7 @@ or:
 
 (The MIT License)
 
-Copyright (c) Ryan Davis, Zen Spider Software
+Copyright (c) Ryan Davis, Seattle.rb
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
