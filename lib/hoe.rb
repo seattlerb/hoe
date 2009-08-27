@@ -3,7 +3,6 @@
 require 'rubygems'
 require 'rake'
 require 'rake/testtask'
-require 'rubyforge'
 require 'yaml'
 
 require 'hoe/rake'
@@ -62,7 +61,7 @@ class Hoe
   VERSION = '2.3.3'
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :package, :publish,
-               :rcov, :signing, :test]
+               :rcov, :rubyforge, :signing, :test]
 
   ##
   # Used to add extra flags to RUBY_FLAGS.

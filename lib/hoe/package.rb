@@ -12,7 +12,7 @@ end
 # === Tasks Provided:
 #
 # install_gem::        Install the package as a gem.
-# release::            Package and upload the release to rubyforge.
+# release::            Package and upload the release.
 
 module Hoe::Package
   ##
@@ -57,7 +57,7 @@ module Hoe::Package
     end
 
     # no doco, invisible hook
-    task :release_to => :release_to_rubyforge
+    task :release_to
 
     # no doco, invisible hook
     task :postrelease
@@ -66,26 +66,6 @@ module Hoe::Package
     task :release_sanity do
       v = ENV["VERSION"] or abort "Must supply VERSION=x.y.z"
       abort "Versions don't match #{v} vs #{version}" if v != version
-    end
-
-    desc 'Release to rubyforge.'
-    task :release_to_rubyforge => [:clean, :package, :release_sanity] do
-      rf = RubyForge.new.configure
-      puts "Logging in"
-      rf.login
-
-      c = rf.userconfig
-      c["release_notes"]   = description if description
-      c["release_changes"] = changes     if changes
-      c["preformatted"]    = true
-
-      pkg   = "pkg/#{name}-#{version}"
-      files = [(@need_tar ? "#{pkg}.tgz" : nil),
-               (@need_zip ? "#{pkg}.zip" : nil),
-               Dir["#{pkg}*.gem"]].flatten.compact
-
-      puts "Releasing #{name} v. #{version}"
-      rf.add_release rubyforge_name, name, version, *files
     end
   end
 
