@@ -1,7 +1,13 @@
 module Rake
   class Task
+    # Used to name the source of a given task
     attr_accessor :plugin
+    # :stopdoc:
     alias :old_comment :comment
+    # :startdoc:
+
+    ##
+    # Overrides the default #comment to provide the plugin name.
     def comment
       "%-#{$plugin_max}s # %s" % [plugin, old_comment] if old_comment
     end
