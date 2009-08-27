@@ -60,8 +60,8 @@ class Hoe
   # duh
   VERSION = '2.3.3'
 
-  @@plugins = [:clean, :debug, :deps, :flay, :flog, :package, :publish,
-               :rcov, :rubyforge, :signing, :test]
+  @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
+               :publish, :rcov, :rubyforge, :signing, :test]
 
   ##
   # Used to add extra flags to RUBY_FLAGS.

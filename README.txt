@@ -32,6 +32,7 @@ below.
 * Hoe::Flay
 * Hoe::Flog
 * Hoe::Inline
+* Hoe::Newb
 * Hoe::Package
 * Hoe::Publish
 * Hoe::RCov
