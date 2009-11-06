@@ -305,7 +305,7 @@ class Hoe
   def add_dependencies
     hoe_deps = {
       'rake'      => ">= #{RAKEVERSION}",
-      'rubyforge' => ">= #{::RubyForge::VERSION}",
+# HACK      'rubyforge' => ">= #{::RubyForge::VERSION}",
     }
 
     self.extra_deps     = normalize_deps extra_deps
