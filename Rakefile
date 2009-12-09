@@ -16,4 +16,10 @@ Hoe.spec "hoe" do
   pluggable!
 end
 
+[:redocs, :docs].each do |t|
+  task t do
+    cp "Hoe.pdf", "doc"
+  end
+end
+
 # vim: syntax=ruby
