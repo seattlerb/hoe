@@ -61,7 +61,7 @@ class Hoe
   VERSION = '2.3.3'
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
-               :publish, :rcov, :rubyforge, :signing, :test]
+               :publish, :rcov, :rubyforge, :gemcutter, :signing, :test]
 
   ##
   # Used to add extra flags to RUBY_FLAGS.
@@ -305,7 +305,7 @@ class Hoe
   def add_dependencies
     hoe_deps = {
       'rake'      => ">= #{RAKEVERSION}",
-# HACK      'rubyforge' => ">= #{::RubyForge::VERSION}",
+      'rubyforge' => ">= #{::RubyForge::VERSION}", # TODO: push down
     }
 
     self.extra_deps     = normalize_deps extra_deps
@@ -367,11 +367,12 @@ class Hoe
     end
 
     unless self.version then
-      version = nil
+      version    = nil
+      version_re = /VERSION += +([\"\'])([\d][\d\w\.]+)\1/
 
       spec.files.each do |file|
         next unless File.exist? file
-        version = File.read(file)[/VERSION += +([\"\'])([\d][\d\w\.]+)\1/, 2]
+        version = File.read_utf(file)[version_re, 2]
         break if version
       end
 
@@ -480,7 +481,7 @@ class Hoe
     $plugin_max = self.class.plugins.map { |s| s.to_s.size }.max
 
     self.class.plugins.each do |plugin|
-      warn plugin if $DEBUG
+      warn "define: #{plugin}" if $DEBUG
 
       old_tasks = Rake::Task.tasks.dup
 
