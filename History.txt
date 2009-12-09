@@ -1,3 +1,14 @@
+=== 2.4.0 / 2009-12-08
+
+* 6 minor enhancements:
+
+  * Added Hoe.pdf
+  * Added gemcutter plugin (raggi)
+  * Added newb plugin. (jbarnette)
+  * Improved README.txt
+  * Improved rdoc
+  * Refactored rubyforge task to plugin. (jbarnette)
+
 === 2.3.3 / 2009-08-07
 
 * 6 minor enhancements:
