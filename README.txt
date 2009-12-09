@@ -2,7 +2,7 @@
 
 * http://rubyforge.org/projects/seattlerb/
 * http://seattlerb.rubyforge.org/hoe/
-* http://seattlerb.rubyforge.org/Hoe.pdf
+* http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 * http://github.com/jbarnette/hoe-plugin-examples
 
 == DESCRIPTION:
@@ -14,6 +14,8 @@ tasks including rdoc generation, testing, packaging, and deployment.
 
 See class rdoc for help. Hint: `ri Hoe` or any of the plugins listed
 below.
+
+See Also: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 
 == FEATURES/PROBLEMS:
 
