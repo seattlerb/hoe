@@ -100,7 +100,7 @@ module Hoe::Publish
         if title then
           rd.options << title
 
-          unless title =~ /=/ then # for ['-t', 'title here']
+          unless title =~ /\=/ then # for ['-t', 'title here']
             title_index = spec.rdoc_options.index(title)
             rd.options << spec.rdoc_options[title_index + 1]
           end
@@ -119,7 +119,8 @@ module Hoe::Publish
 
     desc 'Publish RDoc to RubyForge.'
     task :publish_docs => [:clean, :docs] do
-      config = YAML.load(File.read(File.expand_path("~/.rubyforge/user-config.yml")))
+      path = File.expand_path("~/.rubyforge/user-config.yml")
+      config = YAML.load(File.read(path))
       host = "#{config["username"]}@rubyforge.org"
 
       remote_dir = "/var/www/gforge-projects/#{rubyforge_name}/#{remote_rdoc_dir}"
@@ -178,7 +179,7 @@ module Hoe::Publish
     end
 
     desc 'Announce your release.'
-    task :announce => [:post_news, :post_blog, :publish_on_announce ]
+    task :announce => [:post_blog, :publish_on_announce ]
   end
 
   def generate_email full = nil
