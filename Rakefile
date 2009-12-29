@@ -19,6 +19,7 @@ end
 [:redocs, :docs].each do |t|
   task t do
     cp "Hoe.pdf", "doc"
+    sh "chmod u+w doc/Hoe.pdf"
   end
 end
 
