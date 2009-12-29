@@ -16,6 +16,11 @@ Hoe.spec "hoe" do
   pluggable!
 end
 
+task :plugins do
+  puts `find lib/hoe -name \*.rb | xargs grep -h module.Hoe::`.
+    gsub(/module/, '*')
+end
+
 [:redocs, :docs].each do |t|
   task t do
     cp "Hoe.pdf", "doc"
