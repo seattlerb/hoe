@@ -33,6 +33,7 @@ See Also: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 * Hoe::Deps
 * Hoe::Flay
 * Hoe::Flog
+* Hoe::Gemcutter
 * Hoe::Inline
 * Hoe::Newb
 * Hoe::Package
@@ -44,7 +45,7 @@ See Also: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 
 === Known 3rd-Party Plugins:
 
-* Hoe::Seattlerb - email announcements & perforce branching/validation on release.
+* Hoe::Seattlerb - minitest support, email announcements & perforce branching/validation on release.
 * Hoe::Git       - git tagging on release, changelogs, and manifest creation.
 * Hoe::Doofus    - release checklist.
 * Hoe::Debugging - for extensions, run your tests with GDB and Valgrind
@@ -65,6 +66,27 @@ or:
   end
 
   # ... project specific tasks ...
+
+== HOW TO CONTRIBUTE OR GET SUPPORT:
+
+=== Mailing List
+
+A mailing list for hoe is hosted at: http://rubyforge.org/projects/seattlerb
+
+=== Bugs & Feature Requests:
+
+We use the bug trackers hosted at: http://rubyforge.org/projects/seattlerb
+
+=== Patches:
+
+* If you have a bug fix or enhancement to hoe that you'd like to
+  contribute, please provide a unified diff and file it in a ticket in
+  the bug tracker listed above.
+* You can check out hoe:
+  * With git via github: http://github.com/seattlerb/hoe
+  * With svn via rubyforge: http://rubyforge.org/projects/seattlerb
+  * Or via perforce if you'd like to directly contribute:
+    http://www.zenspider.com/ZSS/Process/Perforce.html
 
 == REQUIREMENTS:
 
