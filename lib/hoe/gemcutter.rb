@@ -1,6 +1,6 @@
 require 'rake'
 
-class Hoe #:nodoc:
+class Hoe
   module Gemcutter
     def define_gemcutter_tasks
       desc "Push gem to gemcutter."
