@@ -97,12 +97,16 @@ class Hoe
   attr_accessor :author
 
   ##
-  # Optional: A description of the release's latest changes. Auto-populates.
+  # Optional: A description of the release's latest changes.
+  # Auto-populates to the top entry of History.txt.
 
   attr_accessor :changes
 
   ##
-  # Optional: A description of the project. Auto-populates.
+  # Optional: A description of the project. Auto-populates from the
+  # first paragraph of the DESCRIPTION section of README.txt.
+  #
+  # See also: Hoe#summary and Hoe.paragraphs_of.
 
   attr_accessor :description
 
@@ -180,7 +184,10 @@ class Hoe
   attr_accessor :spec_extras
 
   ##
-  # Optional: A short summary of the project. Auto-populates.
+  # Optional: A short summary of the project. Auto-populates from the
+  # first sentence of the description.
+  #
+  # See also: Hoe#description and Hoe.paragraphs_of.
 
   attr_accessor :summary
 
@@ -195,7 +202,9 @@ class Hoe
   attr_accessor :test_globs
 
   ##
-  # Optional: The url(s) of the project. (can be array). Auto-populates.
+  # Optional: The url(s) of the project. (can be array).
+  # Auto-populates to a list of urls read from the beginning of
+  # README.txt.
 
   attr_accessor :url
 
@@ -267,7 +276,13 @@ class Hoe
   end
 
   ##
-  # Create a new hoe-specification executing the supplied block
+  # Execute the Hoe DSL to define your project's Hoe specification
+  # (which interally creates a gem specification). All hoe attributes
+  # and methods are available within +block+. Eg:
+  #
+  #   Hoe.spec name do
+  #     # ... project specific data ...
+  #   end
 
   def self.spec name, &block
     Hoe.load_plugins
