@@ -51,15 +51,25 @@ class TestHoe < MiniTest::Unit::TestCase
     assert_match(/^Hoe.*Rakefiles$/, spec.summary)
     assert_equal files.grep(/^test/), spec.test_files
 
-    deps = spec.dependencies
+    deps = spec.dependencies.sort_by { |dep| dep.name }
 
-    assert_equal 1, deps.size
+    assert_equal %w(gemcutter hoe rubyforge), deps.map { |dep| dep.name }
 
-    dep = deps.first
+    dep = deps.shift
+    assert_equal 'gemcutter', dep.name
+    assert_equal :development, dep.type
+    version = Gem.loaded_specs['gemcutter'].version
+    assert_equal ">= #{version}", dep.version_requirements.to_s
 
+    dep = deps.shift
     assert_equal 'hoe', dep.name
     assert_equal :development, dep.type
     assert_equal ">= #{Hoe::VERSION}", dep.version_requirements.to_s
+
+    dep = deps.shift
+    assert_equal 'rubyforge', dep.name
+    assert_equal :development, dep.type
+    assert_equal ">= #{::RubyForge::VERSION}", dep.version_requirements.to_s
   end
 
   def test_plugins
@@ -69,7 +79,6 @@ class TestHoe < MiniTest::Unit::TestCase
     Hoe.plugin :first, :second
     assert_equal before + [:first, :second], Hoe.plugins
   ensure
-    # FIX: maybe add Hoe.reset
     Hoe.plugins.replace before
   end
 
