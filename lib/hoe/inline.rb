@@ -36,7 +36,7 @@ module Hoe::Inline
         dlext = Config::CONFIG['DLEXT']
 
         Inline.registered_inline_classes.each do |cls|
-          name = cls.name # TODO: what about X::Y::Z?
+          name = cls.name.gsub(/::/, '')
           # name of the extension is CamelCase
           alternate_name = if name =~ /[A-Z]/ then
                              name.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
