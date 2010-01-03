@@ -318,21 +318,24 @@ class Hoe
   # Add standard and user defined dependencies to the spec.
 
   def add_dependencies
-    hoe_deps = {
-      'rake'      => ">= #{RAKEVERSION}",
-      'rubyforge' => ">= #{::RubyForge::VERSION}", # TODO: push down
-    }
-
     self.extra_deps     = normalize_deps extra_deps
     self.extra_dev_deps = normalize_deps extra_dev_deps
 
-    if name == 'hoe' then
-      hoe_deps.each do |pkg, vers|
-        extra_deps << [pkg, vers]
-      end
+    case name
+    when 'hoe' then
+      extra_deps << ['rake', ">= #{RAKEVERSION}"]
+    when 'rubyforge', 'rake', 'gemcutter' then
+      # avoid circular dependencies for hoe's (potentially) hoe'd dependencies
     else
-      extra_dev_deps << ['hoe', ">= #{VERSION}"] unless hoe_deps.has_key? name
+      extra_dev_deps << ['hoe', ">= #{VERSION}"]
     end
+  end
+
+  ##
+  # Returns the proper dependency list for the thingy.
+
+  def dependency_target
+    self.name == 'hoe' ? extra_deps : extra_dev_deps
   end
 
   ##
