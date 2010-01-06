@@ -7,15 +7,16 @@
 
 == DESCRIPTION:
 
-Hoe is a rake/rubygems helper for project Rakefiles. It helps generate
-rubygems and includes a dynamic plug-in system allowing for easy
-extensibility. Hoe ships with plug-ins for all your usual project
-tasks including rdoc generation, testing, packaging, and deployment.
+Hoe is a rake/rubygems helper for project Rakefiles. It helps you
+manage and maintain, and release your project and includes a dynamic
+plug-in system allowing for easy extensibility. Hoe ships with
+plug-ins for all your usual project tasks including rdoc generation,
+testing, packaging, and deployment.
 
 See class rdoc for help. Hint: `ri Hoe` or any of the plugins listed
 below.
 
-See Also: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
+For extra goodness, see: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 
 == FEATURES/PROBLEMS:
 
@@ -64,12 +65,13 @@ artifacts in your release that you wouldn't already have.
 === README.txt
 
 Most projects have a readme file of some kind that describes the
-project. Hoe is no different. The readme file points the reader
-towards all the information they need to know to get started including
-a description, relevant urls, code synopsis, license, etc. Hoe knows
-how to read a basic rdoc formatted file to pull out the description
-(and summary by extension), urls, and extra paragraphs of info you may
-want to provide in news/blog posts.
+project. Hoe projects are no different, but we take them one step
+further. The readme file points the reader towards all the information
+they need to know to get started including a description, relevant
+urls, code synopsis, license, etc. Hoe knows how to read a basic rdoc
+formatted file to pull out the description (and summary by extension),
+urls, and extra paragraphs of info you may want to provide in
+news/blog posts.
 
 === History.txt
 
@@ -114,11 +116,14 @@ packaging.
       
   % rake release VERSION=x.y.z
       
-That really is all there is to it. With the `hoe-seattlerb` plugin,
-that branches the release in our perforce server, performs sanity
-checks to ensure the release has integrity, packages into gem and
-tarballs, uploads the packages to rubyforge, posts news of the release
-to rubyforge and my blog, and sends an announcement email.
+That really is all there is to it. Behind the scenes it:
+
+* Branches the release in our perforce server. (via hoe-seattlerb plugin)
+* Performs sanity checks to ensure the release has integrity. (hoe-seattlerb)
+* Packages into gem and tarballs.
+* Uploads the packages to rubyforge.
+* Posts news of the release to rubyforge and my blog.
+* Sends an announcement email. (hoe-seattlerb)
       
 That `VERSION=x.y.z` is there as a last-chance sanity check that you
 know what you're releasing. You'd be surprised how blurry eyed/brained
