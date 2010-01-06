@@ -1,3 +1,21 @@
+=== 2.5.0 / 2010-01-06
+
+* 8 minor enhancements:
+
+  * Add extra dirs to rcov include path if needed.
+  * Added Hoe#dependency_target to make dependencies easier to declare.
+  * Added extra doco to describe how auto-population works.
+  * Added more doco to readme.
+  * Don't bother posting news to rubyforge.
+  * Hoe::Inline plugin now deals with X::Y by flattening the name.
+  * Merged some of Hoe.pdf to README.txt and further improved doco.
+  * Pushed gemcutter & rubyforge dependencies down to the plugins.
+
+* 2 bug fixes:
+
+  * Fix perms on Hoe.pdf after copying.
+  * Fixed Hoe rdoc problem caused by gemcutter plugin.
+
 === 2.4.0 / 2009-12-08
 
 * 6 minor enhancements:
