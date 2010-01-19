@@ -68,7 +68,7 @@ class Hoe
 
   RUBY_DEBUG = ENV['RUBY_DEBUG']
 
-  default_ruby_flags = "-w -I#{%w(lib ext bin test).join(File::PATH_SEPARATOR)}" +
+  default_ruby_flags = "-w -I#{%w(lib bin test).join(File::PATH_SEPARATOR)}" +
     (RUBY_DEBUG ? " #{RUBY_DEBUG}" : '')
 
   ##
@@ -343,7 +343,7 @@ class Hoe
 
   def define_spec
     self.spec = Gem::Specification.new do |s|
-      dirs = Dir['{lib,ext}']
+      dirs = Dir['lib']
 
       s.name                 = name
       s.version              = version if version
