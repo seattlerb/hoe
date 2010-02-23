@@ -552,10 +552,13 @@ class Hoe
 
   ##
   # Tell the world you're a pluggable package (ie you require rubygems 1.3.1+)
+  #
+  # This uses require_rubygems_version. Last one wins. Make sure you
+  # account for that.
 
   def pluggable!
     abort "update rubygems to >= 1.3.1" unless  Gem.respond_to? :find_files
-    spec_extras[:required_rubygems_version] = '>= 1.3.1'
+    require_rubygems_version '>= 1.3.1'
   end
 
   ##
@@ -567,6 +570,20 @@ class Hoe
     add_dependencies
     define_spec
     load_plugin_tasks
+  end
+
+  ##
+  # Declare that your gem requires a specific rubygems version. Last one wins.
+
+  def require_rubygems_version version
+    spec_extras[:required_rubygems_version] = version
+  end
+
+  ##
+  # Declare that your gem requires a specific ruby version. Last one wins.
+
+  def require_ruby_version version
+    spec_extras[:required_ruby_version] = version
   end
 
   ##

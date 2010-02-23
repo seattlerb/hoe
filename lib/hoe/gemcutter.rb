@@ -1,12 +1,6 @@
 require 'rake'
-gem "gemcutter" # lame. gemcutter doesn't have a VERSION const.
 
 module Hoe::Gemcutter
-  def initialize_gemcutter
-    version = Gem.loaded_specs['gemcutter'].version
-    dependency_target << ['gemcutter', ">= #{version}"]
-  end
-
   def define_gemcutter_tasks
     desc "Push gem to gemcutter."
     task :release_to_gemcutter => [:clean, :package, :release_sanity] do
