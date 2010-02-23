@@ -126,7 +126,7 @@ module Hoe::Test
       test_globs.map { |g| Dir.glob(g) }.flatten
     tests.map! {|f| %(require "#{f}")}
 
-    cmd = "#{Hoe::RUBY_FLAGS} -e '#{tests.join("; ")}' #{FILTER}"
+    cmd = "#{Hoe::RUBY_FLAGS} -e '#{tests.join("; ")}' -- #{FILTER}"
 
     if multi then
       ENV['EXCLUDED_VERSIONS'] = multiruby_skip.join ":"
