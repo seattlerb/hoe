@@ -47,7 +47,9 @@ module Hoe::Debug
       files = []
       with_config do |config, _|
         exclusions = config["exclude"]
-        abort "exclude entry missing from .hoerc. Aborting." if exclusions.nil?
+        abort "exclude entry missing from .hoerc. Run rake config_hoe." if
+          exclusions.nil?
+
         Find.find '.' do |path|
           next unless File.file? path
           next if path =~ exclusions
