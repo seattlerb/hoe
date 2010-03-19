@@ -68,7 +68,7 @@ class Hoe
 
   RUBY_DEBUG = ENV['RUBY_DEBUG']
 
-  default_ruby_flags = "-w -I#{%w(lib bin test).join(File::PATH_SEPARATOR)}" +
+  default_ruby_flags = "-w -I#{%w(lib bin test .).join(File::PATH_SEPARATOR)}" +
     (RUBY_DEBUG ? " #{RUBY_DEBUG}" : '')
 
   ##
