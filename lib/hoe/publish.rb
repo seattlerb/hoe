@@ -48,6 +48,15 @@ module Hoe::Publish
   attr_accessor :need_rdoc
 
   ##
+  # Optional: An array of remote (rsync) paths to copy rdoc to.
+  #
+  # eg:
+  #
+  #     rdoc_locations << "user@server:Sites/rdoc/#{remote_rdoc_dir}"
+
+  attr_accessor :rdoc_locations
+
+  ##
   # Optional: Name of RDoc destination directory on Rubyforge. [default: +name+]
 
   attr_accessor :remote_rdoc_dir
@@ -77,6 +86,7 @@ module Hoe::Publish
     self.blog_categories ||= [self.name]
     self.local_rdoc_dir  ||= 'doc'
     self.need_rdoc       ||= true
+    self.rdoc_locations  ||= []
     self.remote_rdoc_dir ||= self.name
     self.rsync_args      ||= '-av --delete'
   end
@@ -117,16 +127,12 @@ module Hoe::Publish
       end
     end
 
-    desc 'Publish RDoc to RubyForge.'
+    desc "Publish RDoc to wherever you want."
     task :publish_docs => [:clean, :docs] do
-      path = File.expand_path("~/.rubyforge/user-config.yml")
-      config = YAML.load(File.read(path))
-      host = "#{config["username"]}@rubyforge.org"
-
-      remote_dir = "/var/www/gforge-projects/#{rubyforge_name}/#{remote_rdoc_dir}"
-      local_dir = local_rdoc_dir
-
-      sh %{rsync #{rsync_args} #{local_dir}/ #{host}:#{remote_dir}}
+      warn "no rdoc_location values" if rdoc_locations.empty?
+      self.rdoc_locations.each do |dest|
+        sh %{rsync #{rsync_args} #{local_rdoc_dir}/ #{dest}}
+      end
     end
 
     # no doco for this one

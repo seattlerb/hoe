@@ -38,5 +38,14 @@ module Hoe::RubyForge
       puts "Releasing #{name} v. #{version}"
       rf.add_release rubyforge_name, name, version, *files
     end
+
+    if Hoe.plugins.include? :publish then
+      path   = File.expand_path("~/.rubyforge/user-config.yml")
+      config = YAML.load(File.read(path))
+      base   = "/var/www/gforge-projects"
+      dir    = "#{base}/#{rubyforge_name}/#{remote_rdoc_dir}"
+
+      rdoc_locations << "#{config["username"]}@rubyforge.org:#{dir}"
+    end
   end
 end
