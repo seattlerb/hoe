@@ -1,3 +1,21 @@
+=== 2.6.0 / 2010-03-27
+
+* 6 minor enhancements:
+
+  * Added '.' to load path for (bad) 1.9.2 changes
+  * Added rdoc_locations array to the publish plugin to allow for
+    multiple arbitrary rdoc locations
+    * Refactored old rubyforge rdoc location to the rubyforge plugin.
+  * Added require_ruby_version and require_rubygems_version.
+  * Cleaned up dep tests
+  * Hoe now depends on rubygems 1.3.6 instead of the gemcutter gem.
+  * Remove ext from default_ruby_flags and require_paths. (luis)
+
+* 2 bug fixes:
+
+  * Fixed test command to use '--' before filter args
+  * Tweaked .hoerc error to point to a fix.
+
 === 2.5.0 / 2010-01-06
 
 * 8 minor enhancements:
