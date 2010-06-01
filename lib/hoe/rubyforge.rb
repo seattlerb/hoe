@@ -41,11 +41,15 @@ module Hoe::RubyForge
 
     if Hoe.plugins.include? :publish then
       path   = File.expand_path("~/.rubyforge/user-config.yml")
-      config = YAML.load(File.read(path))
-      base   = "/var/www/gforge-projects"
-      dir    = "#{base}/#{rubyforge_name}/#{remote_rdoc_dir}"
+      config = YAML.load(File.read(path)) rescue nil
+      if config then
+        base = "/var/www/gforge-projects"
+        dir  = "#{base}/#{rubyforge_name}/#{remote_rdoc_dir}"
 
-      rdoc_locations << "#{config["username"]}@rubyforge.org:#{dir}"
+        rdoc_locations << "#{config["username"]}@rubyforge.org:#{dir}"
+      else
+        warn "Couldn't read #{path}. Run `rubyforge setup`."
+      end
     end
   end
 end

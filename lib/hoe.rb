@@ -386,7 +386,7 @@ class Hoe
 
     unless self.version then
       version    = nil
-      version_re = /VERSION += +([\"\'])([\d][\d\w\.]+)\1/
+      version_re = /VERSION += +([\"\'])([\d][\w\.]+)\1/
 
       spec.files.each do |file|
         next unless File.exist? file
