@@ -34,7 +34,7 @@ module Hoe::Deps
         puts "  dependents:"
         unless deps.empty? then
           deps.sort_by { |spec| spec.full_name }.each do |spec|
-            vers = spec.dependencies.find {|s| s.name == name }.requirement_list
+            vers = spec.dependencies.find {|s| s.name == name}.requirements_list
             puts "    %-*s - %s" % [max, spec.full_name, vers.join(", ")]
           end
         else
@@ -50,8 +50,7 @@ module Hoe::Deps
         abort "Couldn't find gem: #{self.name}" unless gem
 
         deps = self.dependent_upon self.name
-
-        email = deps.map { |s| s.email }.flatten.sort.uniq
+        email = deps.map { |s| s.email }.compact.flatten.sort.uniq
         email = email.map { |s| s.split(/,\s*/) }.flatten.sort.uniq
 
         email.map! { |s| # don't you people realize how easy this is?
@@ -64,6 +63,8 @@ module Hoe::Deps
           bad.empty?
 
         puts good.join(", ")
+
+        warn "Warning: couldn't extract any email addresses" if good.empty?
       end
 
       desc "Fetch all the dependent gems of this gem into tarballs"
@@ -128,10 +129,22 @@ module Hoe::Deps
     return @@index if @@index
 
     dump = unless File.exist? '.source_index' then
+             warn "Fetching full index and caching. This can take a while."
              url = GEMURL + "Marshal.#{Gem.marshal_version}.Z"
              dump = Gem::RemoteFetcher.fetcher.fetch_path url
              dump = Gem.inflate dump
+
+             warn "stripping index to latest gems"
+             ary = Marshal.load dump
+
+             h = {}
+             Hash[ary].values.sort.each { |spec| h[spec.name] = spec }
+             ary = h.map { |k,v| [v.full_name, v] }
+
+             dump = Marshal.dump ary
+
              open '.source_index', 'wb' do |io| io.write dump end
+
              dump
            else
              open '.source_index', 'rb' do |io| io.read end
@@ -144,7 +157,7 @@ module Hoe::Deps
   # Return the latest rubygems.
 
   def get_latest_gems
-    @@cache ||= get_source_index.latest_specs
+    @@cache ||= Hash[*get_source_index.flatten].values
   end
 
   ##
