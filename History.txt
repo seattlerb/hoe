@@ -1,3 +1,10 @@
+=== 2.6.1 / 2010-06-02
+
+* 2 bug fixes:
+
+  * Fix up hoe to be happy when rubyforge is missing or misconfigured
+  * Fixed dep tasks to deal with broken rubygems changes RF#27847 (mjwillson)
+
 === 2.6.0 / 2010-03-27
 
 * 6 minor enhancements:
