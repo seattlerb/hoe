@@ -4,6 +4,8 @@ $: << 'lib'
 
 require './lib/hoe.rb'
 
+Hoe.add_include_dirs "../../minitest/dev/lib"
+
 Hoe.plugin :seattlerb
 
 Hoe.spec "hoe" do
