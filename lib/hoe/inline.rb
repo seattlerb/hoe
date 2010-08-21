@@ -22,7 +22,7 @@ module Hoe::Inline
   # Define tasks for plugin.
 
   def define_inline_tasks
-    extra_deps  << 'RubyInline'
+    extra_deps  << ['RubyInline', "~> 3.8.4"]
     clean_globs << File.expand_path("~/.ruby_inline")
     task :test => :clean
 
