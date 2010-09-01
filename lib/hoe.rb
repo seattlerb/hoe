@@ -596,7 +596,7 @@ class Hoe
     rest  = (finis - Time.now)
     full  = (finis - start)
 
-    ((n - m) * rest / full).to_i + m
+    [((n - m) * rest / full).to_i + m, m].max
   end
 
   ##
