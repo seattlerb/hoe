@@ -1,3 +1,4 @@
+require "hoe"
 require "hoe/gemcutter" unless defined? Hoe::Gemcutter
 
 class TestHoeGemcutter < MiniTest::Unit::TestCase
