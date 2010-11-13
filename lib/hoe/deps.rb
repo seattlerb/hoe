@@ -1,4 +1,5 @@
 require 'rubygems/remote_fetcher'
+require 'uri'
 
 ##
 # Deps plugin for hoe.
