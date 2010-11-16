@@ -1,3 +1,15 @@
+=== 2.7.0 / 2010-11-15
+
+* 2 minor enhancements:
+
+  * Added new plugin: gem_prelude_sucks. (jbarnette)
+    * Activate under 1.9 if you don't want it messing with you.
+  * Added rspec2 support (bleything)
+
+* 1 bug fix:
+
+  * require uri in hoe/deps (raggi)
+
 === 2.6.2 / 2010-08-31
 
 * 1 minor enhancement:
