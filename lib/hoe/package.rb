@@ -38,6 +38,8 @@ module Hoe::Package
 
   def define_package_tasks
     Gem::PackageTask.new spec do |pkg|
+      prerelease_version
+
       pkg.need_tar = @need_tar
       pkg.need_zip = @need_zip
     end
@@ -47,13 +49,14 @@ module Hoe::Package
       install_gem Dir['pkg/*.gem'].first
     end
 
-    desc 'Package and upload the release.'
+    desc 'Package and upload; Requires VERSION=x.y.z (optional PRE=a.1)'
     task :release => [:prerelease, :release_to, :postrelease]
 
     # no doco, invisible hook
     task :prerelease do
-      abort "Fix your version before you release" if
-        spec.version.version =~ /borked/
+      prerelease_version
+
+      abort "Fix your version before you release" if spec.version =~ /borked/
     end
 
     # no doco, invisible hook
@@ -78,5 +81,16 @@ module Hoe::Package
     local   = '--local'                unless version
     version = "--version '#{version}'" if     version
     sh "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
+  end
+
+  def prerelease_version # :nodoc:
+    pre = ENV['PRERELEASE'] || ENV['PRE']
+    if pre then
+      spec.version.version << "." << pre if pre
+
+      abort "ERROR: You should format PRE like pre or alpha.1 or something" if
+        (Gem::VERSION < "1.4"  and pre !~ /^[a-z]+(\.\d+)?$/) or
+        (Gem::VERSION >= "1.4" and pre !~ /^[a-z]+(\.?\d+)?$/)
+    end
   end
 end
