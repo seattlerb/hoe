@@ -7,6 +7,7 @@ Rakefile
 bin/sow
 lib/hoe.rb
 lib/hoe/clean.rb
+lib/hoe/compiler.rb
 lib/hoe/debug.rb
 lib/hoe/deps.rb
 lib/hoe/flay.rb
