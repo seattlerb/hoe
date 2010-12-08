@@ -41,10 +41,10 @@ require 'hoe/rake'
 # == Extending Hoe
 #
 # Hoe can be extended via its plugin system. Hoe searches out all
-# installed files matching <tt>'hoe/*.rb'</tt> and loads them. Those files are
-# expected to define a module matching the file name. The module must
-# define a define task method and can optionally define an initialize
-# method. Both methods must be named to match the file. eg
+# installed files matching <tt>'hoe/*.rb'</tt> and loads them. Those
+# files are expected to define a module matching the file name. The
+# module must define a define task method and can optionally define an
+# initialize method. Both methods must be named to match the file. eg
 #
 #   module Hoe::Blah
 #     def initialize_blah # optional
@@ -61,7 +61,7 @@ class Hoe
   VERSION = '2.7.0'
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
-               :publish, :rcov, :rubyforge, :gemcutter, :signing, :test]
+               :publish, :rcov, :gemcutter, :signing, :test]
 
   ##
   # Used to add extra flags to RUBY_FLAGS.

@@ -1,5 +1,3 @@
-require 'rubyforge'
-
 ##
 # RubyForge plugin for hoe.
 #
@@ -21,6 +19,8 @@ module Hoe::RubyForge
 
     desc 'Release to rubyforge.'
     task :release_to_rubyforge => [:clean, :package, :release_sanity] do
+      require 'rubyforge'
+
       rf = RubyForge.new.configure
       puts "Logging in"
       rf.login
