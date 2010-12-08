@@ -18,6 +18,7 @@ lib/hoe/inline.rb
 lib/hoe/newb.rb
 lib/hoe/package.rb
 lib/hoe/publish.rb
+lib/hoe/racc.rb
 lib/hoe/rake.rb
 lib/hoe/rcov.rb
 lib/hoe/rubyforge.rb

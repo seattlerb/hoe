@@ -161,6 +161,7 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * Hoe::Newb
 * Hoe::Package
 * Hoe::Publish
+* Hoe::Racc
 * Hoe::RCov
 * Hoe::RubyForge
 * Hoe::Signing
