@@ -150,10 +150,12 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 === Plug-ins Provided:
 
 * Hoe::Clean
+* Hoe::Compiler
 * Hoe::Debug
 * Hoe::Deps
 * Hoe::Flay
 * Hoe::Flog
+* Hoe::GemPreludeSucks
 * Hoe::Gemcutter
 * Hoe::Inline
 * Hoe::Newb
@@ -166,10 +168,16 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 
 === Known 3rd-Party Plugins:
 
-* Hoe::Seattlerb - minitest support, email announcements & perforce branching/validation on release.
-* Hoe::Git       - git tagging on release, changelogs, and manifest creation.
-* Hoe::Doofus    - release checklist.
-* Hoe::Debugging - for extensions, run your tests with GDB and Valgrind
+* hoe-bundler   - Generates a Gemfile based on a Hoe's declared dependencies.
+* hoe-debugging - A Hoe plugin to help you debug your codes.
+* hoe-doofus    - A Hoe plugin that helps me keep from messing up gem releases.
+* hoe-gemcutter - Adds gemcutter release automation to Hoe.
+* hoe-gemspec   - Generate a prerelease gemspec based on a Hoe spec.
+* hoe-git       - A set of Hoe plugins for tighter Git integration.
+* hoe-hg        - A Hoe plugin for Mercurial integration.
+* hoe-rubygems  - A Hoe plugin with additional RubyGems tasks.
+* hoe-seattlerb - Minitest, email announcements, release branching.
+* hoe-yard      - A Hoe plugin for generating YARD documentation.
 
 === Writing Plugins:
 

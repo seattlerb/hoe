@@ -24,6 +24,19 @@ task :plugins do
     gsub(/module/, '*')
 end
 
+task :known_plugins do
+  dep         = Gem::Dependency.new(/^hoe-/, Gem::Requirement.default)
+  fetcher     = Gem::SpecFetcher.fetcher
+  spec_tuples = fetcher.find_matching dep
+
+  max = spec_tuples.map { |(tuple, source)| tuple.first.size }.max
+
+  spec_tuples.each do |(tuple, source)|
+    spec = Gem::SpecFetcher.fetcher.fetch_spec(tuple, URI.parse(source))
+    puts "* %-#{max}s - %s (%s)" % [spec.name, spec.summary, spec.authors.first]
+  end
+end
+
 [:redocs, :docs].each do |t|
   task t do
     cp "Hoe.pdf", "doc"
