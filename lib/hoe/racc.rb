@@ -12,14 +12,36 @@ module Hoe::Racc
 
   ##
   # Optional: Defines what tasks need to generate parsers/lexers first.
+  #
+  # Defaults to [:multi, :test, :check_manifest]
+  #
+  # If you have extra tasks that require your parser/lexer to be
+  # built, add their names here in your hoe spec. eg:
+  #
+  #    racc_tasks << :debug
 
   attr_accessor :racc_tasks
+
+  ##
+  # Optional: Defines what flags to use for racc. default: "-v -l"
+
+  attr_accessor :racc_flags
+
+  ##
+  # Optional: Defines what flags to use for rex. default: "--independent"
+
+  attr_accessor :rex_flags
 
   ##
   # Initialize variables for racc plugin.
 
   def initialize_racc
     self.racc_tasks = [:multi, :test, :check_manifest]
+
+    # -v = verbose
+    # -l = no-line-convert (they don't ever line up anyhow)
+    self.racc_flags ||= "-v -l"
+    self.rex_flags  ||= "--independent"
 
     extra_dev_deps << ['racc', '~> 1.4.7']
   end
@@ -34,13 +56,12 @@ module Hoe::Racc
     parser_files = racc_files.map { |f| f.sub(/\.y$/, ".rb") }
     lexer_files  = rex_files.map  { |f| f.sub(/\.rex$/, ".rb") }
 
+    self.clean_globs += parser_files
+    self.clean_globs += lexer_files
+
     rule ".rb" => ".y" do |t|
-      # -v = verbose
-      # -t = debugging parser ~4% reduction in speed -- keep for now
-      # -l = no-line-convert
       begin
-        # TODO: variable for flags
-        sh "racc -v -t -l -o #{t.name} #{t.source}"
+        sh "racc #{racc_flags} -o #{t.name} #{t.source}"
       rescue
         abort "need racc, sudo gem install racc"
       end
@@ -48,7 +69,7 @@ module Hoe::Racc
 
     rule ".rb" => ".rex" do |t|
       begin
-        sh "rex --independent -o #{t.name} #{t.source}"
+        sh "rex #{rex_flags} -o #{t.name} #{t.source}"
       rescue
         abort "need rexical, sudo gem install rexical"
       end
@@ -65,10 +86,6 @@ module Hoe::Racc
 
     racc_tasks.each do |t|
       task t => [:parser, :lexer]
-    end
-
-    task :clobber do
-      rm_rf parser_files + lexer_files
     end
   end
 end
