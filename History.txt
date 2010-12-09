@@ -1,3 +1,14 @@
+=== 2.8.0 / 2010-12-08
+
+* 6 minor enhancements:
+
+  * Added PRE=a.1 variable to package and release tasks. (ged)
+  * Added compiler plugin to support rake-compiler. (tenderlove)
+  * Added known_plugins task and updated included and 3rd party plugins doco
+  * Added racc/rex plugin!
+  * Extended sow's Rakefile template to dynamically include installed plugins
+  * Turned off rubyforge plugin by default. (tenderlove's whining)
+
 === 2.7.0 / 2010-11-15
 
 * 2 minor enhancements:
