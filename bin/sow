@@ -40,7 +40,9 @@ FileUtils.cp_r template_path, project, :verbose => true
 Dir.chdir project do
   dirs = Dir["**/*"].select { |f| File.directory? f }.sort
   dirs.grep(/file_name/).each do |file|
-    FileUtils.mv file, file.gsub(/file_name/, file_name), :verbose => true
+    if File.exists? file
+      FileUtils.mv file, file.gsub(/file_name/, file_name), :verbose => true
+    end
   end
 
   paths = (Dir["**/*"] + Dir["**/.*"]).select { |f| File.file? f }.sort
