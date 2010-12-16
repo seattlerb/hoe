@@ -10,6 +10,8 @@
 
 module Hoe::RubyForge
   def initialize_rubyforge
+    require 'rubyforge'
+
     dependency_target << ['rubyforge', ">= #{::RubyForge::VERSION}"]
   end
 
@@ -19,8 +21,6 @@ module Hoe::RubyForge
 
     desc 'Release to rubyforge.'
     task :release_to_rubyforge => [:clean, :package, :release_sanity] do
-      require 'rubyforge'
-
       rf = RubyForge.new.configure
       puts "Logging in"
       rf.login
