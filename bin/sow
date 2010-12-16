@@ -16,6 +16,8 @@ if $h || ARGV.empty? || ($t && $d) then
   exit
 end
 
+include FileUtils::Verbose
+
 project = ARGV.shift
 
 abort "Project #{project} seems to exist" if test ?d, project
@@ -28,19 +30,19 @@ source_path               = File.join(File.dirname(File.dirname(__FILE__)),
                                       "template")
 
 unless File.directory? template_path then
-  FileUtils.cp_r source_path, template_path, :verbose => true
+  FileUtils.cp_r source_path, template_path
   paths = (Dir["#{template_path}/**/*"] +
            Dir["#{template_path}/**/.*"]).select { |f| File.file? f }
-  FileUtils.chmod 0644, paths, :verbose => true
-  FileUtils.chmod 0755, paths.grep(/bin\//), :verbose => true
+  FileUtils.chmod 0644, paths
+  FileUtils.chmod 0755, paths.grep(/bin\//)
 end
 
-FileUtils.cp_r template_path, project, :verbose => true
+FileUtils.cp_r template_path, project
 
 Dir.chdir project do
   dirs = Dir["**/*"].select { |f| File.directory? f }.sort.reverse
   dirs.grep(/file_name$/).each do |file|
-    FileUtils.mv file, file.sub(/file_name$/, file_name), :verbose => true
+    FileUtils.mv file, file.sub(/file_name$/, file_name)
   end
 
   paths = (Dir["**/*"] + Dir["**/.*"]).select { |f| File.file? f }.sort
@@ -56,15 +58,15 @@ Dir.chdir project do
 
   paths.grep(/file_name|\.erb$/).each do |file|
     new_file = file.sub(/file_name/, file_name).sub(/\.erb$/, '')
-    FileUtils.mv file, new_file, :verbose => true
+    FileUtils.mv file, new_file
   end
 end
 
 if $d || $t then
   temp_dir = "#{project}.#{$$}"
-  FileUtils.mv project, temp_dir, :verbose => true
-  FileUtils.mkdir project, :verbose => true
-  FileUtils.mv temp_dir, "#{project}/#{$d ? 'dev' : 'trunk'}", :verbose => true
+  FileUtils.mv project, temp_dir
+  FileUtils.mkdir project
+  FileUtils.mv temp_dir, "#{project}/#{$d ? 'dev' : 'trunk'}"
 end
 
 puts
