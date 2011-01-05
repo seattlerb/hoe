@@ -307,7 +307,7 @@ class Hoe
       self.extend Hoe.const_get(name)
     end
 
-    Hoe.plugins.each do |plugin|
+    self.class.plugins.each do |plugin|
       msg = "initialize_#{plugin}"
       warn msg if $DEBUG
       send msg if self.respond_to? msg
@@ -507,7 +507,7 @@ class Hoe
         send "define_#{plugin}_tasks"
       rescue NoMethodError => e
         warn "warning: couldn't activate the #{plugin} plugin, skipping" if
-          Rake.application.options.trace
+          Rake.application.options.trace or $DEBUG
 
         bad << plugin
         next
@@ -561,6 +561,20 @@ class Hoe
   def pluggable!
     abort "update rubygems to >= 1.3.1" unless  Gem.respond_to? :find_files
     require_rubygems_version '>= 1.3.1'
+  end
+
+  ##
+  # Is a plugin activated? Used for guarding missing plugins in your
+  # hoe spec:
+  #
+  #   Hoe.spec "blah" do
+  #     if plugin? :enhancement then
+  #       self.enhancement = true # or whatever...
+  #     end
+  #   end
+
+  def plugin? name
+    self.class.plugins.include? name
   end
 
   ##
