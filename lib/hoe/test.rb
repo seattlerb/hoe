@@ -37,6 +37,11 @@ module Hoe::Test
   attr_accessor :testlib
 
   ##
+  # Optional: Additional ruby to run before the test framework is loaded.
+
+  attr_accessor :test_prelude
+
+  ##
   # Optional: RSpec dirs. [default: %w(spec lib)]
 
   attr_accessor :rspec_dirs
@@ -52,6 +57,7 @@ module Hoe::Test
   def initialize_test
     self.multiruby_skip ||= []
     self.testlib        ||= :testunit
+    self.test_prelude   ||= nil
     self.rspec_dirs     ||= %w(spec lib)
     self.rspec_options  ||= []
   end
@@ -125,6 +131,23 @@ module Hoe::Test
     desc 'Run the default task(s).'
     task :default => default_tasks
 
+    unless default_tasks.empty? then
+      ##
+      # This is for Erik Hollensbe's rubygems-test project. Hoe is
+      # test-happy, so by using this plugin you're already testable. For
+      # more information, see: <https://github.com/erikh/rubygems-test>
+      # and/or <http://www.gem-testers.org/>
+
+      self.spec.files += [".gemtest"]
+
+      pkg  = pkg_path
+      turd = "#{pkg}/.gemtest"
+
+      task pkg do
+        touch turd
+      end
+    end
+
     desc 'Run ZenTest against the package.'
     task :audit do
       libs = %w(lib test ext).join(File::PATH_SEPARATOR)
@@ -142,6 +165,8 @@ module Hoe::Test
     tests = ["rubygems", framework] +
       test_globs.map { |g| Dir.glob(g) }.flatten
     tests.map! {|f| %(require "#{f}")}
+
+    tests.insert 1, test_prelude if test_prelude
 
     cmd = "#{Hoe::RUBY_FLAGS} -e '#{tests.join("; ")}' -- #{FILTER}"
 

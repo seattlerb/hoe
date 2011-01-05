@@ -24,7 +24,7 @@ class TestHoe < MiniTest::Unit::TestCase
       developer 'author', 'email'
     end
 
-    files = File.read("Manifest.txt").split(/\n/)
+    files = File.read("Manifest.txt").split(/\n/) + [".gemtest"]
 
     spec = hoe.spec
 
