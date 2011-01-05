@@ -73,6 +73,14 @@ module Hoe::Package
   end
 
   ##
+  # Returns the path used for packaging. Convenience method for those
+  # that need to write a package hook.
+
+  def pkg_path
+    "pkg/#{spec.full_name}"
+  end
+
+  ##
   # Install the named gem.
 
   def install_gem name, version = nil
