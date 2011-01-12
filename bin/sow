@@ -1,20 +1,47 @@
-#!/usr/bin/env ruby -ws
+#!/usr/bin/env ruby -w
 
-$h ||= false
-$t ||= false
-$d ||= false
-
+require 'optparse'
 require 'rubygems'
 require 'hoe'
 require 'fileutils'
 require 'erb'
 
-if $h || ARGV.empty? || ($t && $d) then
-  puts "usage: #{File.basename $0} [-d|-t] project"
-  puts "  -t = add project to subdir under 'trunk'"
-  puts "  -d = add project to subdir under 'dev'"
-  exit
+option = {
+  :style  => "default",
+  :subdir => nil,
+}
+
+def check_subdir
+  if option[:subdir] then
+    warn "ERROR: you can't specify multiple subdirs"
+    abort opts.to_s
+  end
 end
+
+OptionParser.new do |opts|
+  opts.separator "Standard options:"
+
+  opts.on("-t", "--trunk", "Add project to subdir under 'trunk'.") do
+    check_subdir
+    option[:subdir] = "trunk"
+  end
+
+  opts.on("-d", "--dev", "Add project to subdir under 'dev'.") do
+    check_subdir
+    option[:subdir] = "dev"
+  end
+
+  opts.on("-s style", "--style style", String, "Use template <style>.") do |s|
+    option[:style] = s
+  end
+
+  opts.on("-h", "--help", "Show this message.") do
+    puts opts
+    exit
+  end
+end.parse!
+
+# TODO: fail if both dev and trunk
 
 include FileUtils::Verbose
 
@@ -25,11 +52,23 @@ abort "Project #{project} seems to exist" if test ?d, project
 # variables for erb:
 XIF                       = 'FI' + 'X' # prevents extra hits on my TAG reporter
 project, file_name, klass = Hoe.normalize_names project
-template_path             = File.expand_path("~/.hoe_template")
+template_dir              = File.expand_path("~/.hoe_template")
+template_path             = File.join template_dir, option[:style]
 source_path               = File.join(File.dirname(File.dirname(__FILE__)),
                                       "template")
 
+default_dir = File.join template_dir, "default"
+if File.directory? template_dir and not File.directory? default_dir then
+  warn "Detected old #{template_dir}"
+  warn "Moving to #{default_dir}"
+  tmp = "#{template_dir}.#{$$}"
+  File.rename template_dir, tmp
+  FileUtils.mkdir template_dir
+  File.rename tmp, default_dir
+end
+
 unless File.directory? template_path then
+  warn "Creating missing #{option[:style]} template."
   FileUtils.cp_r source_path, template_path
   paths = (Dir["#{template_path}/**/*"] +
            Dir["#{template_path}/**/.*"]).select { |f| File.file? f }
@@ -62,11 +101,11 @@ Dir.chdir project do
   end
 end
 
-if $d || $t then
+if option[:dev] || option[:trunk] then
   temp_dir = "#{project}.#{$$}"
   FileUtils.mv project, temp_dir
   FileUtils.mkdir project
-  FileUtils.mv temp_dir, "#{project}/#{$d ? 'dev' : 'trunk'}"
+  FileUtils.mv temp_dir, "#{project}/#{option[:dev] ? 'dev' : 'trunk'}"
 end
 
 puts
