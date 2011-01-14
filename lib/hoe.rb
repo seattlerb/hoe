@@ -240,7 +240,7 @@ class Hoe
       next if loaded[name]
       begin
         warn "loading #{plugin}" if $DEBUG
-        loaded[name] = load plugin
+        loaded[name] = require plugin
       rescue LoadError => e
         warn "error loading #{plugin.inspect}: #{e.message}. skipping..."
       end
