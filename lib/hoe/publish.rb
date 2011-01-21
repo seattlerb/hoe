@@ -173,17 +173,6 @@ module Hoe::Publish
       end
     end
 
-    desc 'Post announcement to rubyforge.'
-    task :post_news do
-      require 'rubyforge'
-      subject, title, body, urls = announcement
-
-      rf = RubyForge.new.configure
-      rf.login
-      rf.post_news(rubyforge_name, subject, "#{title}\n\n#{body}")
-      puts "Posted to rubyforge"
-    end
-
     desc 'Announce your release.'
     task :announce => [:post_blog, :publish_on_announce ]
   end
