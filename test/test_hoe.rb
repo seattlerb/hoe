@@ -9,6 +9,59 @@ class TestHoe < MiniTest::Unit::TestCase
     Rake.application.clear
   end
 
+  def test_class_load_plugins
+    loaded, = Hoe.load_plugins
+
+    assert_includes loaded.keys, :clean
+    assert_includes loaded.keys, :debug
+    assert_includes loaded.keys, :deps
+  end
+
+  def test_activate_plugins
+    hoe = Hoe.spec 'blah' do
+      developer 'author', 'email'
+    end
+
+    initializers = hoe.methods.grep(/^initialize/)
+
+    assert_includes initializers, 'initialize_clean'
+    assert_includes initializers, 'initialize_flay'
+    assert_includes initializers, 'initialize_flog'
+    assert_includes initializers, 'initialize_package'
+    assert_includes initializers, 'initialize_publish'
+    assert_includes initializers, 'initialize_test'
+  end
+
+  def test_activate_plugins_hoerc
+    home = ENV['HOME']
+    load_path = $LOAD_PATH.dup
+
+    Dir.mktmpdir do |path|
+      ENV['HOME'] = path
+      $LOAD_PATH << path
+
+      Dir.mkdir File.join(path, 'hoe')
+      open File.join(path, 'hoe', 'hoerc.rb'), 'w' do |io|
+        io.write 'module Hoe::Hoerc; def initialize_hoerc; end; end'
+      end
+
+      open File.join(path, '.hoerc'), 'w' do |io|
+        io.write YAML.dump 'plugins' => %w[hoerc]
+      end
+
+      spec = Hoe.spec 'blah' do
+        developer 'author', 'email'
+      end
+
+      assert_includes spec.methods.grep(/^initialize/), 'initialize_hoerc'
+    end
+  ensure
+    Hoe.instance_variable_get(:@loaded).delete :hoerc
+    Hoe.plugins.delete :hoerc
+    $LOAD_PATH.replace load_path
+    ENV['HOME'] = home
+  end
+
   def test_file_read_utf
     Tempfile.open 'BOM' do |io|
       io.write "\xEF\xBB\xBFBOM"

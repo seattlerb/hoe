@@ -228,23 +228,26 @@ class Hoe
   #
   # It is called at the end of hoe.rb
 
-  def self.load_plugins
-    loaded, found = {}, {}
+  def self.load_plugins plugins = Hoe.plugins
+    @found  ||= {}
+    @loaded ||= {}
 
     Gem.find_files("hoe/*.rb").reverse.each do |path|
-      found[File.basename(path, ".rb").intern] = path
+      @found[File.basename(path, ".rb").intern] = path
     end
 
-    :keep_doing_this while found.map { |name, plugin|
-      next unless Hoe.plugins.include? name
-      next if loaded[name]
+    :keep_doing_this while @found.map { |name, plugin|
+      next unless plugins.include? name
+      next if @loaded[name]
       begin
         warn "loading #{plugin}" if $DEBUG
-        loaded[name] = load plugin
+        @loaded[name] = require plugin
       rescue LoadError => e
         warn "error loading #{plugin.inspect}: #{e.message}. skipping..."
       end
     }.any?
+
+    return @loaded, @found
   end
 
   ##
@@ -261,15 +264,20 @@ class Hoe
   end
 
   ##
-  # Activate plugins.
+  # Activates +plugins+.  If a plugin cannot be loaded it will be ignored.
+  #
+  # Plugins may also be activated through a +plugins+ array in
+  # <tt>~/.hoerc</tt>.  This should only be used for plugins that aren't
+  # critical to your project and plugins that you want to use on other
+  # projects.
 
-  def self.plugin *names
-    self.plugins.concat names
+  def self.plugin *plugins
+    self.plugins.concat plugins
     self.plugins.uniq!
   end
 
   ##
-  # Return the list of activated plugins.
+  # The list of active plugins.
 
   def self.plugins
     @@plugins
@@ -298,16 +306,26 @@ class Hoe
   # Activate plugin modules and add them to the current instance.
 
   def activate_plugins
-    names = self.class.constants.map { |s| s.to_s }
+    plugins = Hoe.plugins
+
+    with_config do |config, _|
+      config_plugins = config['plugins']
+      break unless config_plugins
+      plugins += config_plugins.map { |plugin| plugin.intern }
+    end
+
+    Hoe.load_plugins plugins
+
+    names = Hoe.constants.map { |s| s.to_s }
     names.reject! { |n| n =~ /^[A-Z_]+$/ }
 
     names.each do |name|
-      next unless Hoe.plugins.include? name.downcase.intern
+      next unless plugins.include? name.downcase.intern
       warn "extend #{name}" if $DEBUG
       self.extend Hoe.const_get(name)
     end
 
-    self.class.plugins.each do |plugin|
+    Hoe.plugins.each do |plugin|
       msg = "initialize_#{plugin}"
       warn msg if $DEBUG
       send msg if self.respond_to? msg
@@ -626,9 +644,9 @@ class Hoe
   end
 
   ##
-  # Load or create a default config and yield it
+  # Loads ~/.hoerc and yields the configuration and its path
 
-  def with_config # :nodoc:
+  def with_config
     rc = File.expand_path("~/.hoerc")
     exists = File.exist? rc
     config = exists ? YAML.load_file(rc) : {}
