@@ -100,7 +100,7 @@ module Hoe::Publish
         rd.main = readme_file
         rd.options << '-d' if (`which dot` =~ /\/dot/) unless
           ENV['NODOT'] || Hoe::WINDOZE
-        rd.rdoc_dir = 'doc'
+        rd.rdoc_dir = local_rdoc_dir
 
         rd.rdoc_files += spec.require_paths
         rd.rdoc_files += spec.extra_rdoc_files
