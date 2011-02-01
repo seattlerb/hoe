@@ -58,7 +58,7 @@ require 'hoe/rake'
 
 class Hoe
   # duh
-  VERSION = '2.8.0'
+  VERSION = '2.9.0'
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
                :publish, :rcov, :gemcutter, :signing, :test]

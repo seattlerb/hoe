@@ -1,3 +1,26 @@
+=== 2.9.0 / 2011-01-31
+
+* 11 minor enhancements:
+
+  * Added Hoe::Package#pkg_path to make package hook writing easier.
+  * Added Hoe::Test#test_prelude to allow for code to run before test loading.
+  * Added plugin?(name) to allow for easier plugin guarding in hoe spec.
+  * Added support for multiple template dirs for sow.
+  * Added support for rubygems-test. See http://www.gem-testers.org/
+  * Clean up sow a LOT using: include FileUtils::Verbose
+  * Don't warn about missing plugins without rake -t
+  * Hoe requires Gem::PackageTask from RubyGems 1.4+
+  * Moved post_news from publish to rubyforge
+  * Plugins can now be loaded from a +plugins+ array in ~/.hoerc
+  * rubyforge plugin now uses plain globs to push. Fixes releases for rubygems itself
+
+* 4 bug fixes:
+
+  * Failed plugins should notify on both trace and debug.
+  * Fixed rdoc_dir for custom rdoc locations
+  * Fixed require 'rubyforge' that was too late
+  * Fixed sow to properly rename dirs depth first
+
 === 2.8.0 / 2010-12-08
 
 * 6 minor enhancements:
