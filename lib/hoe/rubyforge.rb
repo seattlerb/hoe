@@ -30,12 +30,12 @@ module Hoe::RubyForge
       c["release_changes"] = changes     if changes
       c["preformatted"]    = true
 
-      pkg   = "pkg/#{name}-#{version}"
-      files = [(@need_tar ? "#{pkg}.tgz" : nil),
-               (@need_zip ? "#{pkg}.zip" : nil),
-               Dir["#{pkg}*.gem"]].flatten.compact
+      files = [(@need_tar ? Dir["pkg/*.tgz"] : nil),
+               (@need_zip ? Dir["pkg/*.zip"] : nil),
+               Dir["pkg/*.gem"]].flatten.compact
 
       puts "Releasing #{name} v. #{version}"
+
       rf.add_release rubyforge_name, name, version, *files
     end
 
