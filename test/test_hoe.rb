@@ -22,7 +22,7 @@ class TestHoe < MiniTest::Unit::TestCase
       developer 'author', 'email'
     end
 
-    initializers = hoe.methods.grep(/^initialize/)
+    initializers = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
 
     assert_includes initializers, 'initialize_clean'
     assert_includes initializers, 'initialize_flay'
@@ -53,7 +53,9 @@ class TestHoe < MiniTest::Unit::TestCase
         developer 'author', 'email'
       end
 
-      assert_includes spec.methods.grep(/^initialize/), 'initialize_hoerc'
+      methods = spec.methods.grep(/^initialize/).map { |s| s.to_s }
+
+      assert_includes methods, 'initialize_hoerc'
     end
   ensure
     Hoe.instance_variable_get(:@loaded).delete :hoerc
