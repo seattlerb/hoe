@@ -1,3 +1,14 @@
+=== 2.9.1 / 2011-02-05
+
+* 1 minor enhancement:
+
+  * Sow now creates all template directories before dealing with anything else
+
+* 2 bug fixes:
+
+  * Fixed dependency order bug with prereleases [erikh]
+  * Fixed sow when passed no args. [erikh]
+
 === 2.9.0 / 2011-01-31
 
 * 11 minor enhancements:
