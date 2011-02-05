@@ -37,9 +37,9 @@ module Hoe::Package
   # Define tasks for plugin.
 
   def define_package_tasks
-    Gem::PackageTask.new spec do |pkg|
-      prerelease_version
+    prerelease_version
 
+    Gem::PackageTask.new spec do |pkg|
       pkg.need_tar = @need_tar
       pkg.need_zip = @need_zip
     end
@@ -54,8 +54,6 @@ module Hoe::Package
 
     # no doco, invisible hook
     task :prerelease do
-      prerelease_version
-
       abort "Fix your version before you release" if spec.version =~ /borked/
     end
 
