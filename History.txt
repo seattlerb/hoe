@@ -4,9 +4,10 @@
 
   * Sow now creates all template directories before dealing with anything else
 
-* 2 bug fixes:
+* 3 bug fixes:
 
   * Fixed dependency order bug with prereleases [erikh]
+  * Fixed sanity check for prereleases.
   * Fixed sow when passed no args. [erikh]
 
 === 2.9.0 / 2011-01-31

@@ -66,6 +66,10 @@ module Hoe::Package
     desc "Sanity checks for release"
     task :release_sanity do
       v = ENV["VERSION"] or abort "Must supply VERSION=x.y.z"
+
+      pre = ENV['PRERELEASE'] || ENV['PRE']
+      v += ".#{pre}" if pre
+
       abort "Versions don't match #{v} vs #{version}" if v != version
     end
   end
