@@ -138,4 +138,21 @@ class TestHoe < MiniTest::Unit::TestCase
     assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('two-words')
     assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('two_words')
   end
+
+  def test_nosudo
+    hoe = Hoe.spec("blah") do
+      self.version = '1.2.3'
+      developer 'author', 'email'
+
+      def sh cmd
+        cmd
+      end
+    end
+
+    assert_match(/^sudo gem.*/, hoe.install_gem('foo'))
+    ENV['NOSUDO'] = '1'
+    assert_match(/^gem.*/, hoe.install_gem('foo'))
+  ensure
+    ENV.delete "NOSUDO"
+  end
 end

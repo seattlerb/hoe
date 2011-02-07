@@ -44,7 +44,7 @@ module Hoe::Package
       pkg.need_zip = @need_zip
     end
 
-    desc 'Install the package as a gem.'
+    desc 'Install the package as a gem. (opt. NOSUDO=1)'
     task :install_gem => [:clean, :package, :check_extra_deps] do
       install_gem Dir['pkg/*.gem'].first
     end
@@ -87,7 +87,7 @@ module Hoe::Package
 
   def install_gem name, version = nil
     gem_cmd = Gem.default_exec_format % 'gem'
-    sudo    = 'sudo '                  unless Hoe::WINDOZE
+    sudo    = 'sudo '                  unless Hoe::WINDOZE || ENV["NOSUDO"]
     local   = '--local'                unless version
     version = "--version '#{version}'" if     version
     sh "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
