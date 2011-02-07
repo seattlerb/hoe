@@ -2,6 +2,12 @@ require 'minitest/autorun'
 require 'hoe'
 require 'tempfile'
 
+class Hoe
+  def self.files= x
+    @files = x
+  end
+end
+
 $rakefile = nil # shuts up a warning in rdoctask.rb
 
 class TestHoe < MiniTest::Unit::TestCase
@@ -35,6 +41,7 @@ class TestHoe < MiniTest::Unit::TestCase
   def test_activate_plugins_hoerc
     home = ENV['HOME']
     load_path = $LOAD_PATH.dup
+    Hoe.files = nil
 
     Dir.mktmpdir do |path|
       ENV['HOME'] = path
@@ -46,7 +53,7 @@ class TestHoe < MiniTest::Unit::TestCase
       end
 
       open File.join(path, '.hoerc'), 'w' do |io|
-        io.write YAML.dump 'plugins' => %w[hoerc]
+        io.write YAML.dump('plugins' => %w[hoerc])
       end
 
       spec = Hoe.spec 'blah' do

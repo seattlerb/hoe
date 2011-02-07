@@ -231,8 +231,9 @@ class Hoe
   def self.load_plugins plugins = Hoe.plugins
     @found  ||= {}
     @loaded ||= {}
+    @files  ||= Gem.find_files "hoe/*.rb"
 
-    Gem.find_files("hoe/*.rb").reverse.each do |path|
+    @files.reverse.each do |path|
       @found[File.basename(path, ".rb").intern] = path
     end
 

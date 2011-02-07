@@ -23,7 +23,6 @@ module Hoe::Flog
 
   def define_flog_tasks
     begin
-      require 'flog'
       require 'flog_task'
       FlogTask.new :flog, self.flog_threshold
     rescue Exception
