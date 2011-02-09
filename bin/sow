@@ -13,7 +13,7 @@ option = {
   :subdir => nil,
 }
 
-def check_subdir
+def check_subdir option
   if option[:subdir] then
     warn "ERROR: you can't specify multiple subdirs"
     abort opts.to_s
@@ -26,12 +26,12 @@ opts = OptionParser.new do |opts|
   opts.separator "Standard options:"
 
   opts.on("-t", "--trunk", "Add project to subdir under 'trunk'.") do
-    check_subdir
+    check_subdir option
     option[:subdir] = "trunk"
   end
 
   opts.on("-d", "--dev", "Add project to subdir under 'dev'.") do
-    check_subdir
+    check_subdir option
     option[:subdir] = "dev"
   end
 
@@ -46,8 +46,6 @@ opts = OptionParser.new do |opts|
 end
 
 opts.parse!
-
-# TODO: fail if both dev and trunk
 
 include FileUtils::Verbose
 
@@ -108,11 +106,11 @@ Dir.chdir project do
   end
 end
 
-if option[:dev] || option[:trunk] then
+if option[:subdir] then
   temp_dir = "#{project}.#{$$}"
   FileUtils.mv project, temp_dir
   FileUtils.mkdir project
-  FileUtils.mv temp_dir, "#{project}/#{option[:dev] ? 'dev' : 'trunk'}"
+  FileUtils.mv temp_dir, "#{project}/#{option[:subdir]}"
 end
 
 puts
