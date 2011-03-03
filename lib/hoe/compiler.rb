@@ -24,6 +24,8 @@ module Hoe::Compiler
     self.compile_tasks = [:multi, :test]
     self.spec_extras   = { :extensions => ["ext/#{self.name}/extconf.rb"] }
 
+    clean_globs << "lib/#{self.name}/*.{so,bundle,dll}"
+
     extra_dev_deps << ["rake-compiler", "~> 0.7"]
   end
 
