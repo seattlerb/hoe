@@ -111,7 +111,7 @@ class TestHoe < MiniTest::Unit::TestCase
     assert_equal 'blah', spec.rubyforge_project
     assert_equal Gem::RubyGemsVersion, spec.rubygems_version
     assert_match(/^Hoe.*Rakefiles$/, spec.summary)
-    assert_equal files.grep(/^test/), spec.test_files
+    assert_equal files.grep(/^test/).sort, spec.test_files.sort
 
     deps = spec.dependencies.sort_by { |dep| dep.name }
 
