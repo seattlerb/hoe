@@ -16,7 +16,7 @@ Hoe.spec "hoe" do
   blog_categories << "Seattle.rb" << "Ruby"
 
   pluggable!
-  require_ruby_version '>= 1.3.6'
+  require_rubygems_version '>= 1.4'
 end
 
 task :plugins do

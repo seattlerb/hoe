@@ -100,7 +100,7 @@ module Hoe::Publish
         rd.main = readme_file
         rd.options << '-d' if (`which dot` =~ /\/dot/) unless
           ENV['NODOT'] || Hoe::WINDOZE
-        rd.rdoc_dir = 'doc'
+        rd.rdoc_dir = local_rdoc_dir
 
         rd.rdoc_files += spec.require_paths
         rd.rdoc_files += spec.extra_rdoc_files
@@ -171,17 +171,6 @@ module Hoe::Publish
                                true)
         end
       end
-    end
-
-    desc 'Post announcement to rubyforge.'
-    task :post_news do
-      require 'rubyforge'
-      subject, title, body, urls = announcement
-
-      rf = RubyForge.new.configure
-      rf.login
-      rf.post_news(rubyforge_name, subject, "#{title}\n\n#{body}")
-      puts "Posted to rubyforge"
     end
 
     desc 'Announce your release.'

@@ -2,11 +2,73 @@ require 'minitest/autorun'
 require 'hoe'
 require 'tempfile'
 
+class Hoe
+  def self.files= x
+    @files = x
+  end
+end
+
 $rakefile = nil # shuts up a warning in rdoctask.rb
 
 class TestHoe < MiniTest::Unit::TestCase
   def setup
     Rake.application.clear
+  end
+
+  def test_class_load_plugins
+    loaded, = Hoe.load_plugins
+
+    assert_includes loaded.keys, :clean
+    assert_includes loaded.keys, :debug
+    assert_includes loaded.keys, :deps
+  end
+
+  def test_activate_plugins
+    hoe = Hoe.spec 'blah' do
+      developer 'author', 'email'
+    end
+
+    initializers = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
+
+    assert_includes initializers, 'initialize_clean'
+    assert_includes initializers, 'initialize_flay'
+    assert_includes initializers, 'initialize_flog'
+    assert_includes initializers, 'initialize_package'
+    assert_includes initializers, 'initialize_publish'
+    assert_includes initializers, 'initialize_test'
+  end
+
+  def test_activate_plugins_hoerc
+    home = ENV['HOME']
+    load_path = $LOAD_PATH.dup
+    Hoe.files = nil
+
+    Dir.mktmpdir do |path|
+      ENV['HOME'] = path
+      $LOAD_PATH << path
+
+      Dir.mkdir File.join(path, 'hoe')
+      open File.join(path, 'hoe', 'hoerc.rb'), 'w' do |io|
+        io.write 'module Hoe::Hoerc; def initialize_hoerc; end; end'
+      end
+
+      open File.join(path, '.hoerc'), 'w' do |io|
+        io.write YAML.dump('plugins' => %w[hoerc])
+      end
+
+      spec = Hoe.spec 'blah' do
+        developer 'author', 'email'
+      end
+
+      methods = spec.methods.grep(/^initialize/).map { |s| s.to_s }
+
+      assert_includes methods, 'initialize_hoerc'
+    end
+  ensure
+    Hoe.instance_variable_get(:@loaded).delete :hoerc
+    Hoe.plugins.delete :hoerc
+    $LOAD_PATH.replace load_path
+    ENV['HOME'] = home
   end
 
   def test_file_read_utf
@@ -82,5 +144,22 @@ class TestHoe < MiniTest::Unit::TestCase
     assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('twoWords')
     assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('two-words')
     assert_equal %w(two_words two_words TwoWords), Hoe.normalize_names('two_words')
+  end
+
+  def test_nosudo
+    hoe = Hoe.spec("blah") do
+      self.version = '1.2.3'
+      developer 'author', 'email'
+
+      def sh cmd
+        cmd
+      end
+    end
+
+    assert_match(/^sudo gem.*/, hoe.install_gem('foo'))
+    ENV['NOSUDO'] = '1'
+    assert_match(/^gem.*/, hoe.install_gem('foo'))
+  ensure
+    ENV.delete "NOSUDO"
   end
 end

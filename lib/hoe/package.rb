@@ -37,14 +37,14 @@ module Hoe::Package
   # Define tasks for plugin.
 
   def define_package_tasks
-    Gem::PackageTask.new spec do |pkg|
-      prerelease_version
+    prerelease_version
 
+    Gem::PackageTask.new spec do |pkg|
       pkg.need_tar = @need_tar
       pkg.need_zip = @need_zip
     end
 
-    desc 'Install the package as a gem.'
+    desc 'Install the package as a gem. (opt. NOSUDO=1)'
     task :install_gem => [:clean, :package, :check_extra_deps] do
       install_gem Dir['pkg/*.gem'].first
     end
@@ -54,8 +54,6 @@ module Hoe::Package
 
     # no doco, invisible hook
     task :prerelease do
-      prerelease_version
-
       abort "Fix your version before you release" if spec.version =~ /borked/
     end
 
@@ -68,6 +66,10 @@ module Hoe::Package
     desc "Sanity checks for release"
     task :release_sanity do
       v = ENV["VERSION"] or abort "Must supply VERSION=x.y.z"
+
+      pre = ENV['PRERELEASE'] || ENV['PRE']
+      v += ".#{pre}" if pre
+
       abort "Versions don't match #{v} vs #{version}" if v != version
     end
   end
@@ -85,7 +87,7 @@ module Hoe::Package
 
   def install_gem name, version = nil
     gem_cmd = Gem.default_exec_format % 'gem'
-    sudo    = 'sudo '                  unless Hoe::WINDOZE
+    sudo    = 'sudo '                  unless Hoe::WINDOZE || ENV["NOSUDO"]
     local   = '--local'                unless version
     version = "--version '#{version}'" if     version
     sh "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"

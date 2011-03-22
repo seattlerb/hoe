@@ -30,12 +30,12 @@ module Hoe::RubyForge
       c["release_changes"] = changes     if changes
       c["preformatted"]    = true
 
-      pkg   = "pkg/#{name}-#{version}"
-      files = [(@need_tar ? "#{pkg}.tgz" : nil),
-               (@need_zip ? "#{pkg}.zip" : nil),
-               Dir["#{pkg}*.gem"]].flatten.compact
+      files = [(@need_tar ? Dir["pkg/*.tgz"] : nil),
+               (@need_zip ? Dir["pkg/*.zip"] : nil),
+               Dir["pkg/*.gem"]].flatten.compact
 
       puts "Releasing #{name} v. #{version}"
+
       rf.add_release rubyforge_name, name, version, *files
     end
 
@@ -49,6 +49,17 @@ module Hoe::RubyForge
         rdoc_locations << "#{config["username"]}@rubyforge.org:#{dir}"
       else
         warn "Couldn't read #{path}. Run `rubyforge setup`."
+      end
+
+      desc 'Post announcement to rubyforge.'
+      task :post_news do
+        require 'rubyforge'
+        subject, title, body, urls = announcement
+
+        rf = RubyForge.new.configure
+        rf.login
+        rf.post_news(rubyforge_name, subject, "#{title}\n\n#{body}")
+        puts "Posted to rubyforge"
       end
     end
   end

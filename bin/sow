@@ -6,28 +6,32 @@ require 'hoe'
 require 'fileutils'
 require 'erb'
 
+XIF = 'FI' + 'X' # prevents extra hits on my TAG reporter
+
 option = {
   :style  => "default",
   :subdir => nil,
 }
 
-def check_subdir
+def check_subdir option
   if option[:subdir] then
     warn "ERROR: you can't specify multiple subdirs"
     abort opts.to_s
   end
 end
 
-OptionParser.new do |opts|
+opts = OptionParser.new do |opts|
+  opts.banner = "Usage: sow [options] project_name"
+
   opts.separator "Standard options:"
 
   opts.on("-t", "--trunk", "Add project to subdir under 'trunk'.") do
-    check_subdir
+    check_subdir option
     option[:subdir] = "trunk"
   end
 
   opts.on("-d", "--dev", "Add project to subdir under 'dev'.") do
-    check_subdir
+    check_subdir option
     option[:subdir] = "dev"
   end
 
@@ -39,25 +43,18 @@ OptionParser.new do |opts|
     puts opts
     exit
   end
-end.parse!
+end
 
-# TODO: fail if both dev and trunk
+opts.parse!
 
 include FileUtils::Verbose
 
-project = ARGV.shift
-
-abort "Project #{project} seems to exist" if test ?d, project
-
 # variables for erb:
-XIF                       = 'FI' + 'X' # prevents extra hits on my TAG reporter
-project, file_name, klass = Hoe.normalize_names project
-template_dir              = File.expand_path("~/.hoe_template")
-template_path             = File.join template_dir, option[:style]
-source_path               = File.join(File.dirname(File.dirname(__FILE__)),
-                                      "template")
+template_dir  = File.expand_path("~/.hoe_template")
+template_path = File.join template_dir, option[:style]
+source_path   = File.join(File.dirname(File.dirname(__FILE__)), "template")
+default_dir   = File.join template_dir, "default"
 
-default_dir = File.join template_dir, "default"
 if File.directory? template_dir and not File.directory? default_dir then
   warn "Detected old #{template_dir}"
   warn "Moving to #{default_dir}"
@@ -69,12 +66,20 @@ end
 
 unless File.directory? template_path then
   warn "Creating missing #{option[:style]} template."
+  FileUtils.mkdir_p File.dirname(template_path)
   FileUtils.cp_r source_path, template_path
   paths = (Dir["#{template_path}/**/*"] +
            Dir["#{template_path}/**/.*"]).select { |f| File.file? f }
   FileUtils.chmod 0644, paths
   FileUtils.chmod 0755, paths.grep(/bin\//)
 end
+
+project = ARGV.shift
+
+abort opts.to_s unless project
+abort "Project #{project} seems to exist" if test ?d, project
+
+project, file_name, klass = Hoe.normalize_names project
 
 FileUtils.cp_r template_path, project
 
@@ -101,11 +106,11 @@ Dir.chdir project do
   end
 end
 
-if option[:dev] || option[:trunk] then
+if option[:subdir] then
   temp_dir = "#{project}.#{$$}"
   FileUtils.mv project, temp_dir
   FileUtils.mkdir project
-  FileUtils.mv temp_dir, "#{project}/#{option[:dev] ? 'dev' : 'trunk'}"
+  FileUtils.mv temp_dir, "#{project}/#{option[:subdir]}"
 end
 
 puts
