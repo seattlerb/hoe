@@ -326,7 +326,7 @@ class Hoe
       self.extend Hoe.const_get(name)
     end
 
-    Hoe.plugins.each do |plugin|
+    plugins.each do |plugin|
       msg = "initialize_#{plugin}"
       warn msg if $DEBUG
       send msg if self.respond_to? msg
