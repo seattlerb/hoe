@@ -168,7 +168,7 @@ module Hoe::Test
 
     tests = ["rubygems"]
     tests << framework if framework
-    tests << test_globs.map { |g| Dir.glob(g) }
+    tests << test_globs.sort.map { |g| Dir.glob(g) }
     tests.flatten!
     tests.map! {|f| %(require "#{f}")}
 
