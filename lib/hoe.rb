@@ -63,6 +63,9 @@ require 'hoe/rake'
 #   end
 
 class Hoe
+
+  include Rake::DSL if defined?(Rake::DSL)
+
   # duh
   VERSION = '2.9.1'
 
