@@ -16,6 +16,7 @@ module Hoe::Test
   SUPPORTED_TEST_FRAMEWORKS = {
     :testunit => "test/unit",
     :minitest => "minitest/autorun",
+    :none     => nil,
   }
 
   ##
@@ -159,11 +160,16 @@ module Hoe::Test
   # Generate the test command-line.
 
   def make_test_cmd multi = false # :nodoc:
-    framework = SUPPORTED_TEST_FRAMEWORKS[testlib]
-    raise "unsupported test framework #{testlib}" unless framework
+    unless SUPPORTED_TEST_FRAMEWORKS.has_key?(testlib)
+      raise "unsupported test framework #{testlib}"
+    end
 
-    tests = ["rubygems", framework] +
-      test_globs.map { |g| Dir.glob(g) }.flatten
+    framework = SUPPORTED_TEST_FRAMEWORKS[testlib]
+
+    tests = ["rubygems"]
+    tests << framework if framework
+    tests << test_globs.sort.map { |g| Dir.glob(g) }
+    tests.flatten!
     tests.map! {|f| %(require "#{f}")}
 
     tests.insert 1, test_prelude if test_prelude

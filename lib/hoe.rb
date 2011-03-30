@@ -3,6 +3,12 @@
 require 'rubygems'
 require 'rake'
 require 'rake/testtask'
+
+begin
+  require 'psych'
+rescue LoadError
+  # do nothing
+end
 require 'yaml'
 
 require 'hoe/rake'
@@ -57,6 +63,9 @@ require 'hoe/rake'
 #   end
 
 class Hoe
+
+  include Rake::DSL if defined?(Rake::DSL)
+
   # duh
   VERSION = '2.9.1'
 
@@ -331,6 +340,22 @@ class Hoe
       warn msg if $DEBUG
       send msg if self.respond_to? msg
     end
+  end
+
+  ##
+  # Add a dependency declaration to your spec. Pass :dev to
+  # +type+ for developer dependencies.
+
+  def dependency name, version, type = :runtime
+    ary = case type
+          when :runtime then
+            extra_deps
+          when :dev, :development, :developer then
+            extra_dev_deps
+          else
+            raise "Unknown dependency type: #{type}"
+          end
+    ary << [name, version]
   end
 
   ##
