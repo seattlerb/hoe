@@ -1,3 +1,21 @@
+=== 2.9.2 / 2011-03-31
+
+* 7 minor enhancements:
+
+  * Added :none as a testlib option to let you do whatever you want. (phiggins)
+  * Added Hoe#dependency(name, version, type = :runtime) for cleaner hoe specs.
+  * Added NOSUDO option to `rake gem_install`. (nihildeb)
+  * Include Rake::DSL to support future versions of rake
+  * Multiruby now skips mri_trunk if multiruby_skip includes 1.9
+  * Test#make_test_cmd now sorts test files (mostly for testing)
+  * Try using psych before syck.
+
+* 3 bug fixes:
+
+  * Clean generated extension library too
+  * Fixed a bug with sow -d or -t
+  * Fixed plugin activation via ~/.hoerc. (ged)
+
 === 2.9.1 / 2011-02-05
 
 * 1 minor enhancement:
