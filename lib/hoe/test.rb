@@ -177,6 +177,7 @@ module Hoe::Test
     cmd = "#{Hoe::RUBY_FLAGS} -e '#{tests.join("; ")}' -- #{FILTER}"
 
     if multi then
+      multiruby_skip << "mri_trunk" if multiruby_skip.include? "1.9"
       ENV['EXCLUDED_VERSIONS'] = multiruby_skip.join ":"
       cmd = "-S multiruby #{cmd}"
     end
