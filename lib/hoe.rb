@@ -316,14 +316,14 @@ class Hoe
   # Activate plugin modules and add them to the current instance.
 
   def activate_plugins
-    plugins = Hoe.plugins
 
     with_config do |config, _|
       config_plugins = config['plugins']
       break unless config_plugins
-      plugins += config_plugins.map { |plugin| plugin.intern }
+      Hoe.plugins.concat config_plugins.map { |plugin| plugin.intern }
     end
 
+    plugins = Hoe.plugins
     Hoe.load_plugins plugins
 
     names = Hoe.constants.map { |s| s.to_s }
