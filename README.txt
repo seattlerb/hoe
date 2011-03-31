@@ -175,7 +175,7 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * hoe-gemcutter - Adds gemcutter release automation to Hoe.
 * hoe-gemspec   - Generate a prerelease gemspec based on a Hoe spec.
 * hoe-git       - A set of Hoe plugins for tighter Git integration.
-* hoe-hg        - A Hoe plugin for Mercurial integration.
+* hoe-mercurial - A Hoe plugin for Mercurial integration.
 * hoe-rubygems  - A Hoe plugin with additional RubyGems tasks.
 * hoe-seattlerb - Minitest, email announcements, release branching.
 * hoe-yard      - A Hoe plugin for generating YARD documentation.

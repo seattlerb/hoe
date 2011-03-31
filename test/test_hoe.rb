@@ -67,6 +67,40 @@ class TestHoe < MiniTest::Unit::TestCase
   ensure
     Hoe.instance_variable_get(:@loaded).delete :hoerc
     Hoe.plugins.delete :hoerc
+    Hoe.send :remove_const, :Hoerc
+    $LOAD_PATH.replace load_path
+    ENV['HOME'] = home
+  end
+
+  def test_initialize_plugins_hoerc
+    home = ENV['HOME']
+    load_path = $LOAD_PATH.dup
+    Hoe.files = nil
+
+    Dir.mktmpdir do |path|
+      ENV['HOME'] = path
+      $LOAD_PATH << path
+
+      Dir.mkdir File.join(path, 'hoe')
+      open File.join(path, 'hoe', 'hoerc.rb'), 'w' do |io|
+        io.write 'module Hoe::Hoerc; def initialize_hoerc; @hoerc_plugin_initialized = true; end; end'
+      end
+
+      open File.join(path, '.hoerc'), 'w' do |io|
+        io.write YAML.dump('plugins' => %w[hoerc])
+      end
+
+      spec = Hoe.spec 'blah' do
+        developer 'author', 'email'
+      end
+
+      assert_includes spec.instance_variables.map(&:to_s), '@hoerc_plugin_initialized',
+        "Hoerc plugin wasn't initialized"
+    end
+  ensure
+    Hoe.instance_variable_get(:@loaded).delete :hoerc
+    Hoe.plugins.delete :hoerc
+    Hoe.send :remove_const, :Hoerc
     $LOAD_PATH.replace load_path
     ENV['HOME'] = home
   end
