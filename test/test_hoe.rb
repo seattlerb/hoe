@@ -132,13 +132,11 @@ class TestHoe < MiniTest::Unit::TestCase
 
     assert_equal ['author'], spec.authors
     assert_equal t, spec.date
-    assert_equal 'sow', spec.default_executable
     assert_match(/Hoe.*Rakefiles/, spec.description)
     assert_equal ['email'], spec.email
     assert_equal ['sow'], spec.executables
     assert_equal text_files, spec.extra_rdoc_files
     assert_equal files, spec.files
-    assert_equal true, spec.has_rdoc
     assert_equal "http://rubyforge.org/projects/seattlerb/", spec.homepage
     assert_equal ['--main', 'README.txt'], spec.rdoc_options
     assert_equal ['lib'], spec.require_paths

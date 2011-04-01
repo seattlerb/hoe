@@ -399,7 +399,6 @@ class Hoe
       s.bindir               = "bin"
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ['--main', readme_file]
-      s.has_rdoc             = true
       s.post_install_message = post_install_message
       s.test_files           = Dir[*self.test_globs]
 
