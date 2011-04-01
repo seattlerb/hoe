@@ -1,3 +1,14 @@
+=== 2.9.4 / 2011-04-01
+
+* 1 minor enhancement:
+
+  * check_manifest now fails when there is a diff. AKA, drbrain was
+    lazy and it is somehow my fault. If anything, it is jbarnette's
+    fault for not building any brains into hoe-git the way that my
+    hoe-perforce plugin works. I mean, c'mon... how hard is it to
+    validate the manifest before you release? I do it all the time
+    and twice on sundays. BAH! Damn kids! Get off my lawn!
+
 === 2.9.3 / 2011-04-01
 
 * 1 minor enhancement:
