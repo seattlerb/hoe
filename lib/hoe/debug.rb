@@ -57,8 +57,11 @@ module Hoe::Debug
         end
         files = files.sort.join "\n"
         File.open f, 'w' do |fp| fp.puts files end
-        system "#{DIFF} -du Manifest.txt #{f}"
-        rm f
+        begin
+          sh "#{DIFF} -du Manifest.txt #{f}"
+        ensure
+          rm f
+        end
       end
     end
 
