@@ -188,9 +188,9 @@ class TestHoe < MiniTest::Unit::TestCase
       end
     end
 
-    assert_match(/^sudo gem.*/, hoe.install_gem('foo'))
+    assert_match(/^sudo j?gem.*/, hoe.install_gem('foo'))
     ENV['NOSUDO'] = '1'
-    assert_match(/^gem.*/, hoe.install_gem('foo'))
+    assert_match(/^j?gem.*/, hoe.install_gem('foo'))
   ensure
     ENV.delete "NOSUDO"
   end
