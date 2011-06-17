@@ -20,7 +20,7 @@ def check_subdir option
   end
 end
 
-opts = OptionParser.new do |opts|
+op = OptionParser.new do |opts|
   opts.banner = "Usage: sow [options] project_name"
 
   opts.separator "Standard options:"
@@ -45,7 +45,7 @@ opts = OptionParser.new do |opts|
   end
 end
 
-opts.parse!
+op.parse!
 
 include FileUtils::Verbose
 
@@ -76,10 +76,10 @@ end
 
 project = ARGV.shift
 
-abort opts.to_s unless project
+abort op.to_s unless project
 abort "Project #{project} seems to exist" if test ?d, project
 
-project, file_name, klass = Hoe.normalize_names project
+_, file_name, klass = Hoe.normalize_names project
 
 FileUtils.cp_r template_path, project
 
@@ -95,13 +95,25 @@ Dir.chdir project do
 
     warn "erb: #{path}"
 
-    File.open path, "w" do |f|
-      f.puts ERB.new(file).result(binding)
+    File.open path, "w" do |io|
+      erb = ERB.new file
+      erb.filename = path
+      io.puts erb.result(binding)
     end
   end
 
   paths.grep(/file_name|\.erb$/).each do |file|
     new_file = file.sub(/file_name/, file_name).sub(/\.erb$/, '')
+
+    # TODO change template to separate a flat filename from a directory
+    # filename
+    if file =~ /^(bin|test)/ then
+      dir, *rest = new_file.split File::SEPARATOR
+
+      new_file = File.join dir, rest.join('_')
+    end
+
+    FileUtils.mkdir_p File.dirname new_file
     FileUtils.mv file, new_file
   end
 end

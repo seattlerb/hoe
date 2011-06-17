@@ -261,14 +261,22 @@ class Hoe
   end
 
   ##
-  # Normalize a project name into the project, file, and klass cases (?!?).
+  # Normalize a project name into the project, file, and klass names that
+  # follow Ruby package naming guidelines.
   #
-  # no, I have no idea how to describe this. Does the thing with the stuff.
+  # Project names are lowercase with _ separating package parts and -
+  # separating extension parts.
+  #
+  # File names are lowercase with _ separating pacagke parts and / separating
+  # extension parts.  net-http-persistent becomes net/http/persistent.
+  #
+  # Klass names are CamelCase with :: separating extension parts.
 
   def self.normalize_names project # :nodoc:
-    project   = project.tr('-', '_').gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
+    project   = project.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
     klass     = project.gsub(/(?:^|_)([a-z])/) { $1.upcase }
-    file_name = project
+    klass     = klass.  gsub(/(?:^|-)([a-z])/) { "::#{$1.upcase}" }
+    file_name = project.gsub(/-/, '/')
 
     return project, file_name, klass
   end
@@ -546,7 +554,7 @@ class Hoe
 
       begin
         send "define_#{plugin}_tasks"
-      rescue NoMethodError => e
+      rescue NoMethodError
         warn "warning: couldn't activate the #{plugin} plugin, skipping" if
           Rake.application.options.trace or $DEBUG
 
