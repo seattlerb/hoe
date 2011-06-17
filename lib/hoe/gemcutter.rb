@@ -1,6 +1,8 @@
 require 'rake'
 
 module Hoe::Gemcutter
+  include Rake::DSL if defined?(Rake::DSL)
+
   def define_gemcutter_tasks
     desc "Push gem to gemcutter."
     task :release_to_gemcutter => [:clean, :package, :release_sanity] do
