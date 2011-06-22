@@ -1,3 +1,15 @@
+=== 2.9.5 / 2011-06-21
+
+* 2 minor enhancements:
+
+  * Extended #dependency to work post-spec creation in case a task wants to add a dep.
+
+* 2 bug fixes:
+
+  * Fixed dependency for :inline plugin
+  * Fixed sow to obey gem naming conventions.  It no longer munges - to _.
+  * Switched hoe deps from >= to ~>.
+
 === 2.9.4 / 2011-04-01
 
 * 1 minor enhancement:
