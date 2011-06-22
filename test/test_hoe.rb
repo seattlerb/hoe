@@ -147,7 +147,7 @@ class TestHoe < MiniTest::Unit::TestCase
 
     deps = spec.dependencies.sort_by { |dep| dep.name }
 
-    expected = [["hoe",       :development, ">= #{Hoe::VERSION}"]]
+    expected = [["hoe",       :development, "~> #{Hoe::VERSION}"]]
 
     expected << ["rubyforge", :development, ">= #{::RubyForge::VERSION}"] if
       defined? ::RubyForge
