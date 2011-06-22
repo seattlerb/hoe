@@ -70,8 +70,6 @@ module Hoe::Deps
 
       desc "Fetch all the dependent gems of this gem into tarballs"
       task :fetch do
-        gems = self.get_gems_by_name
-        gem  = gems[self.name]
         deps = self.dependent_upon self.name
 
         mkdir "deps" unless File.directory? "deps"

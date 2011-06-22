@@ -154,7 +154,7 @@ module Hoe::Publish
       with_config do |config, path|
         break unless config['blogs']
 
-        subject, title, body, urls = announcement
+        _, title, body, urls = announcement
         body += "\n\n#{urls}"
 
         config['blogs'].each do |site|
@@ -163,12 +163,12 @@ module Hoe::Publish
                                                 :description => body,
                                                 :categories => blog_categories)
 
-          result = server.call('metaWeblog.newPost',
-                               site['blog_id'],
-                               site['user'],
-                               site['password'],
-                               content,
-                               true)
+          server.call('metaWeblog.newPost',
+                      site['blog_id'],
+                      site['user'],
+                      site['password'],
+                      content,
+                      true)
         end
       end
     end

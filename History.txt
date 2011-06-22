@@ -4,9 +4,10 @@
 
   * Extended #dependency to work post-spec creation in case a task wants to add a dep.
 
-* 2 bug fixes:
+* 4 bug fixes:
 
-  * Fixed dependency for :inline plugin
+  * Fixed dependency for :inline plugin.
+  * Fixed minor 1.9.3 warnings.
   * Fixed sow to obey gem naming conventions.  It no longer munges - to _.
   * Switched hoe deps from >= to ~>.
 
