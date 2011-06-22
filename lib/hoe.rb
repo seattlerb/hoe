@@ -385,11 +385,11 @@ class Hoe
 
     case name
     when 'hoe' then
-      extra_deps << ['rake', ">= #{RAKEVERSION}"]
-    when 'rubyforge', 'rake', 'gemcutter' then
+      dependency "rake", "~> #{RAKEVERSION}"
+    when 'rake', 'minitest' then
       # avoid circular dependencies for hoe's (potentially) hoe'd dependencies
     else
-      extra_dev_deps << ['hoe', ">= #{VERSION}"]
+      dependency "hoe", "~> #{VERSION}", :development
     end
   end
 
