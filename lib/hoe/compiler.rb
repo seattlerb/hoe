@@ -26,7 +26,7 @@ module Hoe::Compiler
 
     clean_globs << "lib/#{self.name}/*.{so,bundle,dll}"
 
-    extra_dev_deps << ["rake-compiler", "~> 0.7"]
+    dependency "rake-compiler", "~> 0.7", :development
   end
 
   ##

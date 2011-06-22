@@ -43,7 +43,7 @@ module Hoe::Racc
     self.racc_flags ||= "-v -l"
     self.rex_flags  ||= "--independent"
 
-    extra_dev_deps << ['racc', '~> 1.4.7']
+    dependency 'racc', '~> 1.4.7', :development
   end
 
   ##
