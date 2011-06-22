@@ -353,15 +353,27 @@ class Hoe
   # +type+ for developer dependencies.
 
   def dependency name, version, type = :runtime
-    ary = case type
-          when :runtime then
-            extra_deps
-          when :dev, :development, :developer then
-            extra_dev_deps
-          else
-            raise "Unknown dependency type: #{type}"
-          end
-    ary << [name, version]
+    raise "Unknown dependency type: #{type}" unless
+      [:runtime, :dev, :development, :developer].include? type
+
+    # spec has already been defined. A task wants to add a dependency after.
+    if spec then
+      msg = if type == :runtime then
+              :add_dependency
+            else
+              :add_development_dependency
+            end
+
+      spec.send msg, name, version
+    else
+      ary = if type == :runtime then
+              extra_deps
+            else
+              extra_dev_deps
+            end
+
+      ary << [name, version]
+    end
   end
 
   ##
@@ -430,7 +442,6 @@ class Hoe
       s.extra_rdoc_files += s.files.grep(/txt$/)
       s.extra_rdoc_files.reject! { |f| f =~ %r%^(test|spec|vendor|template|data|tmp)/% }
       s.extra_rdoc_files += @extra_rdoc_files
-
     end
 
     unless self.version then
