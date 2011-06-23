@@ -1,3 +1,11 @@
+=== 2.9.6 / 2011-06-22
+
+* 3 bug fixes:
+
+  * Fixed hoe dep to be a spermy (~>) dep
+  * Hard coded rake dependency as ~> 0.8 so we don't collide with other libs
+  * Removed circular dependency check. Hasn't been needed in a long while.
+
 === 2.9.5 / 2011-06-21
 
 * 2 minor enhancements:
