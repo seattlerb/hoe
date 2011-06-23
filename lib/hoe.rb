@@ -386,10 +386,9 @@ class Hoe
     case name
     when 'hoe' then
       dependency "rake", "~> 0.8"
-    when 'rake', 'minitest' then
-      # avoid circular dependencies for hoe's (potentially) hoe'd dependencies
     else
-      dependency "hoe", "~> #{VERSION}", :development
+      version = VERSION.split(/\./).first(2).join(".")
+      dependency "hoe", "~> #{version}", :development
     end
   end
 
