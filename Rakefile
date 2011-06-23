@@ -1,5 +1,6 @@
 # -*- ruby -*-
 
+$:.unshift 'lib'
 require './lib/hoe.rb'
 
 Hoe.plugin :seattlerb
