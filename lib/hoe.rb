@@ -385,7 +385,7 @@ class Hoe
 
     case name
     when 'hoe' then
-      dependency "rake", "~> #{RAKEVERSION}"
+      dependency "rake", "~> 0.8"
     when 'rake', 'minitest' then
       # avoid circular dependencies for hoe's (potentially) hoe'd dependencies
     else
