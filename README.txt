@@ -1,9 +1,9 @@
 = Hoe
 
-* http://rubyforge.org/projects/seattlerb/
-* http://seattlerb.rubyforge.org/hoe/
-* http://seattlerb.rubyforge.org/hoe/Hoe.pdf
-* http://github.com/jbarnette/hoe-plugin-examples
+home  :: https://github.com/seattlerb/hoe
+rdoc  :: http://seattlerb.rubyforge.org/hoe/
+doco  :: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
+other :: http://github.com/jbarnette/hoe-plugin-examples
 
 == DESCRIPTION:
 
@@ -284,7 +284,7 @@ We use the bug trackers hosted at: http://rubyforge.org/projects/seattlerb
 
 (The MIT License)
 
-Copyright (c) Ryan Davis, Seattle.rb
+Copyright (c) Ryan Davis, seattle.rb
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
