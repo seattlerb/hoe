@@ -211,11 +211,21 @@ class Hoe
   attr_accessor :test_globs
 
   ##
-  # Optional: The url(s) of the project. (can be array).
+  # Deprecated: Optional: The url(s) of the project. (can be array).
   # Auto-populates to a list of urls read from the beginning of
   # README.txt.
+  #
 
   attr_accessor :url
+
+  ##
+  # Optional: The urls of the project. This can be an array or
+  # (preferably) a hash. Auto-populates to the urls read from the
+  # beginning of README.txt.
+  #
+  # See parse_urls for more details
+
+  attr_accessor :urls
 
   ##
   # *MANDATORY*: The version. Don't hardcode! use a constant in the project.
@@ -532,10 +542,19 @@ class Hoe
       }]
       desc     = sections.values_at(*description_sections).join("\n\n")
       summ     = desc.split(/\.\s+/).first(summary_sentences).join(". ")
+      urls     = parse_urls(readme[1])
 
+      self.urls        ||= urls
       self.description ||= desc
       self.summary     ||= summ
-      self.url         ||= readme[1].gsub(/^\* /, '').split(/\n/).grep(/\S+/)
+      self.url         ||= case urls
+                           when Hash then
+                             urls["home"] || urls["repo"] || urls.values.first
+                           when Array then
+                             urls
+                           else
+                             raise "unknown urls format: #{urls.inspect}"
+                           end
     else
       missing readme_file
     end
@@ -547,6 +566,33 @@ class Hoe
                        missing history_file
                        ''
                      end
+  end
+
+  ##
+  # Parse the urls section of the readme file. Returns a hash or an
+  # array depending on the format of the section.
+  #
+  #     label1 :: url1
+  #     label2 :: url2
+  #     label3 :: url3
+  #
+  # vs:
+  #
+  #     * url1
+  #     * url2
+  #     * url3
+  #
+  # The hash format is preferred as it will be used to populate gem
+  # metadata. The array format will work, but will warn that you
+  # should update the readme.
+
+  def parse_urls text
+    lines = text.gsub(/^\* /, '').split(/\n/).grep(/\S+/)
+    if lines.first =~ /::/ then
+      Hash[lines.map { |line| line.split(/\s*::\s*/) }]
+    else
+      lines
+    end
   end
 
   ##

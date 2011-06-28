@@ -11,6 +11,12 @@ end
 $rakefile = nil # shuts up a warning in rdoctask.rb
 
 class TestHoe < MiniTest::Unit::TestCase
+  def hoe
+    @hoe ||= Hoe.spec("blah") do
+      developer 'author', 'email'
+    end
+  end
+
   def setup
     Rake.application.clear
   end
@@ -24,10 +30,6 @@ class TestHoe < MiniTest::Unit::TestCase
   end
 
   def test_activate_plugins
-    hoe = Hoe.spec 'blah' do
-      developer 'author', 'email'
-    end
-
     initializers = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
 
     assert_includes initializers, 'initialize_clean'
@@ -56,11 +58,7 @@ class TestHoe < MiniTest::Unit::TestCase
         io.write YAML.dump('plugins' => %w[hoerc])
       end
 
-      spec = Hoe.spec 'blah' do
-        developer 'author', 'email'
-      end
-
-      methods = spec.methods.grep(/^initialize/).map { |s| s.to_s }
+      methods = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
 
       assert_includes methods, 'initialize_hoerc'
     end
@@ -90,12 +88,9 @@ class TestHoe < MiniTest::Unit::TestCase
         io.write YAML.dump('plugins' => %w[hoerc])
       end
 
-      spec = Hoe.spec 'blah' do
-        developer 'author', 'email'
-      end
-
-      assert_includes spec.instance_variables.map(&:to_s), '@hoerc_plugin_initialized',
-        "Hoerc plugin wasn't initialized"
+      methods = hoe.instance_variables.map(&:to_s)
+      assert_includes(methods, '@hoerc_plugin_initialized',
+                      "Hoerc plugin wasn't initialized")
     end
   ensure
     Hoe.instance_variable_get(:@loaded).delete :hoerc
@@ -113,6 +108,38 @@ class TestHoe < MiniTest::Unit::TestCase
     end
   end
 
+  def test_parse_urls_ary
+    ary  = ["* https://github.com/seattlerb/hoe",
+            "* http://seattlerb.rubyforge.org/hoe/",
+            "* http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+            "* http://github.com/jbarnette/hoe-plugin-examples"].join "\n"
+
+    exp = ["https://github.com/seattlerb/hoe",
+           "http://seattlerb.rubyforge.org/hoe/",
+           "http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+           "http://github.com/jbarnette/hoe-plugin-examples"]
+
+    assert_equal exp, hoe.parse_urls(ary)
+  end
+
+  def test_parse_urls_hash
+    hash = [
+            "home  :: https://github.com/seattlerb/hoe",
+            "rdoc  :: http://seattlerb.rubyforge.org/hoe/",
+            "doco  :: http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+            "other :: http://github.com/jbarnette/hoe-plugin-examples",
+           ].join "\n"
+
+    exp = {
+      "home"  => "https://github.com/seattlerb/hoe",
+      "rdoc"  => "http://seattlerb.rubyforge.org/hoe/",
+      "doco"  => "http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+      "other" => "http://github.com/jbarnette/hoe-plugin-examples",
+    }
+
+    assert_equal exp, hoe.parse_urls(hash)
+  end
+
   def test_possibly_better
     t = Gem::Specification::TODAY
     hoe = Hoe.spec("blah") do
@@ -123,6 +150,16 @@ class TestHoe < MiniTest::Unit::TestCase
     files = File.read("Manifest.txt").split(/\n/) + [".gemtest"]
 
     spec = hoe.spec
+
+    urls = {
+      "home"  => "https://github.com/seattlerb/hoe",
+      "rdoc"  => "http://seattlerb.rubyforge.org/hoe/",
+      "doco"  => "http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+      "other" => "http://github.com/jbarnette/hoe-plugin-examples",
+    }
+
+    assert_equal "https://github.com/seattlerb/hoe", hoe.url
+    assert_equal urls, hoe.urls
 
     text_files = files.grep(/txt$/).reject { |f| f =~ /template/ }
 
@@ -137,7 +174,8 @@ class TestHoe < MiniTest::Unit::TestCase
     assert_equal ['sow'], spec.executables
     assert_equal text_files, spec.extra_rdoc_files
     assert_equal files, spec.files
-    assert_equal "http://rubyforge.org/projects/seattlerb/", spec.homepage
+    assert_equal "https://github.com/seattlerb/hoe", spec.homepage
+    # TODO: assert_equal "https://github.com/seattlerb/hoe", spec.metadata
     assert_equal ['--main', 'README.txt'], spec.rdoc_options
     assert_equal ['lib'], spec.require_paths
     assert_equal 'blah', spec.rubyforge_project
@@ -155,6 +193,8 @@ class TestHoe < MiniTest::Unit::TestCase
     assert_equal expected, deps.map { |dep|
       [dep.name, dep.type, dep.requirement.to_s]
     }
+
+    # flunk "not yet"
   end
 
   def test_plugins
