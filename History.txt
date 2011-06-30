@@ -1,3 +1,15 @@
+=== 2.10.0 / 2011-06-30
+
+* 3 minor enhancements:
+
+  * Added parse_urls to deal with array and hash style url lists in README.txt.
+  * Added urls accessor.
+  * Deprecated url accessors.
+
+* 1 bug fix:
+
+  * Specified wrong version of racc in racc plugin.
+
 === 2.9.6 / 2011-06-22
 
 * 3 bug fixes:
