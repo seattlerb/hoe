@@ -13,15 +13,13 @@ class TestHoeTest < MiniTest::Unit::TestCase
       initialize_test
 
       def test_globs
-        ['test/**/test_*.rb']
+        ['test/test_hoe_test.rb']
       end
     end
   end
 
   def test_make_test_cmd_with_different_testlibs
     expected = ['-w -Ilib:bin:test:. -e \'require "rubygems"; %s',
-                'require "test/test_hoe.rb"; ',
-                'require "test/test_hoe_gemcutter.rb"; ',
                 'require "test/test_hoe_test.rb"',
                 "' -- ",
                ].join
