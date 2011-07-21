@@ -18,6 +18,7 @@ module Hoe::RCov
 
         t.test_files = FileList[pattern]
         t.verbose = true
+        t.libs = %w[lib test .]
         t.rcov_opts << Hoe::RUBY_FLAGS
         t.rcov_opts << "--no-color"
         t.rcov_opts << "--save coverage.info"
