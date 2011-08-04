@@ -86,8 +86,10 @@ module Hoe::Package
   # Install the named gem.
 
   def install_gem name, version = nil
+    should_not_sudo = Hoe::WINDOZE || ENV["NOSUDO"] || File.writable?(Gem.dir)
+
     gem_cmd = Gem.default_exec_format % 'gem'
-    sudo    = 'sudo '                  unless Hoe::WINDOZE || ENV["NOSUDO"]
+    sudo    = 'sudo '                  unless should_not_sudo
     local   = '--local'                unless version
     version = "--version '#{version}'" if     version
     sh "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
