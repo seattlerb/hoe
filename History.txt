@@ -1,3 +1,14 @@
+=== 2.11.0 / 2011-08-08
+
+* 2 minor enhancements:
+
+  * Bypass sudo on install_gem if GEM_HOME is writable (ala rvm).
+  * rcov plugin should set libs to lib, test, and '.'. (tenderlove)
+
+* 1 bug fix:
+
+  * Fixed windoze detection on jruby. *sigh* (myabc)
+
 === 2.10.0 / 2011-06-30
 
 * 3 minor enhancements:
