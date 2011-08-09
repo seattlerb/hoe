@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'rake'
 require 'rake/testtask'
+require 'rbconfig'
 
 begin
   require 'psych'
@@ -96,7 +97,7 @@ class Hoe
   ##
   # True if you're a masochistic developer. Used for building commands.
 
-  WINDOZE = /mswin|mingw/ =~ RUBY_PLATFORM unless defined? WINDOZE
+  WINDOZE = Config::CONFIG['host_os'] =~ /mswin|mingw/ unless defined? WINDOZE
 
   ##
   # *MANDATORY*: The author(s) of the package. (can be array)
