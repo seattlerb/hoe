@@ -127,6 +127,12 @@ module Hoe::Publish
       end
     end
 
+    task :docs do
+      Dir.chdir local_rdoc_dir do
+        cp "#{readme_file.gsub(/\./, '_')}.html", "index.html"
+      end
+    end
+
     desc "Publish RDoc to wherever you want."
     task :publish_docs => [:clean, :docs] do
       warn "no rdoc_location values" if rdoc_locations.empty?
