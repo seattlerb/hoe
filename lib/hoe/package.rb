@@ -29,7 +29,7 @@ module Hoe::Package
   # Initialize variables for plugin.
 
   def initialize_package
-    self.need_tar ||= true
+    self.need_tar ||= false
     self.need_zip ||= false
   end
 
