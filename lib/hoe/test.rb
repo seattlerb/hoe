@@ -144,9 +144,11 @@ module Hoe::Test
       pkg  = pkg_path
       turd = "#{pkg}/.gemtest"
 
-      task pkg do
+      file turd do
         touch turd
       end
+
+      file "#{pkg}.gem" => turd
     end
 
     desc 'Run ZenTest against the package.'
