@@ -268,6 +268,11 @@ class Hoe
       end
     }.any?
 
+    bad_plugins = plugins - @loaded.keys
+    bad_plugins.each do |bad_plugin|
+      plugins.delete bad_plugin
+    end
+
     return @loaded, @found
   end
 
