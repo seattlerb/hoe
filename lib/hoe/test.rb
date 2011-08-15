@@ -98,8 +98,16 @@ module Hoe::Test
     end
 
     if File.directory? "spec" then
-      found = true
-      begin
+      if defined?(RSpec) then
+        require 'rspec/core/rake_task' # rspec 2
+
+        desc "Run all specifications"
+        RSpec::Core::RakeTask.new(:spec) do |t|
+          t.rspec_opts = self.rspec_options
+          t.rspec_opts << "-I#{self.rspec_dirs.join(":")}" unless
+            rspec_dirs.empty?
+        end
+      elsif defined?(Spec) then
         require 'spec/rake/spectask'     # rspec 1
 
         desc "Run all specifications"
@@ -107,19 +115,8 @@ module Hoe::Test
           t.libs = self.rspec_dirs
           t.spec_opts = self.rspec_options
         end
-      rescue LoadError
-        begin
-          require 'rspec/core/rake_task' # rspec 2
-
-          desc "Run all specifications"
-          RSpec::Core::RakeTask.new(:spec) do |t|
-            t.rspec_opts = self.rspec_options
-            t.rspec_opts << "-I#{self.rspec_dirs.join(":")}" unless
-              rspec_dirs.empty?
-          end
-        rescue LoadError
-          found = false
-        end
+      else
+        found = true
       end
 
       if found then
