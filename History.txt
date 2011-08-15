@@ -1,3 +1,17 @@
+=== 2.12.0 / 2011-08-15
+
+* 2 minor enhancements:
+
+  * Forcibly copy file specified in --main to index.html. (ewong)
+  * need_tar now defaults to false.
+
+* 4 bug fixes:
+
+  * Don't attempt to require RSpec 1 in an RSpec 2 environment. (monde)
+  * Fixed test/packaging issue when wrapping hoespec in namespace. (damphyr)
+  * Fixed tests for jruby. (sferik)
+  * Hoe.load_plugins removes bad entries so plugin? returns false for unloaded plugins.
+
 === 2.11.0 / 2011-08-08
 
 * 2 minor enhancements:
