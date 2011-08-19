@@ -97,7 +97,7 @@ class Hoe
   ##
   # True if you're a masochistic developer. Used for building commands.
 
-  WINDOZE = Config::CONFIG['host_os'] =~ /mswin|mingw/ unless defined? WINDOZE
+  WINDOZE = RbConfig::CONFIG['host_os'] =~ /mswin|mingw/ unless defined? WINDOZE
 
   ##
   # *MANDATORY*: The author(s) of the package. (can be array)

@@ -37,7 +37,7 @@ module Hoe::Inline
       if defined?(Inline) then
         directory 'lib/inline'
 
-        dlext = Config::CONFIG['DLEXT']
+        dlext = RbConfig::CONFIG['DLEXT']
 
         Inline.registered_inline_classes.each do |cls|
           name = cls.name.gsub(/::/, '')
