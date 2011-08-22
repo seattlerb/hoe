@@ -1,3 +1,10 @@
+=== 2.12.1 / 2011-08-22
+
+* 2 bug fixes:
+
+  * Fixed a test that fails on non-privileged (rvm/multiruby) setups
+  * RbConfig is used instead of Config to remove a 1.9.3 warning.
+
 === 2.12.0 / 2011-08-15
 
 * 2 minor enhancements:
