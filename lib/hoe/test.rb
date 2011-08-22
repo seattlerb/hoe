@@ -98,26 +98,7 @@ module Hoe::Test
     end
 
     if File.directory? "spec" then
-      if defined?(RSpec) then
-        require 'rspec/core/rake_task' # rspec 2
-
-        desc "Run all specifications"
-        RSpec::Core::RakeTask.new(:spec) do |t|
-          t.rspec_opts = self.rspec_options
-          t.rspec_opts << "-I#{self.rspec_dirs.join(":")}" unless
-            rspec_dirs.empty?
-        end
-      elsif defined?(Spec) then
-        require 'spec/rake/spectask'     # rspec 1
-
-        desc "Run all specifications"
-        Spec::Rake::SpecTask.new(:spec) do |t|
-          t.libs = self.rspec_dirs
-          t.spec_opts = self.rspec_options
-        end
-      else
-        found = true
-      end
+      found = try_loading_rspec2 || try_loading_rspec1
 
       if found then
         default_tasks << :spec
@@ -183,4 +164,41 @@ module Hoe::Test
 
     cmd
   end
+
+  ##
+  # Attempt to load RSpec 2, returning true if successful
+
+  def try_loading_rspec2
+    require 'rspec/core/rake_task'
+
+    desc "Run all specifications"
+    RSpec::Core::RakeTask.new(:spec) do |t|
+      t.rspec_opts = self.rspec_options
+      t.rspec_opts << "-I#{self.rspec_dirs.join(":")}" unless
+      rspec_dirs.empty?
+    end
+
+    true
+  rescue LoadError => err
+    warn "%p while trying to load RSpec 2: %s" % [ err.class, err.message ]
+    false
+  end
+
+  ##
+  # Attempt to load RSpec 1, returning true if successful
+
+  def try_loading_rspec1
+    require 'spec/rake/spectask'
+
+    desc "Run all specifications"
+    Spec::Rake::SpecTask.new(:spec) do |t|
+      t.libs = self.rspec_dirs
+      t.spec_opts = self.rspec_options
+    end
+    true
+  rescue LoadError => err
+    warn "%p while trying to load RSpec 1: %s" % [ err.class, err.message ]
+    false
+  end
+
 end
