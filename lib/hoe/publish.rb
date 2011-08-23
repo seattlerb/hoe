@@ -130,6 +130,7 @@ module Hoe::Publish
     task :docs do
       Dir.chdir local_rdoc_dir do
         cp "#{readme_file.gsub(/\./, '_')}.html", "index.html"
+        sh "chmod -R g+w ."
       end
     end
 
