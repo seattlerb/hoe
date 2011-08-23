@@ -1,4 +1,4 @@
-# -*- ruby -*-
+# -*- mode: ruby; coding: us-ascii; -*-
 
 require 'rubygems'
 require 'rake'
