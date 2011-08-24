@@ -422,6 +422,15 @@ class Hoe
     self.spec = Gem::Specification.new do |s|
       dirs = Dir['lib']
 
+      manifest = File.read_utf("Manifest.txt").split(/\r?\n\r?/) rescue nil
+
+      abort [
+             "Manifest is missing or couldn't be read.",
+             "The Manifest is kind of a big deal.",
+             "Maybe you're using a gem packaged by a linux project.",
+             "It seems like they enjoy breaking other people's code."
+             ].join "\n" unless manifest
+
       s.name                 = name
       s.version              = version if version
       s.summary              = summary
@@ -429,7 +438,7 @@ class Hoe
       s.homepage             = Array(url).first
       s.rubyforge_project    = rubyforge_name
       s.description          = description
-      s.files = files        = File.read_utf("Manifest.txt").split(/\r?\n\r?/)
+      s.files                = manifest
       s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
       s.bindir               = "bin"
       s.require_paths        = dirs unless dirs.empty?
@@ -437,7 +446,7 @@ class Hoe
       s.post_install_message = post_install_message
       s.test_files           = Dir[*self.test_globs]
 
-      missing "Manifest.txt" if files.empty?
+      missing "Manifest.txt" if s.files.empty?
 
       case author
       when Array
