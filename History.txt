@@ -1,3 +1,16 @@
+=== 2.12.2 / 2011-08-24
+
+* 2 minor enhancements:
+
+  * Added recursive chmod to docs task to ensure group write-ability (kleb)
+  * Improve error message when no manifest found. (Apparently some linux packagers remove manifest files)
+
+* 3 bug fixes:
+
+  * Added missing minitest/autorun require (NOT reported by fedoraproject.org)
+  * Fix for RSpec support broken in 0dc6b2f (ged)
+  * Fix for the edgiest of edge cases (-Ku in ruby19... ummm, yeah)
+
 === 2.12.1 / 2011-08-22
 
 * 2 bug fixes:
