@@ -1,14 +1,3 @@
-begin
-  gem 'rdoc'
-rescue Gem::LoadError
-end
-
-begin
-  require 'rdoc/task'
-rescue LoadError
-  require 'rake/rdoctask'
-end
-
 ##
 # Publish plugin for hoe.
 #
@@ -96,7 +85,19 @@ module Hoe::Publish
 
   def define_publish_tasks
     if need_rdoc then
-      Rake::RDocTask.new(:docs) do |rd|
+      begin
+        gem 'rdoc'
+      rescue Gem::LoadError
+        p $!
+      end
+
+      begin
+        require 'rdoc/task'
+      rescue LoadError
+        require 'rake/rdoctask'
+      end
+
+      RDoc::Task.new(:docs) do |rd|
         rd.main = readme_file
         rd.options << '-d' if (`which dot` =~ /\/dot/) unless
           ENV['NODOT'] || Hoe::WINDOZE
