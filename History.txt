@@ -1,3 +1,9 @@
+=== 2.12.3 / 2011-09-06
+
+* 1 bug fix:
+
+  * Hoe was loading rdoc early... delay and isolate will be happier
+
 === 2.12.2 / 2011-08-24
 
 * 2 minor enhancements:
