@@ -6,6 +6,8 @@
 # standard extconf setup, namely that your extconf.rb and c source is
 # located in: ext/project-name.
 #
+# Look at nokogiri for a good example of how to use this.
+#
 # === Tasks Provided:
 #
 # compile::     Compile your c-extension.
