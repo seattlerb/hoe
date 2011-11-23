@@ -21,6 +21,14 @@ class TestHoe < MiniTest::Unit::TestCase
     Rake.application.clear
   end
 
+  def test_read_utf_encoding
+    skip "encoding not supported" unless "<3".respond_to?(:encoding)
+
+    hoe.spec.files.each do |file_name|
+      assert_equal Encoding::UTF_8, file_name.encoding
+    end
+  end
+
   def test_class_load_plugins
     loaded, = Hoe.load_plugins
 

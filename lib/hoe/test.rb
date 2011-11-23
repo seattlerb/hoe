@@ -117,7 +117,11 @@ module Hoe::Test
       # more information, see: <https://github.com/erikh/rubygems-test>
       # and/or <http://www.gem-testers.org/>
 
-      self.spec.files += [".gemtest"]
+      gemtest = ".gemtest"
+
+      gemtest.encode!(Encoding::UTF_8) if gemtest.respond_to?(:encoding)
+
+      self.spec.files += [gemtest]
 
       pkg  = pkg_path
       turd = "#{pkg}/.gemtest"
