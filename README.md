@@ -1,11 +1,11 @@
-= Hoe
+# Hoe
 
 * home  :: https://github.com/seattlerb/hoe
 * rdoc  :: http://seattlerb.rubyforge.org/hoe/
 * doco  :: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 * other :: http://github.com/jbarnette/hoe-plugin-examples
 
-== DESCRIPTION:
+## DESCRIPTION:
 
 Hoe is a rake/rubygems helper for project Rakefiles. It helps you
 manage and maintain, and release your project and includes a dynamic
@@ -18,7 +18,7 @@ below.
 
 For extra goodness, see: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 
-== FEATURES/PROBLEMS:
+## FEATURES/PROBLEMS:
 
 * Includes a dynamic plug-in system allowing for easy extensibility.
 * Auto-intuits changes, description, summary, and version.
@@ -27,7 +27,7 @@ For extra goodness, see: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 * Sow uses a simple ERB templating system allowing you to capture your
   project patterns.
 
-== SYNOPSIS:
+## SYNOPSIS:
 
   % sow [group] project
 
@@ -46,14 +46,14 @@ or:
   # ... project specific tasks ...
 ```
 
-== Deployment, the DRY way
+## Deployment, the DRY way
 
 Hoe focuses on keeping everything in its place in a useful form and
 intelligently extracting what it needs. As a result, there are no
 extra YAML files, config directories, ruby files, or any other
 artifacts in your release that you wouldn't already have.
 
-=== Structure Overview
+### Structure Overview
 
   project_dir/
     History.txt
@@ -64,7 +64,7 @@ artifacts in your release that you wouldn't already have.
     lib/...
     test/...
 
-=== README.txt
+### README.txt
 
 Most projects have a readme file of some kind that describes the
 project. Hoe projects are no different, but we take them one step
@@ -75,13 +75,13 @@ formatted file to pull out the description (and summary by extension),
 urls, and extra paragraphs of info you may want to provide in
 news/blog posts.
 
-=== History.txt
+### History.txt
 
 Every project should have a document describing changes over time. Hoe
 can read this file (also in rdoc) and include the latest changes in
 your announcements.
 
-=== Manifest.txt
+### Manifest.txt
 
 **manifest [noun]** *a document giving comprehensive
 details of a ship and its cargo and other contents, passengers, and
@@ -107,17 +107,17 @@ have you peered under the covers and seen .DS\_Store, emacs backup~
 files, vim vm files and other files completely unrelated to the
 package? I have far more times than I'd like.
 
-=== VERSION
+### VERSION
 
 Releases have versions and I've found it best for the version to be
 part of the code. You can use this during runtime in a multitude of
 ways. Hoe finds your version and uses it automatically during
 packaging.
 
-=== Releasing in 1 easy step
+### Releasing in 1 easy step
 
 ```shell
-  % rake release VERSION=x.y.z
+  % rake release VERSION#x.y.z
 ```
 
 That really is all there is to it. Behind the scenes it:
@@ -129,11 +129,11 @@ That really is all there is to it. Behind the scenes it:
 * Posts news of the release to rubyforge and my blog.
 * Sends an announcement email. (hoe-seattlerb)
       
-That `VERSION=x.y.z` is there as a last-chance sanity check that you
+That `VERSION#x.y.z` is there as a last-chance sanity check that you
 know what you're releasing. You'd be surprised how blurry eyed/brained
 you get at 3AM. This check helps a lot more than it should.
 
-== Plugins:
+## Plugins:
 
 Hoe has a flexible plugin system that allows you to activate and
 deactivate what tasks are available on a given project. Hoe has been
@@ -151,7 +151,7 @@ to make it easier to turn off or replace code you don't want.
 
 Again, this must be done before the Hoe spec, or it won't be useful.
 
-=== Plug-ins Provided:
+### Plug-ins Provided:
 
 * Hoe::Clean
 * Hoe::Compiler
@@ -171,7 +171,7 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * Hoe::Signing
 * Hoe::Test
 
-=== Known 3rd-Party Plugins:
+### Known 3rd-Party Plugins:
 
 * hoe-bundler   - Generates a Gemfile based on a Hoe's declared dependencies.
 * hoe-debugging - A Hoe plugin to help you debug your codes.
@@ -184,7 +184,7 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * hoe-seattlerb - Minitest, email announcements, release branching.
 * hoe-yard      - A Hoe plugin for generating YARD documentation.
 
-=== Writing Plugins:
+### Writing Plugins:
 
 A plugin can be as simple as:
 
@@ -193,7 +193,7 @@ A plugin can be as simple as:
       attr_accessor :thingy
 
       def initialize_thingy # optional
-        self.thingy = 42
+        self.thingy # 42
       end
 
       def define_thingy_tasks
@@ -208,7 +208,7 @@ Not terribly useful, but you get the idea. This example exercises both
 plugin methods (initialize_#{plugin} and define_#{plugin}_tasks and
 adds an accessor method to the Hoe instance.
 
-=== How Plugins Work
+### How Plugins Work
 
 Hoe plugins are made to be as simple as possible, but no simpler. They are
 modules defined in the `Hoe` namespace and have only one required method
@@ -216,13 +216,13 @@ modules defined in the `Hoe` namespace and have only one required method
 Plugins can also define their own methods and they'll be available as instance
 methods to your hoe-spec. Plugins have 4 simple phases:
 
-==== Loading
+#### Loading
 
 When Hoe is loaded the last thing it does is to ask rubygems for all of its
 plugins. Plugins are found by finding all files matching "hoe/*.rb" via
 installed gems or `$LOAD\_PATH`. All found files are then loaded.
 
-==== Activation
+#### Activation
 
 All of the plugins that ship with hoe are activated by default. This is
 because they're providing the same functionality that the previous Hoe was and
@@ -240,7 +240,7 @@ activate itself. Let developers opt-in, not opt-out. Just because someone
 needs the `:thingy` plugin on one project doesn't mean they need them on _all_
 their projects.
 
-==== Initialization
+#### Initialization
 
 When your hoe-spec is instantiated, it extends itself all known plugin
 modules. This adds the method bodies to the hoe-spec and allows for the plugin
@@ -249,23 +249,23 @@ their **optional** define `initialize\_#{plugin}` methods called. This lets
 them set needed instance variables to default values. Finally, the hoe-spec
 block is evaluated so that project specific values can override the defaults.
 
-==== Task Definition
+#### Task Definition
 
 Finally, once the user's hoe-spec has been evaluated, all activated plugins
 have their `define\_#{plugin}\_tasks` method called. This method must be defined
 and it is here that you'll define all your tasks.
 
-== HOW TO CONTRIBUTE OR GET SUPPORT:
+## HOW TO CONTRIBUTE OR GET SUPPORT:
 
-=== Mailing List
+### Mailing List
 
 A mailing list for hoe is hosted at: http://rubyforge.org/projects/seattlerb
 
-=== Bugs & Feature Requests:
+### Bugs & Feature Requests:
 
 We use the bug trackers hosted at: http://rubyforge.org/projects/seattlerb
 
-=== Patches:
+### Patches:
 
 * If you have a bug fix or enhancement to hoe that you'd like to
   contribute, please provide a unified diff and file it in a ticket in
@@ -276,17 +276,17 @@ We use the bug trackers hosted at: http://rubyforge.org/projects/seattlerb
   * Or via perforce if you'd like to directly contribute:
     http://www.zenspider.com/ZSS/Process/Perforce.html
 
-== REQUIREMENTS:
+## REQUIREMENTS:
 
 * rake
 * rubyforge
 * rubygems
 
-== INSTALL:
+## INSTALL:
 
 * sudo gem install hoe
 
-== LICENSE:
+## LICENSE:
 
 (The MIT License)
 
