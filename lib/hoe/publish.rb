@@ -85,16 +85,20 @@ module Hoe::Publish
 
   def define_publish_tasks
     if need_rdoc then
-      begin
-        gem 'rdoc'
-      rescue Gem::LoadError
-        p $!
-      end
+      dependency "rdoc", "~> 3.10", :developer
 
-      begin
-        require 'rdoc/task'
-      rescue LoadError
-        require 'rake/rdoctask'
+      unless defined? RDoc::Task then
+        begin
+          gem 'rdoc'
+        rescue Gem::LoadError
+          p $!
+        end unless Object.const_defined? :RDoc
+
+        begin
+          require 'rdoc/task'
+        rescue LoadError
+          require 'rake/rdoctask'
+        end
       end
 
       RDoc::Task.new(:docs) do |rd|
@@ -126,12 +130,11 @@ module Hoe::Publish
       task :ridocs => :clean do
         sh %q{ rdoc --ri -o ri . }
       end
-    end
 
-    task :docs do
-      Dir.chdir local_rdoc_dir do
-        cp "#{readme_file.gsub(/\./, '_')}.html", "index.html"
-        sh "chmod -R g+w ."
+      task :docs do
+        Dir.chdir local_rdoc_dir do
+          sh "chmod -R g+w ."
+        end
       end
     end
 
