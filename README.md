@@ -1,9 +1,9 @@
 = Hoe
 
-home  :: https://github.com/seattlerb/hoe
-rdoc  :: http://seattlerb.rubyforge.org/hoe/
-doco  :: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
-other :: http://github.com/jbarnette/hoe-plugin-examples
+* home  :: https://github.com/seattlerb/hoe
+* rdoc  :: http://seattlerb.rubyforge.org/hoe/
+* doco  :: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
+* other :: http://github.com/jbarnette/hoe-plugin-examples
 
 == DESCRIPTION:
 
@@ -31,11 +31,12 @@ For extra goodness, see: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 
   % sow [group] project
 
-(you can edit a project template in ~/.hoe_template after running sow
+(you can edit a project template in ~/.hoe\_template after running sow
 for the first time)
 
 or:
 
+```ruby
   require 'hoe'
   
   Hoe.spec projectname do
@@ -43,6 +44,7 @@ or:
   end
 
   # ... project specific tasks ...
+```
 
 == Deployment, the DRY way
 
@@ -81,9 +83,9 @@ your announcements.
 
 === Manifest.txt
 
-<em><strong>manifest [noun]</strong> a document giving comprehensive
+**manifest [noun]** *a document giving comprehensive
 details of a ship and its cargo and other contents, passengers, and
-crew for the use of customs officers.</em>
+crew for the use of customs officers.*
 
 Every project should know what it is shipping. This is done via an
 explicit list of everything that goes out in a release. Hoe uses this
@@ -101,7 +103,7 @@ Professional software releases know _exactly_ what is in them, amateur
 releases _do not_. "Write better globs" is the response I often hear.
 I consider myself and the people I work with to be rather smart people
 and if we get them wrong, chances are you will too. How many times
-have you peered under the covers and seen .DS_Store, emacs backup~
+have you peered under the covers and seen .DS\_Store, emacs backup~
 files, vim vm files and other files completely unrelated to the
 package? I have far more times than I'd like.
 
@@ -113,9 +115,11 @@ ways. Hoe finds your version and uses it automatically during
 packaging.
 
 === Releasing in 1 easy step
-      
+
+```shell
   % rake release VERSION=x.y.z
-      
+```
+
 That really is all there is to it. Behind the scenes it:
 
 * Branches the release in our perforce server. (via hoe-seattlerb plugin)
@@ -183,7 +187,8 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 === Writing Plugins:
 
 A plugin can be as simple as:
-      
+
+```ruby
     module Hoe::Thingy
       attr_accessor :thingy
 
@@ -197,7 +202,8 @@ A plugin can be as simple as:
         end
       end
     end
-      
+```
+
 Not terribly useful, but you get the idea. This example exercises both
 plugin methods (initialize_#{plugin} and define_#{plugin}_tasks and
 adds an accessor method to the Hoe instance.
@@ -206,7 +212,7 @@ adds an accessor method to the Hoe instance.
 
 Hoe plugins are made to be as simple as possible, but no simpler. They are
 modules defined in the `Hoe` namespace and have only one required method
-(`define_#{plugin}_tasks`) and one optional method (`initialize_#{plugin}`).
+(`define\_#{plugin}\_tasks`) and one optional method (`initialize\_#{plugin}`).
 Plugins can also define their own methods and they'll be available as instance
 methods to your hoe-spec. Plugins have 4 simple phases:
 
@@ -214,7 +220,7 @@ methods to your hoe-spec. Plugins have 4 simple phases:
 
 When Hoe is loaded the last thing it does is to ask rubygems for all of its
 plugins. Plugins are found by finding all files matching "hoe/*.rb" via
-installed gems or `$LOAD_PATH`. All found files are then loaded.
+installed gems or `$LOAD\_PATH`. All found files are then loaded.
 
 ==== Activation
 
@@ -239,14 +245,14 @@ their projects.
 When your hoe-spec is instantiated, it extends itself all known plugin
 modules. This adds the method bodies to the hoe-spec and allows for the plugin
 to work as part of the spec itself. Once that is over, activated plugins have
-their **optional** define `initialize_#{plugin}` methods called. This lets
+their **optional** define `initialize\_#{plugin}` methods called. This lets
 them set needed instance variables to default values. Finally, the hoe-spec
 block is evaluated so that project specific values can override the defaults.
 
 ==== Task Definition
 
 Finally, once the user's hoe-spec has been evaluated, all activated plugins
-have their `define_#{plugin}_tasks` method called. This method must be defined
+have their `define\_#{plugin}\_tasks` method called. This method must be defined
 and it is here that you'll define all your tasks.
 
 == HOW TO CONTRIBUTE OR GET SUPPORT:
