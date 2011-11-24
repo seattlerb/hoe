@@ -54,7 +54,7 @@ extra YAML files, config directories, ruby files, or any other
 artifacts in your release that you wouldn't already have.
 
 ### Structure Overview
-
+<pre>
   project_dir/
     History.txt
     Manifest.txt
@@ -63,7 +63,7 @@ artifacts in your release that you wouldn't already have.
     bin/...
     lib/...
     test/...
-
+</pre>
 ### README.txt
 
 Most projects have a readme file of some kind that describes the
