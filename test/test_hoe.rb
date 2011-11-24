@@ -104,7 +104,13 @@ class TestHoe < MiniTest::Unit::TestCase
     Tempfile.open 'BOM' do |io|
       io.write "\xEF\xBB\xBFBOM"
       io.rewind
-      assert_equal 'BOM', File.read_utf(io.path)
+
+      content = File.read_utf io.path
+      assert_equal 'BOM', content
+
+      if content.respond_to? :encoding then
+        assert_equal Encoding::UTF_8, content.encoding
+      end
     end
   end
 

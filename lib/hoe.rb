@@ -474,7 +474,7 @@ class Hoe
 
       spec.files.each do |file|
         next unless File.exist? file
-        version = File.read_utf(file)[version_re, 2]
+        version = File.read_utf(file)[version_re, 2] rescue nil
         break if version
       end
 
@@ -759,8 +759,15 @@ end
 class File
   # Like File::read, but strips out a BOM marker if it exists.
   def self.read_utf path
-    open path, 'rb' do |f|
-      f.read.sub %r/\A\xEF\xBB\xBF/, ''
+    r19 = "<3".respond_to? :encoding
+    opt = r19 ? "r:bom|utf-8" : "rb"
+
+    open path, opt do |f|
+      if r19 then
+        f.read
+      else
+        f.read.sub %r/\A\xEF\xBB\xBF/, ''
+      end
     end
   end
 end
