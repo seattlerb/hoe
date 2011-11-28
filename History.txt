@@ -1,3 +1,11 @@
+=== 2.12.4 / 2011-11-28
+
+* 3 bug fixes:
+
+  * Fixed Hoe.read_utf to work on both 1.8 and 1.9. Unicode files FTW! (tenderlove)
+  * Moved the rdoc dependency to the publish plugin from hoe-seattlerb.
+  * Only load rdoc once to fix test loading bugs.
+
 === 2.12.3 / 2011-09-06
 
 * 1 bug fix:
