@@ -422,7 +422,9 @@ class Hoe
     self.spec = Gem::Specification.new do |s|
       dirs = Dir['lib']
 
-      manifest = File.read_utf("Manifest.txt").split(/\r?\n\r?/) rescue nil
+      manifest = File.open("Manifest.txt", "r:bom|utf-8") { |f|
+        f.read
+      }.split(/\r?\n\r?/u) rescue nil
 
       abort [
              "Manifest is missing or couldn't be read.",
