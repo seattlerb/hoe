@@ -70,6 +70,35 @@ class TestHoe < MiniTest::Unit::TestCase
     ENV['HOME'] = home
   end
 
+  def test_perproject_hoerc
+    overrides = {
+      'exclude' => Regexp.union( Hoe::DEFAULT_CONFIG["exclude"], /\.hg/ ),
+      'plugins' => ['tweedledee', 'tweedledum']
+    }
+    overrides_rcfile = File.join(Dir.pwd, '.hoerc')
+
+    home = ENV['HOME']
+    Hoe.files = nil
+
+    Dir.mktmpdir do |path|
+      ENV['HOME'] = path
+
+      open File.join(path, '.hoerc'), 'w' do |io|
+        io.write YAML.dump( Hoe::DEFAULT_CONFIG )
+      end
+      open overrides_rcfile, File::CREAT|File::EXCL|File::WRONLY do |io|
+        io.write YAML.dump( overrides )
+      end
+
+      hoeconfig = hoe.with_config {|config, _| config }
+
+      assert_equal Hoe::DEFAULT_CONFIG.merge(overrides), hoeconfig
+    end
+  ensure
+    File.delete overrides_rcfile if File.exist?( overrides_rcfile )
+    ENV['HOME'] = home
+  end
+
   def test_initialize_plugins_hoerc
     home = ENV['HOME']
     load_path = $LOAD_PATH.dup
