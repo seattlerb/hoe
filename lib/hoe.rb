@@ -746,13 +746,18 @@ class Hoe
   end
 
   ##
-  # Loads ~/.hoerc and yields the configuration and its path
+  # Loads ~/.hoerc, merges it with a .hoerc in the current pwd (if
+  # any) and yields the configuration and its path
 
   def with_config
     rc = File.expand_path("~/.hoerc")
     exists = File.exist? rc
     config = exists ? YAML.load_file(rc) : {}
-    yield(config, rc)
+    localrc = File.join Dir.pwd, '.hoerc'
+    exists = File.exist? localrc
+    localconfig = exists ? YAML.load_file(localrc) : {}
+
+    yield(config.merge(localconfig), rc)
   end
 end
 
