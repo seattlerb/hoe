@@ -372,24 +372,13 @@ class Hoe
     raise "Unknown dependency type: #{type}" unless
       [:runtime, :dev, :development, :developer].include? type
 
-    # spec has already been defined. A task wants to add a dependency after.
-    if spec then
-      msg = if type == :runtime then
-              :add_dependency
-            else
-              :add_development_dependency
-            end
+    ary = if type == :runtime then
+            extra_deps
+          else
+            extra_dev_deps
+          end
 
-      spec.send msg, name, version
-    else
-      ary = if type == :runtime then
-              extra_deps
-            else
-              extra_dev_deps
-            end
-
-      ary << [name, version]
-    end
+    ary << [name, version]
   end
 
   ##
@@ -405,6 +394,17 @@ class Hoe
     else
       version = VERSION.split(/\./).first(2).join(".")
       dependency "hoe", "~> #{version}", :development
+    end
+
+    runtime = extra_deps.map(&:first)
+    extra_dev_deps.reject! { |(name, v)| runtime.include? name }
+
+    extra_deps.each do |dep|
+      spec.add_dependency(*dep)
+    end
+
+    extra_dev_deps.each do |dep|
+      spec.add_development_dependency(*dep)
     end
   end
 
@@ -453,14 +453,6 @@ class Hoe
         s.authors = author
       else
         s.author  = author
-      end
-
-      extra_deps.each do |dep|
-        s.add_dependency(*dep)
-      end
-
-      extra_dev_deps.each do |dep|
-        s.add_development_dependency(*dep)
       end
 
       s.extra_rdoc_files += s.files.grep(/txt$/)
@@ -703,9 +695,9 @@ class Hoe
   def post_initialize
     intuit_values
     validate_fields
-    add_dependencies
     define_spec
     load_plugin_tasks
+    add_dependencies
   end
 
   ##
