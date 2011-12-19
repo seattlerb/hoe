@@ -618,8 +618,7 @@ class Hoe
       begin
         send "define_#{plugin}_tasks"
       rescue NoMethodError
-        warn "warning: couldn't activate the #{plugin} plugin, skipping" if
-          Rake.application.options.trace or $DEBUG
+        warn "warning: couldn't activate the #{plugin} plugin, skipping"
 
         bad << plugin
         next
