@@ -1,3 +1,10 @@
+=== 2.12.5 / 2011-12-19
+
+* 2 minor enhancements:
+
+  * Make hoe noisy about missing plugins again.
+  * Normalize dev/runtime deps: dev + runtime = runtime.
+
 === 2.12.4 / 2011-11-28
 
 * 3 bug fixes:
