@@ -397,7 +397,7 @@ class Hoe
     end
 
     runtime = extra_deps.map(&:first)
-    extra_dev_deps.reject! { |(name, v)| runtime.include? name }
+    extra_dev_deps.reject! { |(name, _)| runtime.include? name }
 
     extra_deps.each do |dep|
       spec.add_dependency(*dep)
