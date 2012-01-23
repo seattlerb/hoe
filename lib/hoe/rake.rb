@@ -11,6 +11,22 @@ module Rake
     def comment
       "%-#{$plugin_max}s # %s" % [plugin, old_comment] if old_comment
     end
+
+    unless method_defined? :clear_comments then
+      alias :old_clear :clear
+      def clear
+        clear_prerequisites
+        clear_actions
+        clear_comments
+        self
+      end
+
+      def clear_comments
+        @full_comment = nil
+        @comment = nil
+        self
+      end
+    end
   end
 
   module TaskManager
