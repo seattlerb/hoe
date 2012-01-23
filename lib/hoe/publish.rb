@@ -1,3 +1,5 @@
+require "hoe/rake"
+
 ##
 # Publish plugin for hoe.
 #
@@ -130,6 +132,15 @@ module Hoe::Publish
       task :ridocs => :clean do
         sh %q{ rdoc --ri -o ri . }
       end
+
+      RDoc::Task.new(:dcov) do |rd|
+        rd.options << '-C'
+        rd.rdoc_files += spec.require_paths
+        rd.rdoc_files += spec.extra_rdoc_files
+      end
+
+      task(:redcov).clear       # lame
+      task(:clobber_dcov).clear # lame
 
       task :docs do
         Dir.chdir local_rdoc_dir do
