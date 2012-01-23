@@ -11,6 +11,8 @@ module Hoe::RCov
 
   def define_rcov_tasks
     begin # take a whack at defining rcov tasks
+      Rake.application[:isolate].invoke if plugin? :isolate
+
       require 'rcov/rcovtask'
 
       Rcov::RcovTask.new do |t|
