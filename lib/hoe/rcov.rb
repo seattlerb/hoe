@@ -23,6 +23,8 @@ module Hoe::RCov
         t.rcov_opts << "--no-color"
         t.rcov_opts << "--save coverage.info"
         t.rcov_opts << "-x ^/"
+        t.rcov_opts << "-x tmp/isolate"
+        t.rcov_opts << "--sort coverage --sort-reverse"
       end
 
       # this is for my emacs rcov overlay stuff on emacswiki.
