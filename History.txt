@@ -1,3 +1,16 @@
+=== 2.13.0 / 2012-01-23
+
+* 3 minor enhancements:
+
+  * Added :dcov task so you can easily check documentation coverage.
+  * Added Rake monkeypatch so that Task#clear will clear comments. (github)
+  * Added coverage sorting and added tmp/isolate to rcov flags
+
+* 2 bug fixes:
+
+  * Quelled 1.9.3 warning. (erikh)
+  * rcov plugin should invoke isolate task if isolate plugin is being used.
+
 === 2.12.5 / 2011-12-19
 
 * 3 minor enhancements:
