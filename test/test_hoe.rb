@@ -51,7 +51,12 @@ class TestHoe < MiniTest::Unit::TestCase
 
       Dir.mkdir File.join(path, 'hoe')
       open File.join(path, 'hoe', 'hoerc.rb'), 'w' do |io|
-        io.write 'module Hoe::Hoerc; def initialize_hoerc; end; end'
+        io.write <<-EOM
+          module Hoe::Hoerc
+            def initialize_hoerc; end
+            def define_hoerc_tasks; end
+          end
+        EOM
       end
 
       open File.join(path, '.hoerc'), 'w' do |io|
@@ -61,6 +66,7 @@ class TestHoe < MiniTest::Unit::TestCase
       methods = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
 
       assert_includes methods, 'initialize_hoerc'
+      assert_includes Hoe.plugins, :hoerc
     end
   ensure
     Hoe.instance_variable_get(:@loaded).delete :hoerc
@@ -110,7 +116,12 @@ class TestHoe < MiniTest::Unit::TestCase
 
       Dir.mkdir File.join(path, 'hoe')
       open File.join(path, 'hoe', 'hoerc.rb'), 'w' do |io|
-        io.write 'module Hoe::Hoerc; def initialize_hoerc; @hoerc_plugin_initialized = true; end; end'
+        io.write <<-EOM
+          module Hoe::Hoerc
+            def initialize_hoerc; @hoerc_plugin_initialized = true; end
+            def define_hoerc_tasks; end
+          end
+        EOM
       end
 
       open File.join(path, '.hoerc'), 'w' do |io|
@@ -120,6 +131,7 @@ class TestHoe < MiniTest::Unit::TestCase
       methods = hoe.instance_variables.map(&:to_s)
       assert_includes(methods, '@hoerc_plugin_initialized',
                       "Hoerc plugin wasn't initialized")
+      assert_includes Hoe.plugins, :hoerc
     end
   ensure
     Hoe.instance_variable_get(:@loaded).delete :hoerc
