@@ -147,6 +147,8 @@ module Hoe::Publish
           sh "chmod -R g+w ."
         end
       end
+
+      task :docs => :isolate if plugin? :isolate
     end
 
     desc "Publish RDoc to wherever you want."
