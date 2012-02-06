@@ -68,7 +68,7 @@ class Hoe
   include Rake::DSL if defined?(Rake::DSL)
 
   # duh
-  VERSION = '2.13.0'
+  VERSION = '2.13.1'
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
                :publish, :rcov, :gemcutter, :signing, :test]
