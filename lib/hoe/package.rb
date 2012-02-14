@@ -12,6 +12,8 @@ end
 # === Tasks Provided:
 #
 # install_gem::        Install the package as a gem.
+# prerelease::         Hook for pre-release actions like sanity checks.
+# postrelease::        Hook for post-release actions like release announcements.
 # release::            Package and upload the release.
 
 module Hoe::Package
@@ -53,7 +55,7 @@ module Hoe::Package
     task :release => [:prerelease, :release_to, :postrelease]
 
     # no doco, invisible hook
-    task :prerelease do
+    task :prerelease => [:check_manifest] do
       abort "Fix your version before you release" if spec.version =~ /borked/
     end
 
