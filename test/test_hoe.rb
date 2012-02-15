@@ -284,4 +284,49 @@ class TestHoe < MiniTest::Unit::TestCase
   ensure
     ENV.delete "NOSUDO"
   end
+
+  def test_with_config_default
+    home = ENV['HOME']
+    Hoe.files = nil
+
+    Dir.mktmpdir do |path|
+      ENV['HOME'] = path
+
+      hoeconfig = hoe.with_config {|config, _| config }
+
+      assert_equal Hoe::DEFAULT_CONFIG, hoeconfig
+    end
+  ensure
+    ENV['HOME'] = home
+  end
+
+  def test_with_config_overrides
+    overrides = {
+      'exclude' => Regexp.union( Hoe::DEFAULT_CONFIG["exclude"], /\.hg/ ),
+      'plugins' => ['tweedledee', 'tweedledum']
+    }
+    overrides_rcfile = File.join(Dir.pwd, '.hoerc')
+
+    home = ENV['HOME']
+    Hoe.files = nil
+
+    Dir.mktmpdir do |path|
+      ENV['HOME'] = path
+
+      open File.join(path, '.hoerc'), 'w' do |io|
+        io.write YAML.dump( Hoe::DEFAULT_CONFIG )
+      end
+      open overrides_rcfile, File::CREAT|File::EXCL|File::WRONLY do |io|
+        io.write YAML.dump( overrides )
+      end
+
+      hoeconfig = hoe.with_config {|config, _| config }
+
+      assert_equal Hoe::DEFAULT_CONFIG.merge(overrides), hoeconfig
+    end
+  ensure
+    File.delete overrides_rcfile if File.exist?( overrides_rcfile )
+    ENV['HOME'] = home
+  end
+
 end

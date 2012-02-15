@@ -741,14 +741,21 @@ class Hoe
   # any) and yields the configuration and its path
 
   def with_config
+    config = Hoe::DEFAULT_CONFIG
+
     rc = File.expand_path("~/.hoerc")
     exists = File.exist? rc
-    config = exists ? YAML.load_file(rc) : {}
+    homeconfig = exists ? YAML.load_file(rc) : {}
+
+    config = config.merge homeconfig
+
     localrc = File.join Dir.pwd, '.hoerc'
     exists = File.exist? localrc
     localconfig = exists ? YAML.load_file(localrc) : {}
 
-    yield(config.merge(localconfig), rc)
+    config = config.merge localconfig
+
+    yield config, rc
   end
 end
 
