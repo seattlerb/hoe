@@ -77,7 +77,7 @@ module Hoe::Test
 
       desc 'Run the test suite using multiruby.'
       task :multi do
-        ruby make_test_cmd(:multi)
+        system "multiruby -S rake"
       end
 
       desc 'Show which test files fail when run alone.'
@@ -143,7 +143,7 @@ module Hoe::Test
   ##
   # Generate the test command-line.
 
-  def make_test_cmd multi = false # :nodoc:
+  def make_test_cmd
     unless SUPPORTED_TEST_FRAMEWORKS.has_key?(testlib)
       raise "unsupported test framework #{testlib}"
     end
@@ -158,15 +158,7 @@ module Hoe::Test
 
     tests.insert 1, test_prelude if test_prelude
 
-    cmd = "#{Hoe::RUBY_FLAGS} -e '#{tests.join("; ")}' -- #{FILTER}"
-
-    if multi then
-      multiruby_skip << "mri_trunk" if multiruby_skip.include? "1.9"
-      ENV['EXCLUDED_VERSIONS'] = multiruby_skip.join ":"
-      cmd = "-S multiruby #{cmd}"
-    end
-
-    cmd
+    "#{Hoe::RUBY_FLAGS} -e '#{tests.join("; ")}' -- #{FILTER}"
   end
 
   ##
