@@ -257,6 +257,16 @@ class TestHoe < MiniTest::Unit::TestCase
     Hoe.plugins.replace before
   end
 
+  def test_read_manifest
+    hoe = Hoe.spec 'blah'  do
+      developer 'author', 'email'
+    end
+
+    expected = File.read_utf('Manifest.txt').split
+
+    assert_equal expected, hoe.read_manifest
+  end
+
   def test_rename
     # project, file_name, klass = Hoe.normalize_names 'project_name'
 

@@ -422,7 +422,7 @@ class Hoe
     self.spec = Gem::Specification.new do |s|
       dirs = Dir['lib']
 
-      manifest = File.read_utf("Manifest.txt").split(/\r?\n\r?/) rescue nil
+      manifest = read_manifest
 
       abort [
              "Manifest is missing or couldn't be read.",
@@ -697,6 +697,15 @@ class Hoe
     define_spec
     load_plugin_tasks
     add_dependencies
+  end
+
+  ##
+  # Reads Manifest.txt and returns an Array of lines in the manifest.
+  #
+  # Returns nil if no manifest was found.
+
+  def read_manifest
+    File.read_utf("Manifest.txt").split(/\r?\n\r?/) rescue nil
   end
 
   ##
