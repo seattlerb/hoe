@@ -113,7 +113,9 @@ module Hoe::Deps
         begin
           gem(*dep)
         rescue Gem::LoadError
-          install_gem(*dep)
+          name, req, = dep
+
+          install_gem name, req
         end
       end
     end
