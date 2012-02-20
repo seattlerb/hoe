@@ -141,6 +141,54 @@ class TestHoe < MiniTest::Unit::TestCase
     ENV['HOME'] = home
   end
 
+  def test_initialize_intuit
+    Dir.mktmpdir do |path|
+      Dir.chdir path do
+        open 'Manifest.txt', 'w' do |io| # sorted
+          io.puts 'FAQ.rdoc'
+          io.puts 'History.rdoc'
+          io.puts 'README.rdoc'
+        end
+
+        open 'README.rdoc',  'w' do |io| io.puts '= blah' end
+        open 'History.rdoc', 'w' do |io| io.puts '=== 1.0' end
+
+        hoe = Hoe.spec 'blah' do
+          self.version = '1.0'
+          developer 'nobody', 'nobody@example'
+        end
+
+        assert_equal 'History.rdoc', hoe.history_file
+        assert_equal 'README.rdoc', hoe.readme_file
+        assert_equal %w[FAQ.rdoc History.rdoc README.rdoc],
+                     hoe.spec.extra_rdoc_files
+      end
+    end
+  end
+
+  def test_initialize_intuit_ambiguous
+    Dir.mktmpdir do |path|
+      Dir.chdir path do
+        open 'Manifest.txt', 'w' do |io|
+          io.puts 'History.rdoc' # sorted
+          io.puts 'README.ja.rdoc'
+          io.puts 'README.rdoc'
+        end
+
+        open 'README.rdoc',    'w' do |io| io.puts '= blah' end
+        open 'README.ja.rdoc', 'w' do |io| io.puts '= blah' end
+        open 'History.rdoc',   'w' do |io| io.puts '=== 1.0' end
+
+        hoe = Hoe.spec 'blah' do
+          self.version = '1.0'
+          developer 'nobody', 'nobody@example'
+        end
+
+        assert_equal 'README.ja.rdoc', hoe.readme_file
+      end
+    end
+  end
+
   def test_file_read_utf
     Tempfile.open 'BOM' do |io|
       io.write "\xEF\xBB\xBFBOM"

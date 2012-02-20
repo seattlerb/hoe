@@ -455,7 +455,7 @@ class Hoe
         s.author  = author
       end
 
-      s.extra_rdoc_files += s.files.grep(/txt$/)
+      s.extra_rdoc_files += s.files.grep(/(txt|rdoc)$/)
       s.extra_rdoc_files.reject! { |f| f =~ %r%^(test|spec|vendor|template|data|tmp)/% }
       s.extra_rdoc_files += @extra_rdoc_files
     end
@@ -516,9 +516,7 @@ class Hoe
     self.extra_deps           = []
     self.extra_dev_deps       = []
     self.extra_rdoc_files     = []
-    self.history_file         = "History.txt"
     self.post_install_message = nil
-    self.readme_file          = "README.txt"
     self.rubyforge_name       = name.downcase
     self.spec                 = nil
     self.spec_extras          = {}
@@ -526,6 +524,14 @@ class Hoe
     self.summary_sentences    = 1
     self.test_globs           = ['test/**/test_*.rb']
     self.url                  = nil
+
+    if manifest = read_manifest then
+      self.readme_file  = manifest.grep(/^README\./).first
+      self.history_file = manifest.grep(/^History\./).first
+    end
+
+    self.history_file ||= "History.txt"
+    self.readme_file  ||= "README.txt"
 
     if block_given? then
       warn "Hoe.new {...} deprecated. Switch to Hoe.spec."
