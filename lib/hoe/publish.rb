@@ -93,7 +93,9 @@ module Hoe::Publish
         begin
           gem 'rdoc'
         rescue Gem::LoadError
-          p $!
+          warn $!
+          warn ""
+          warn "please run: rake check_extra_deps"
         end unless Object.const_defined? :RDoc
 
         begin
@@ -102,6 +104,8 @@ module Hoe::Publish
           require 'rake/rdoctask'
         end
       end
+
+      return unless Object.const_defined? :RDoc
 
       RDoc::Task.new(:docs) do |rd|
         rd.main = readme_file
