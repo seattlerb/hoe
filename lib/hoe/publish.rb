@@ -89,6 +89,8 @@ module Hoe::Publish
     if need_rdoc then
       dependency "rdoc", "~> 3.10", :developer
 
+      Rake.application[:isolate].invoke if plugin? :isolate
+
       unless defined? RDoc::Task then
         begin
           gem 'rdoc'
