@@ -1,3 +1,23 @@
+=== 2.14.0 / 2012-02-20
+
+* 9 minor enhancements:
+
+  * .rdoc files are now automatically added to the extra_rdoc_files list.
+  * Added Hoe#read_manifest
+  * Added check_manifest to the prerelease task to prevent broken releases.
+  * Added extra duplicate dependency checking.
+  * Hoe#with_config merges the local and home configuration atop Hoe::DEFAULT_CONFIG to allow plugins to supply new defaults.
+  * The readme_file and history_file are now automatically guessed from the manifest.  This allows "README.rdoc" to be used automatically.
+  * install_gem optionally excludes rdoc/ri generation.
+  * rake check_extra_deps excludes rdoc/ri generation. rake install_gem does not.
+  * rake multi now just reinvokes rake using multiruby to allow hoe plugins to be invoked.
+
+* 3 bug fixes:
+
+  * Added workaround for check_extra_deps for multi-version dependencies.
+  * The publish plugin no longer raises an exception for missing or ancient versions of rdoc.
+  * rdoc plugin calls isolate if using isolate
+
 === 2.13.1 / 2012-02-06
 
 * 1 minor enhancement:
