@@ -87,14 +87,18 @@ module Hoe::Package
   ##
   # Install the named gem.
 
-  def install_gem name, version = nil
+  def install_gem name, version = nil, rdoc=true
     should_not_sudo = Hoe::WINDOZE || ENV["NOSUDO"] || File.writable?(Gem.dir)
 
     gem_cmd = Gem.default_exec_format % 'gem'
     sudo    = 'sudo '                  unless should_not_sudo
     local   = '--local'                unless version
     version = "--version '#{version}'" if     version
-    sh "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
+
+    cmd  = "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
+    cmd += " --no-rdoc --no-ri" unless rdoc
+
+    sh cmd
   end
 
   def prerelease_version # :nodoc:

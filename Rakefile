@@ -4,6 +4,7 @@ $:.unshift 'lib'
 require './lib/hoe.rb'
 
 Hoe.plugin :seattlerb
+Hoe.plugin :isolate
 
 Hoe.spec "hoe" do
   developer "Ryan Davis", "ryand-ruby@zenspider.com"
@@ -14,6 +15,8 @@ Hoe.spec "hoe" do
 
   pluggable!
   require_rubygems_version '>= 1.4'
+
+  dependency "rake", "~> 0.8" # FIX: to force it to exist pre-isolate
 end
 
 task :plugins do

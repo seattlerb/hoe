@@ -115,7 +115,7 @@ module Hoe::Deps
         rescue Gem::LoadError
           name, req, = dep
 
-          install_gem name, req
+          install_gem name, req, false
         end
       end
     end

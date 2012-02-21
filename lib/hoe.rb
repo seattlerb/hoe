@@ -396,14 +396,19 @@ class Hoe
       dependency "hoe", "~> #{version}", :development
     end
 
-    runtime = extra_deps.map(&:first)
-    extra_dev_deps.reject! { |(name, _)| runtime.include? name }
+    seen = {}
 
     extra_deps.each do |dep|
+      next if seen[dep.first]
+      seen[dep.first] = true
+
       spec.add_dependency(*dep)
     end
 
     extra_dev_deps.each do |dep|
+      next if seen[dep.first]
+      seen[dep.first] = true
+
       spec.add_development_dependency(*dep)
     end
   end
