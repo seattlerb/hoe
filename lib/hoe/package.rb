@@ -89,6 +89,7 @@ module Hoe::Package
 
   def install_gem name, version = nil, rdoc=true
     should_not_sudo = Hoe::WINDOZE || ENV["NOSUDO"] || File.writable?(Gem.dir)
+    null_dev = Hoe::WINDOZE ? '> NUL 2>&1' : '&> /dev/null'
 
     gem_cmd = Gem.default_exec_format % 'gem'
     sudo    = 'sudo '                  unless should_not_sudo
@@ -97,6 +98,7 @@ module Hoe::Package
 
     cmd  = "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
     cmd += " --no-rdoc --no-ri" unless rdoc
+    cmd += " #{null_dev}" unless Rake.application.options.trace
 
     puts cmd if Rake.application.options.trace
     system cmd
