@@ -98,7 +98,8 @@ module Hoe::Package
     cmd  = "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
     cmd += " --no-rdoc --no-ri" unless rdoc
 
-    sh cmd
+    puts cmd if Rake.application.options.trace
+    system cmd
   end
 
   def prerelease_version # :nodoc:

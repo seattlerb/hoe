@@ -19,6 +19,23 @@ class TestHoe < MiniTest::Unit::TestCase
 
   def setup
     Rake.application.clear
+
+    Hoe.instance_variable_set :@bad_plugins, []
+    Hoe.instance_variable_set :@files, nil
+    Hoe.instance_variable_set :@found, nil
+    Hoe.instance_variable_set :@loaded, nil
+  end
+
+  def test_class_bad_plugins
+    Hoe.plugin :bogus
+
+    Hoe.load_plugins
+
+    assert_equal [:bogus], Hoe.bad_plugins
+
+    Hoe.load_plugins
+
+    assert_equal [:bogus], Hoe.bad_plugins
   end
 
   def test_class_load_plugins
@@ -103,6 +120,11 @@ class TestHoe < MiniTest::Unit::TestCase
   ensure
     File.delete overrides_rcfile if File.exist?( overrides_rcfile )
     ENV['HOME'] = home
+  end
+
+  def test_have_gem_eh
+    assert hoe.have_gem? 'rake'
+    refute hoe.have_gem? 'nonexistent'
   end
 
   def test_initialize_plugins_hoerc
@@ -331,7 +353,7 @@ class TestHoe < MiniTest::Unit::TestCase
       self.version = '1.2.3'
       developer 'author', 'email'
 
-      def sh cmd
+      def system cmd
         cmd
       end
     end

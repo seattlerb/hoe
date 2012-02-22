@@ -119,6 +119,11 @@ module Hoe::Deps
         end
       end
     end
+
+    desc 'Install missing plugins.'
+    task :install_plugins do
+      install_missing_plugins
+    end
   end
 
   ##
@@ -168,6 +173,26 @@ module Hoe::Deps
     @@by_name ||= Hash[*get_latest_gems.map { |gem|
                          [gem.name, gem, gem.full_name, gem]
                        }.flatten]
+  end
+
+  ##
+  # Installs plugins that aren't currently installed
+
+  def install_missing_plugins plugins = Hoe.bad_plugins
+    version = '>= 0'
+
+    plugins.each do |name|
+      dash_name = name.to_s.gsub '_', '-'
+
+      next if have_gem?(name) or
+                have_gem?("hoe-#{name}") or
+                have_gem?("hoe-#{dash_name}")
+
+      install_gem("hoe-#{name}", version, false) or
+        install_gem(name, version, false) or
+        install_gem(dash_name, version, false) or
+        warn "could not install gem for #{name} plugin"
+    end
   end
 
   ##

@@ -73,6 +73,8 @@ class Hoe
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
                :publish, :rcov, :gemcutter, :signing, :test]
 
+  @bad_plugins = []
+
   ##
   # Used to add extra flags to RUBY_FLAGS.
 
@@ -244,6 +246,13 @@ class Hoe
   end
 
   ##
+  # Returns plugins that could not be loaded by Hoe.load_plugins.
+
+  def self.bad_plugins
+    @bad_plugins
+  end
+
+  ##
   # Find and load all plugin files.
   #
   # It is called at the end of hoe.rb
@@ -272,6 +281,9 @@ class Hoe
     bad_plugins.each do |bad_plugin|
       plugins.delete bad_plugin
     end
+
+    @bad_plugins.concat bad_plugins
+    @bad_plugins.uniq!
 
     return @loaded, @found
   end
@@ -502,6 +514,15 @@ class Hoe
   def developer name, email
     self.author << name
     self.email  << email
+  end
+
+  ##
+  # Returns true if the gem +name+ is installed.
+
+  def have_gem? name
+    Gem::Specification.find_by_name name
+  rescue Gem::LoadError
+    false
   end
 
   ##
