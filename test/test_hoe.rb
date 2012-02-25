@@ -24,6 +24,10 @@ class TestHoe < MiniTest::Unit::TestCase
     Hoe.instance_variable_set :@files, nil
     Hoe.instance_variable_set :@found, nil
     Hoe.instance_variable_set :@loaded, nil
+
+    Hoe.plugin :package
+    Hoe.plugin :publish
+    Hoe.plugin :test
   end
 
   def test_class_bad_plugins
@@ -41,17 +45,14 @@ class TestHoe < MiniTest::Unit::TestCase
   def test_class_load_plugins
     loaded, = Hoe.load_plugins
 
-    assert_includes loaded.keys, :clean
-    assert_includes loaded.keys, :debug
-    assert_includes loaded.keys, :deps
+    assert_includes loaded.keys, :package
+    assert_includes loaded.keys, :publish
+    assert_includes loaded.keys, :test
   end
 
   def test_activate_plugins
     initializers = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
 
-    assert_includes initializers, 'initialize_clean'
-    assert_includes initializers, 'initialize_flay'
-    assert_includes initializers, 'initialize_flog'
     assert_includes initializers, 'initialize_package'
     assert_includes initializers, 'initialize_publish'
     assert_includes initializers, 'initialize_test'
@@ -319,12 +320,12 @@ class TestHoe < MiniTest::Unit::TestCase
 
   def test_plugins
     before = Hoe.plugins.dup
+
     Hoe.plugin :first, :second
     assert_equal before + [:first, :second], Hoe.plugins
+
     Hoe.plugin :first, :second
     assert_equal before + [:first, :second], Hoe.plugins
-  ensure
-    Hoe.plugins.replace before
   end
 
   def test_read_manifest
