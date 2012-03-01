@@ -16,6 +16,20 @@ require "hoe/rake"
 #
 # publish_on_announce:: Run +publish_docs+ when you run +release+.
 # blogs::               An array of hashes of blog settings.
+#
+# The blogs entry can either look like:
+#
+#    - path: ~/Work/p4/zss/www/blog.zenspider.com/releases
+#      type: zenweb
+#
+# or:
+#
+#    - url: http://example.com/cgi-bin/blog.cgi
+#      blog_id: 1
+#      user: username
+#      password: passwd
+#      extra_headers:
+#        blah: whatever
 
 module Hoe::Publish
   ##
@@ -177,34 +191,66 @@ module Hoe::Publish
       puts generate_email
     end
 
-    desc 'Post announcement to blog.'
+    desc 'Post announcement to blog. Uses the "blogs" array in your hoerc.'
     task :post_blog do
-      require 'xmlrpc/client'
-
       with_config do |config, path|
         break unless config['blogs']
 
-        _, title, body, urls = announcement
-        body += "\n\n#{urls}"
-
         config['blogs'].each do |site|
-          server = XMLRPC::Client.new2(site['url'])
-          content = site['extra_headers'].merge(:title => title,
-                                                :description => body,
-                                                :categories => blog_categories)
+          if site['path'] then
+            msg = "post_blog_#{site['type']}"
+            send msg, site
+          else
+            require 'xmlrpc/client'
 
-          server.call('metaWeblog.newPost',
-                      site['blog_id'],
-                      site['user'],
-                      site['password'],
-                      content,
-                      true)
+            _, title, body, urls = announcement
+            body += "\n\n#{urls}"
+
+            server = XMLRPC::Client.new2(site['url'])
+            content = site['extra_headers'].merge(:title => title,
+                                                  :description => body,
+                                                  :categories => blog_categories)
+
+            server.call('metaWeblog.newPost',
+                        site['blog_id'],
+                        site['user'],
+                        site['password'],
+                        content,
+                        true)
+          end
         end
       end
     end
 
     desc 'Announce your release.'
     task :announce => [:post_blog, :publish_on_announce ]
+  end
+
+  def post_blog_zenweb site
+    dir = site["path"]
+
+    _, title, body, urls = announcement
+    body += "\n\n#{urls}"
+
+    Dir.chdir File.expand_path dir do
+      time = Time.at Time.now.to_i # nukes fractions
+      path = [time.strftime("%Y-%m-%d-"),
+              title.sub(/\W+$/, '').gsub(/\W+/, '-'),
+              ".html.md"].join
+
+      header = {
+        "title"      => title,
+        "categories" => cats,
+        "date"       => time,
+      }
+
+      File.open path, "w" do |f|
+        f.puts header.to_yaml.gsub(/\s$/, '')
+        f.puts "..."
+        f.puts
+        f.puts body
+      end
+    end
   end
 
   def generate_email full = nil
