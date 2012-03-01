@@ -240,7 +240,7 @@ module Hoe::Publish
 
       header = {
         "title"      => title,
-        "categories" => cats,
+        "categories" => blog_categories,
         "date"       => time,
       }
 
