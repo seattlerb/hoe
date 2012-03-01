@@ -1,3 +1,13 @@
+=== 2.15.0 / 2012-02-29
+
+* 5 minor enhancements:
+
+  * Added Hoe::bad_plugins which returns plugins that could not be found
+  * Added post_blog_zenweb to post releases to my blog's jekyll-like format
+  * Added the install_plugins task
+  * Documented the blogs .hoerc entry.
+  * Revamped post_blog task to allow for local file based blogs.
+
 === 2.14.0 / 2012-02-20
 
 * 9 minor enhancements:
