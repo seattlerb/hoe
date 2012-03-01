@@ -1,6 +1,8 @@
 = Hoe
 
-home  :: https://github.com/seattlerb/hoe
+home  :: http://www.zenspider.com/projects/hoe.html
+code  :: https://github.com/seattlerb/hoe
+bugs  :: https://github.com/seattlerb/hoe/issues
 rdoc  :: http://seattlerb.rubyforge.org/hoe/
 doco  :: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
 other :: http://github.com/jbarnette/hoe-plugin-examples
@@ -8,10 +10,10 @@ other :: http://github.com/jbarnette/hoe-plugin-examples
 == DESCRIPTION:
 
 Hoe is a rake/rubygems helper for project Rakefiles. It helps you
-manage and maintain, and release your project and includes a dynamic
+manage, maintain, and release your project and includes a dynamic
 plug-in system allowing for easy extensibility. Hoe ships with
 plug-ins for all your usual project tasks including rdoc generation,
-testing, packaging, and deployment.
+testing, packaging, deployment, and announcement..
 
 See class rdoc for help. Hint: `ri Hoe` or any of the plugins listed
 below.
@@ -248,27 +250,6 @@ block is evaluated so that project specific values can override the defaults.
 Finally, once the user's hoe-spec has been evaluated, all activated plugins
 have their `define_#{plugin}_tasks` method called. This method must be defined
 and it is here that you'll define all your tasks.
-
-== HOW TO CONTRIBUTE OR GET SUPPORT:
-
-=== Mailing List
-
-A mailing list for hoe is hosted at: http://rubyforge.org/projects/seattlerb
-
-=== Bugs & Feature Requests:
-
-We use the bug trackers hosted at: http://rubyforge.org/projects/seattlerb
-
-=== Patches:
-
-* If you have a bug fix or enhancement to hoe that you'd like to
-  contribute, please provide a unified diff and file it in a ticket in
-  the bug tracker listed above.
-* You can check out hoe:
-  * With git via github: http://github.com/seattlerb/hoe
-  * With svn via rubyforge: http://rubyforge.org/projects/seattlerb
-  * Or via perforce if you'd like to directly contribute:
-    http://www.zenspider.com/ZSS/Process/Perforce.html
 
 == REQUIREMENTS:
 
