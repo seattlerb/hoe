@@ -171,16 +171,27 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 
 === Known 3rd-Party Plugins:
 
-* hoe-bundler   - Generates a Gemfile based on a Hoe's declared dependencies.
-* hoe-debugging - A Hoe plugin to help you debug your codes.
-* hoe-doofus    - A Hoe plugin that helps me keep from messing up gem releases.
-* hoe-gemcutter - Adds gemcutter release automation to Hoe.
-* hoe-gemspec   - Generate a prerelease gemspec based on a Hoe spec.
-* hoe-git       - A set of Hoe plugins for tighter Git integration.
-* hoe-mercurial - A Hoe plugin for Mercurial integration.
-* hoe-rubygems  - A Hoe plugin with additional RubyGems tasks.
-* hoe-seattlerb - Minitest, email announcements, release branching.
-* hoe-yard      - A Hoe plugin for generating YARD documentation.
+* hoe-bundler    - Generates a Gemfile based on a Hoe's declared dependencies.
+* hoe-debugging  - A Hoe plugin to help you debug your codes.
+* hoe-deveiate   - A collection of Rake tasks and utility functions.
+* hoe-doofus     - A Hoe plugin that helps me keep from messing up gem releases.
+* hoe-gemcutter  - Adds gemcutter release automation to Hoe.
+* hoe-geminabox  - Allows you to push your gems to geminabox
+* hoe-gemspec    - Generate a prerelease gemspec based on a Hoe spec.
+* hoe-git        - A set of Hoe plugins for tighter Git integration.
+* hoe-heroku     - Helps you get your stuff on Heroku.
+* hoe-hg         - A Hoe plugin for Mercurial integration.
+* hoe-highline   - A Hoe plugin for building interactive Rake tasks
+* hoe-manualgen  - A manual-generation plugin for Hoe
+* hoe-mercurial  - A Hoe plugin for Mercurial integration.
+* hoe-reek       - Integrates the reek code smell engine into your hoe projects.
+* hoe-roodi      - Integrates the roodi code smell tool into your hoe projects.
+* hoe-rubygems   - A Hoe plugin with additional RubyGems tasks.
+* hoe-rubygems   - Additional RubyGems tasks.
+* hoe-seattlerb  - Minitest, email announcements, release branching.
+* hoe-telicopter - Provides tasks used by hotelicopter.
+* hoe-travis     - Allows your gem to gain maximum benefit from <http://travis-ci.org>.
+* hoe-yard       - A Hoe plugin for generating YARD documentation.
 
 === Writing Plugins:
 
