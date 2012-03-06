@@ -270,13 +270,15 @@ class TestHoe < MiniTest::Unit::TestCase
     spec = hoe.spec
 
     urls = {
-      "home"  => "https://github.com/seattlerb/hoe",
+      "home"  => "http://www.zenspider.com/projects/hoe.html",
+      "code"  => "https://github.com/seattlerb/hoe",
+      "bugs"  => "https://github.com/seattlerb/hoe/issues",
       "rdoc"  => "http://seattlerb.rubyforge.org/hoe/",
       "doco"  => "http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
       "other" => "http://github.com/jbarnette/hoe-plugin-examples",
     }
 
-    assert_equal "https://github.com/seattlerb/hoe", hoe.url
+    assert_equal urls["home"], hoe.url
     assert_equal urls, hoe.urls
 
     text_files = files.grep(/txt$/).reject { |f| f =~ /template/ }
@@ -292,8 +294,7 @@ class TestHoe < MiniTest::Unit::TestCase
     assert_equal ['sow'], spec.executables
     assert_equal text_files, spec.extra_rdoc_files
     assert_equal files, spec.files
-    assert_equal "https://github.com/seattlerb/hoe", spec.homepage
-    # TODO: assert_equal "https://github.com/seattlerb/hoe", spec.metadata
+    assert_equal urls["home"], spec.homepage
     assert_equal ['--main', 'README.txt'], spec.rdoc_options
     assert_equal ['lib'], spec.require_paths
     assert_equal 'blah', spec.rubyforge_project
