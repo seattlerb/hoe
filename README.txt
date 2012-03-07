@@ -186,7 +186,6 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * hoe-mercurial  - A Hoe plugin for Mercurial integration.
 * hoe-reek       - Integrates the reek code smell engine into your hoe projects.
 * hoe-roodi      - Integrates the roodi code smell tool into your hoe projects.
-* hoe-rubygems   - A Hoe plugin with additional RubyGems tasks.
 * hoe-rubygems   - Additional RubyGems tasks.
 * hoe-seattlerb  - Minitest, email announcements, release branching.
 * hoe-telicopter - Provides tasks used by hotelicopter.
