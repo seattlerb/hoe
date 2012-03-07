@@ -14,10 +14,10 @@ module Hoe::RCov
       task :isolate # ensure it exists
 
       task :rcov => :isolate do
-        ruby rcov_cmd
+        ruby make_rcov_cmd
       end
 
-      task :clobber_rcov => :isolate do
+      task :clobber_rcov do
         rm_rf "coverage"
       end
 
