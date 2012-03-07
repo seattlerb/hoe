@@ -1,3 +1,22 @@
+=== 2.16.0 / 2012-03-06
+
+* 9 minor enhancements:
+
+  * Added Gem.bin_wrapper to provide API to bin wrapped files.
+  * Added check_manifest task to compile_tasks in the compiler plugin.
+  * Decoupled from rcov task. Solves isolate/hoe bootstrap issues.
+  * Decoupled from rdoc tasks. Solves isolate/hoe bootstrap issues.
+  * Updated default exclude config to skip extconf.h and .o files.
+  * Updated known 3rd party plugin list in readme.
+  * Warn against using system installed rake (eg osx ships their own on 1.8).
+  * Removed rcov plugin from the default loaded set.
+  * Added dev dependency for rcov when the plugin is loaded.
+
+* 2 bug fixes:
+
+  * Fix Rake::DSL include warnings.
+  * Removing check_manifest from prerelease. (should be pushed to the hoe-git plugin)
+
 === 2.15.0 / 2012-02-29
 
 * 5 minor enhancements:
