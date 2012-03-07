@@ -11,23 +11,17 @@ module Hoe::RCov
 
   def define_rcov_tasks
     begin # take a whack at defining rcov tasks
-      Rake.application[:isolate].invoke if plugin? :isolate
+      task :isolate # ensure it exists
 
-      require 'rcov/rcovtask'
-
-      Rcov::RcovTask.new do |t|
-        pattern = ENV['PATTERN'] || test_globs
-
-        t.test_files = FileList[pattern]
-        t.verbose = true
-        t.libs = %w[lib test .]
-        t.rcov_opts << Hoe::RUBY_FLAGS
-        t.rcov_opts << "--no-color"
-        t.rcov_opts << "--save coverage.info"
-        t.rcov_opts << "-x ^/"
-        t.rcov_opts << "-x tmp/isolate"
-        t.rcov_opts << "--sort coverage --sort-reverse"
+      task :rcov => :isolate do
+        ruby rcov_cmd
       end
+
+      task :clobber_rcov => :isolate do
+        rm_rf "coverage"
+      end
+
+      task :clobber => :clobber_rcov
 
       # this is for my emacs rcov overlay stuff on emacswiki.
       task :rcov_overlay do
@@ -42,6 +36,25 @@ module Hoe::RCov
       # skip
       task :clobber_rcov # in case rcov didn't load
     end
+  end
+
+  def make_rcov_cmd extra_args = nil
+    rcov  = Gem.bin_wrapper "rcov"
+    tests = test_globs.sort.map { |g| Dir.glob(g) }.flatten.map(&:inspect)
+
+    cmd = %W[#{rcov}
+             #{Hoe::RUBY_FLAGS}
+             --text-report
+             --no-color
+             --save coverage.info
+             -x ^/
+             -x tmp/isolate
+             --sort coverage
+             --sort-reverse
+             -o "coverage"
+            ] + tests
+
+    cmd.join " "
   end
 end
 

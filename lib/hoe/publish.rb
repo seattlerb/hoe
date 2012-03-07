@@ -96,10 +96,10 @@ module Hoe::Publish
     self.rsync_args      ||= '-av --delete'
   end
 
-  def rdoc_cmd extra_args = nil
+  def make_rdoc_cmd extra_args = nil
     title = "#{name}-#{version} Documentation"
     title = "#{rubyforge_name}'s #{title}" if rubyforge_name != name
-    rdoc = Gem.bin_path "rdoc", "rdoc"
+    rdoc  = Gem.bin_wrapper "rdoc"
 
     cmd = %W[#{rdoc}
              --title "#{title}"
@@ -120,14 +120,16 @@ module Hoe::Publish
     if need_rdoc then
       dependency "rdoc", "~> 3.10", :developer
 
+      task :isolate # ensure it exists
+
       desc "Generate rdoc"
       task :docs => [:clobber_docs, :isolate] do
-        ruby rdoc_cmd
+        ruby make_rdoc_cmd
       end
 
       desc "Generate rdoc coverage report"
       task :dcov => :isolate do
-        ruby rdoc_cmd '-C'
+        ruby make_rdoc_cmd '-C'
       end
 
       desc "Remove RDoc files"
@@ -139,7 +141,7 @@ module Hoe::Publish
 
       desc 'Generate ri locally for testing.'
       task :ridocs => [:clean, :isolate] do
-        sh %q{ rdoc --ri -o ri . }
+        ruby make_rdoc_cmd "--ri -o ri"
       end
     end
 
