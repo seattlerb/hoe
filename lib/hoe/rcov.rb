@@ -6,6 +6,10 @@
 # rcov::               Analyze code coverage with tests
 
 module Hoe::RCov
+  def initialize_rcov
+    dependency "rcov", "~> 0.9", :development
+  end
+
   ##
   # Define tasks for plugin.
 
