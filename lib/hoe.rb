@@ -77,7 +77,7 @@ class Hoe
   VERSION = '2.15.0'
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
-               :publish, :rcov, :gemcutter, :signing, :test]
+               :publish, :gemcutter, :signing, :test]
 
   @bad_plugins = []
 
