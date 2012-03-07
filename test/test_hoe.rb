@@ -20,7 +20,8 @@ class TestHoe < MiniTest::Unit::TestCase
   def setup
     Rake.application.clear
 
-    Hoe.instance_variable_set :@bad_plugins, []
+    Hoe.plugins.clear
+    Hoe.bad_plugins.clear
     Hoe.instance_variable_set :@files, nil
     Hoe.instance_variable_set :@found, nil
     Hoe.instance_variable_set :@loaded, nil
