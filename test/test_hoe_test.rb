@@ -19,6 +19,8 @@ class TestHoeTest < MiniTest::Unit::TestCase
   end
 
   def test_make_test_cmd_with_different_testlibs
+    skip "Using TESTOPTS... skipping" if ENV['TESTOPTS']
+
     expected = ['-w -Ilib:bin:test:. -e \'require "rubygems"; %s',
                 'require "test/test_hoe_test.rb"',
                 "' -- ",
