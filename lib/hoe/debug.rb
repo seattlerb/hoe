@@ -8,6 +8,9 @@
 # debug_gem::          Show information about the gem.
 
 module Hoe::Debug
+
+  include Rake::DSL if defined? ::Rake::DSL
+
   Hoe::DEFAULT_CONFIG["exclude"] = /tmp$|CVS|TAGS|\.(svn|git|DS_Store)/
 
   # :stopdoc:
@@ -42,32 +45,42 @@ module Hoe::Debug
 
     desc 'Verify the manifest.'
     task :check_manifest => :clean do
-      f = "Manifest.tmp"
-      require 'find'
-      files = []
-      with_config do |config, _|
-        exclusions = config["exclude"]
-        abort "exclude entry missing from .hoerc. Run rake config_hoe." if
-          exclusions.nil?
-
-        Find.find '.' do |path|
-          next unless File.file? path
-          next if path =~ exclusions
-          files << path[2..-1]
-        end
-        files = files.sort.join "\n"
-        File.open f, 'w' do |fp| fp.puts files end
-        begin
-          sh "#{DIFF} -du Manifest.txt #{f}"
-        ensure
-          rm f
-        end
-      end
+      check_manifest
     end
 
     desc 'Show information about the gem.'
     task :debug_gem do
       puts spec.to_ruby
+    end
+  end
+
+  ##
+  # Verifies your Manifest.txt against the files in your project.
+
+  def check_manifest
+    f = "Manifest.tmp"
+    require 'find'
+    files = []
+    with_config do |config, _|
+      exclusions = config["exclude"]
+
+      Find.find '.' do |path|
+        next unless File.file? path
+        next if path =~ exclusions
+        files << path[2..-1]
+      end
+
+      files = files.sort.join "\n"
+
+      File.open f, 'w' do |fp| fp.puts files end
+
+      verbose = { :verbose => Rake.application.options.verbose }
+
+      begin
+        sh "#{DIFF} -du Manifest.txt #{f}", verbose
+      ensure
+        rm f, verbose
+      end
     end
   end
 end

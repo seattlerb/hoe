@@ -96,6 +96,23 @@ module Hoe::Publish
     self.rsync_args      ||= '-av --delete'
   end
 
+  def rdoc_cmd extra_args = nil
+    title = "#{name}-#{version} Documentation"
+    title = "#{rubyforge_name}'s #{title}" if rubyforge_name != name
+    rdoc = Gem.bin_path "rdoc", "rdoc"
+
+    cmd = %W[#{rdoc}
+             --title "#{title}"
+             -o "#{local_rdoc_dir}"
+            ] +
+      spec.rdoc_options +
+      Array(extra_args) +
+      spec.require_paths +
+      spec.extra_rdoc_files
+
+    cmd.join " "
+  end
+
   ##
   # Define tasks for plugin.
 
@@ -103,72 +120,27 @@ module Hoe::Publish
     if need_rdoc then
       dependency "rdoc", "~> 3.10", :developer
 
-      Rake.application[:isolate].invoke if plugin? :isolate
-
-      unless defined? RDoc::Task then
-        begin
-          gem 'rdoc'
-        rescue Gem::LoadError
-          warn $!
-          warn ""
-          warn "please run: rake check_extra_deps"
-        end unless Object.const_defined? :RDoc
-
-        begin
-          require 'rdoc/task'
-        rescue LoadError
-          require 'rake/rdoctask'
-        end
+      desc "Generate rdoc"
+      task :docs => [:clobber_docs, :isolate] do
+        ruby rdoc_cmd
       end
 
-      return unless Object.const_defined? :RDoc
-
-      RDoc::Task.new(:docs) do |rd|
-        rd.main = readme_file
-        rd.options << '-d' if (`which dot` =~ /\/dot/) unless
-          ENV['NODOT'] || Hoe::WINDOZE
-        rd.rdoc_dir = local_rdoc_dir
-
-        rd.rdoc_files += spec.require_paths
-        rd.rdoc_files += spec.extra_rdoc_files
-
-        title = spec.rdoc_options.grep(/^(-t|--title)=?$/).first
-
-        if title then
-          rd.options << title
-
-          unless title =~ /\=/ then # for ['-t', 'title here']
-            title_index = spec.rdoc_options.index(title)
-            rd.options << spec.rdoc_options[title_index + 1]
-          end
-        else
-          title = "#{name}-#{version} Documentation"
-          title = "#{rubyforge_name}'s " + title if rubyforge_name != name
-          rd.options << '--title' << title
-        end
+      desc "Generate rdoc coverage report"
+      task :dcov => :isolate do
+        ruby rdoc_cmd '-C'
       end
+
+      desc "Remove RDoc files"
+      task :clobber_docs do
+        rm_rf local_rdoc_dir
+      end
+
+      task :clobber => :clobber_docs
 
       desc 'Generate ri locally for testing.'
-      task :ridocs => :clean do
+      task :ridocs => [:clean, :isolate] do
         sh %q{ rdoc --ri -o ri . }
       end
-
-      RDoc::Task.new(:dcov) do |rd|
-        rd.options << '-C'
-        rd.rdoc_files += spec.require_paths
-        rd.rdoc_files += spec.extra_rdoc_files
-      end
-
-      task(:redcov).clear       # lame
-      task(:clobber_dcov).clear # lame
-
-      task :docs do
-        Dir.chdir local_rdoc_dir do
-          sh "chmod -R g+w ."
-        end
-      end
-
-      task :docs => :isolate if plugin? :isolate
     end
 
     desc "Publish RDoc to wherever you want."

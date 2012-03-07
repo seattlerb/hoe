@@ -1,6 +1,12 @@
 # -*- mode: ruby; coding: us-ascii; -*-
 
 require 'rubygems'
+
+begin
+  gem 'rake'
+rescue Gem::LoadError
+  warn "Using the crusty system installed rake... you probably want to upgrade"
+end
 require 'rake'
 require 'rake/testtask'
 require 'rbconfig'
@@ -93,7 +99,7 @@ class Hoe
   # this on load.
 
   DEFAULT_CONFIG = {
-    "exclude" => /tmp$|CVS|\.svn|\.log$/,
+    "exclude" => /tmp$|CVS|\.svn|TAGS|extconf.h|\.o$|\.log$/,
   }
 
   ##

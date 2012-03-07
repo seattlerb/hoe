@@ -23,7 +23,7 @@ module Hoe::Compiler
   # Initialize variables for compiler plugin.
 
   def initialize_compiler
-    self.compile_tasks = [:multi, :test]
+    self.compile_tasks = [:multi, :test, :check_manifest]
     self.spec_extras   = { :extensions => ["ext/#{self.name}/extconf.rb"] }
 
     clean_globs << "lib/#{self.name}/*.{so,bundle,dll}"
