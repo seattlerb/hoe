@@ -55,7 +55,7 @@ module Hoe::Package
     task :release => [:prerelease, :release_to, :postrelease]
 
     # no doco, invisible hook
-    task :prerelease => [:check_manifest] do
+    task :prerelease do
       abort "Fix your version before you release" if spec.version =~ /borked/
     end
 
