@@ -126,7 +126,7 @@ module Hoe::Test
       pkg  = pkg_path
       turd = "#{pkg}/.gemtest"
 
-      file turd do
+      file turd => pkg_path do
         touch turd
       end
 
