@@ -18,7 +18,7 @@ module Hoe::RCov
       task :isolate # ensure it exists
 
       task :rcov => :isolate do
-        ruby make_rcov_cmd
+        sh(*make_rcov_cmd)
       end
 
       task :clobber_rcov do
@@ -42,7 +42,7 @@ module Hoe::RCov
     end
   end
 
-  def make_rcov_cmd extra_args = nil
+  def make_rcov_cmd
     rcov  = Gem.bin_wrapper "rcov"
     tests = test_globs.sort.map { |g| Dir.glob(g) }.flatten.map(&:inspect)
 
@@ -55,10 +55,10 @@ module Hoe::RCov
              -x tmp/isolate
              --sort coverage
              --sort-reverse
-             -o "coverage"
+             -o coverage
             ] + tests
 
-    cmd.join " "
+    cmd
   end
 end
 

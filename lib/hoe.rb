@@ -823,5 +823,5 @@ class File
 end
 
 def Gem.bin_wrapper name # HACK
-  File.join Gem.dir, "bin", Gem.default_exec_format % name
+  File.join Gem.bindir, Gem.default_exec_format % name
 end unless Gem.respond_to? :bin_wrapper

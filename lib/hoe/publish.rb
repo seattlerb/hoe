@@ -96,21 +96,19 @@ module Hoe::Publish
     self.rsync_args      ||= '-av --delete'
   end
 
-  def make_rdoc_cmd extra_args = nil
+  def make_rdoc_cmd(*extra_args)
     title = "#{name}-#{version} Documentation"
     title = "#{rubyforge_name}'s #{title}" if rubyforge_name != name
-    rdoc  = Gem.bin_path "rdoc", "rdoc"
+    rdoc  = Gem.bin_wrapper "rdoc"
 
-    cmd = %W[#{rdoc}
-             --title #{title}
-             -o #{local_rdoc_dir}
-            ] +
+    %W[#{rdoc}
+       --title #{title}
+       -o #{local_rdoc_dir}
+      ] +
       spec.rdoc_options +
-      Array(extra_args) +
+      extra_args +
       spec.require_paths +
       spec.extra_rdoc_files
-
-    cmd
   end
 
   ##
@@ -124,12 +122,12 @@ module Hoe::Publish
 
       desc "Generate rdoc"
       task :docs => [:clobber_docs, :isolate] do
-        ruby(*make_rdoc_cmd)
+        sh(*make_rdoc_cmd)
       end
 
       desc "Generate rdoc coverage report"
       task :dcov => :isolate do
-        ruby make_rdoc_cmd '-C'
+        sh(*make_rdoc_cmd('-C'))
       end
 
       desc "Remove RDoc files"
