@@ -99,18 +99,18 @@ module Hoe::Publish
   def make_rdoc_cmd extra_args = nil
     title = "#{name}-#{version} Documentation"
     title = "#{rubyforge_name}'s #{title}" if rubyforge_name != name
-    rdoc  = Gem.bin_wrapper "rdoc"
+    rdoc  = Gem.bin_path "rdoc", "rdoc"
 
     cmd = %W[#{rdoc}
-             --title "#{title}"
-             -o "#{local_rdoc_dir}"
+             --title #{title}
+             -o #{local_rdoc_dir}
             ] +
       spec.rdoc_options +
       Array(extra_args) +
       spec.require_paths +
       spec.extra_rdoc_files
 
-    cmd.join " "
+    cmd
   end
 
   ##
@@ -124,7 +124,7 @@ module Hoe::Publish
 
       desc "Generate rdoc"
       task :docs => [:clobber_docs, :isolate] do
-        ruby make_rdoc_cmd
+        ruby(*make_rdoc_cmd)
       end
 
       desc "Generate rdoc coverage report"
