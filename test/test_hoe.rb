@@ -17,7 +17,7 @@ class TestHoe < MiniTest::Unit::TestCase
     end
   end
 
-  def setup
+  def teardown
     Rake.application.clear
 
     Hoe.plugins.clear
