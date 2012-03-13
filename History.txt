@@ -1,3 +1,10 @@
+=== 2.16.1 / 2012-03-13
+
+* 2 bug fixes:
+
+  * Fixed missing dependency for .gemtest creation (larskanis)
+  * Fixed the rdoc/rcov commands to use sh. Oops.
+
 === 2.16.0 / 2012-03-06
 
 * 9 minor enhancements:
