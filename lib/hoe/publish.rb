@@ -93,7 +93,7 @@ module Hoe::Publish
     self.need_rdoc       ||= true
     self.rdoc_locations  ||= []
     self.remote_rdoc_dir ||= self.name
-    self.rsync_args      ||= '-av --delete'
+    self.rsync_args      ||= '-av -O --delete'
   end
 
   def make_rdoc_cmd(*extra_args)
