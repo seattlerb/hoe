@@ -42,7 +42,9 @@ module Hoe::Racc
     # -l = no-line-convert (they don't ever line up anyhow)
     self.racc_flags ||= "-v -l"
     self.rex_flags  ||= "--independent"
+  end
 
+  def define_racc_deps
     dependency 'racc', '~> 1.4.6', :development
   end
 
@@ -75,11 +77,13 @@ module Hoe::Racc
       end
     end
 
+    task :isolate # stub task
+
     desc "build the parser" unless parser_files.empty?
-    task :parser
+    task :parser => :isolate
 
     desc "build the lexer" unless lexer_files.empty?
-    task :lexer
+    task :lexer  => :isolate
 
     task :parser => parser_files
     task :lexer  => lexer_files

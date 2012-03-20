@@ -19,9 +19,11 @@ require 'rbconfig'
 
 module Hoe::Inline
   def initialize_inline
-    dependency "RubyInline", "~> 3.9"
-
     clean_globs << File.expand_path("~/.ruby_inline")
+  end
+
+  def activate_inline_deps
+    dependency "RubyInline", "~> 3.9"
   end
 
   ##

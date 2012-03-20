@@ -249,11 +249,16 @@ their projects.
 ==== Initialization
 
 When your hoe-spec is instantiated, it extends itself all known plugin
-modules. This adds the method bodies to the hoe-spec and allows for the plugin
-to work as part of the spec itself. Once that is over, activated plugins have
-their **optional** define `initialize_#{plugin}` methods called. This lets
-them set needed instance variables to default values. Finally, the hoe-spec
-block is evaluated so that project specific values can override the defaults.
+modules. This adds the method bodies to the hoe-spec and allows for
+the plugin to work as part of the spec itself. Once that is over,
+activated plugins have their **optional** `initialize_#{plugin}`
+methods called followed by their **optional**
+`activate_#{plugin}_deps` methods called. This lets them set needed
+instance variables to default values and declare any gem dependencies
+needed.. Finally, the hoe-spec block is evaluated so that project
+specific values can override the defaults.
+
+See "Hoe Plugin Loading Sequence" in hoe.rb for full details.
 
 ==== Task Definition
 

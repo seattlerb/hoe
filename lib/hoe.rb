@@ -68,6 +68,23 @@ require 'hoe/rake'
 #       # ...
 #     end
 #   end
+#
+# === Hoe Plugin Loading Sequence
+#
+#   Hoe.spec
+#     Hoe.load_plugins
+#       require
+#     activate_plugins
+#       extend plugin_module
+#       initialize_plugins
+#         initialize_XXX
+#       activate_plugin_deps
+#         activate_XXX_deps
+#     yield spec
+#     post_initialize
+#       define_spec # gemspec, not hoespec
+#       load_plugin_tasks
+#       add_dependencies
 
 class Hoe
 
@@ -375,8 +392,21 @@ class Hoe
       self.extend Hoe.const_get(name)
     end
 
+    initialize_plugins
+    activate_plugin_deps
+  end
+
+  def initialize_plugins
     Hoe.plugins.each do |plugin|
       msg = "initialize_#{plugin}"
+      warn msg if $DEBUG
+      send msg if self.respond_to? msg
+    end
+  end
+
+  def activate_plugin_deps
+    Hoe.plugins.each do |plugin|
+      msg = "activate_#{plugin}_deps"
       warn msg if $DEBUG
       send msg if self.respond_to? msg
     end

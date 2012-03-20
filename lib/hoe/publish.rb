@@ -96,19 +96,8 @@ module Hoe::Publish
     self.rsync_args      ||= '-av -O --delete'
   end
 
-  def make_rdoc_cmd(*extra_args)
-    title = "#{name}-#{version} Documentation"
-    title = "#{rubyforge_name}'s #{title}" if rubyforge_name != name
-    rdoc  = Gem.bin_wrapper "rdoc"
-
-    %W[#{rdoc}
-       --title #{title}
-       -o #{local_rdoc_dir}
-      ] +
-      spec.rdoc_options +
-      extra_args +
-      spec.require_paths +
-      spec.extra_rdoc_files
+  def activate_publish_deps
+    dependency "rdoc", "~> 3.10", :developer if need_rdoc
   end
 
   ##
@@ -116,8 +105,6 @@ module Hoe::Publish
 
   def define_publish_tasks
     if need_rdoc then
-      dependency "rdoc", "~> 3.10", :developer
-
       task :isolate # ensure it exists
 
       desc "Generate rdoc"
@@ -196,6 +183,21 @@ module Hoe::Publish
 
     desc 'Announce your release.'
     task :announce => [:post_blog, :publish_on_announce ]
+  end
+
+  def make_rdoc_cmd(*extra_args)
+    title = "#{name}-#{version} Documentation"
+    title = "#{rubyforge_name}'s #{title}" if rubyforge_name != name
+    rdoc  = Gem.bin_wrapper "rdoc"
+
+    %W[#{rdoc}
+       --title #{title}
+       -o #{local_rdoc_dir}
+      ] +
+      spec.rdoc_options +
+      extra_args +
+      spec.require_paths +
+      spec.extra_rdoc_files
   end
 
   def post_blog_zenweb site

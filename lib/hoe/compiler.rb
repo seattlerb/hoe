@@ -27,8 +27,11 @@ module Hoe::Compiler
     self.spec_extras   = { :extensions => ["ext/#{self.name}/extconf.rb"] }
 
     clean_globs << "lib/#{self.name}/*.{so,bundle,dll}"
+  end
 
+  def activate_compiler_deps
     dependency "rake-compiler", "~> 0.7", :development
+    gem "rake-compiler", "~> 0.7"
   end
 
   ##
