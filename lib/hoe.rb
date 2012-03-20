@@ -713,7 +713,7 @@ class Hoe
   def normalize_deps deps
     Array(deps).map { |o|
       if String === o then
-        warn "WAR\NING: HOE DEPRECATION: Add '>= 0' to the '#{o}' dependency."
+        warn "WAR\NING: HOE DEPRECATION: Change the '#{o}' dependency to ['#{o}', '>= 0']."
         [o, ">= 0"]
       else
         o
