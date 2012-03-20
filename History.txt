@@ -1,3 +1,22 @@
+=== 3.0.0 / 2012-03-20
+
+* 3 major enhancements:
+
+  * Added activate_plugin_deps phase to plugin loading.
+  * Removed long deprecated Hoe.new { block }.
+  * Removed long deprecated handling of improper dependencies.
+
+* 3 minor enhancements:
+
+  * Added deprecation warnings to Hoe#url and Hoe#url=. Already deprecated for 9 mo.
+  * Reworked all the plugins to use activate_XXX_deps, as necessary.
+  * Switched internal usage of #url to #urls.
+
+* 2 bug fixes:
+
+  * Fixed failures in the publish_docs task when remote directory times cannot be changed (such as on rubyforge).
+  * Fixed isolate setup for the racc plugin
+
 === 2.16.1 / 2012-03-13
 
 * 2 bug fixes:
