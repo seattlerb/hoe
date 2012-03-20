@@ -91,7 +91,7 @@ class Hoe
   include Rake::DSL if defined?(Rake::DSL)
 
   # duh
-  VERSION = '2.16.1'
+  VERSION = '3.0.0'
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
                :publish, :gemcutter, :signing, :test]
@@ -243,6 +243,11 @@ class Hoe
   #
 
   attr_accessor :url
+
+  require 'rubygems/deprecate'
+  extend Gem::Deprecate
+  deprecate :url,  :urls,  2012, 6
+  deprecate :url=, :urls=, 2012, 6
 
   ##
   # Optional: The urls of the project. This can be an array or
@@ -488,7 +493,14 @@ class Hoe
       s.version              = version if version
       s.summary              = summary
       s.email                = email
-      s.homepage             = Array(url).first
+      s.homepage             = case urls
+                               when Hash then
+                                 urls["home"] || urls.values.first
+                               when Array then
+                                 urls
+                               else
+                                 raise "unknown urls format: #{urls.inspect}"
+                               end
       s.rubyforge_project    = rubyforge_name
       s.description          = description
       s.files                = manifest
@@ -562,9 +574,7 @@ class Hoe
   end
 
   ##
-  # Create a newly initialized hoe spec. If a block is given, yield on
-  # it and finish post_initialize steps. This is deprecated behavior
-  # and should be switched from Hoe.new to Hoe.spec.
+  # Create a newly initialized hoe spec.
 
   def initialize name, version = nil # :nodoc:
     self.name                 = name
@@ -585,7 +595,6 @@ class Hoe
     self.summary              = nil
     self.summary_sentences    = 1
     self.test_globs           = ['test/**/test_*.rb']
-    self.url                  = nil
 
     if manifest = read_manifest then
       self.readme_file  = manifest.grep(/^README\./).first
@@ -595,13 +604,7 @@ class Hoe
     self.history_file ||= "History.txt"
     self.readme_file  ||= "README.txt"
 
-    if block_given? then
-      warn "Hoe.new {...} deprecated. Switch to Hoe.spec."
-      Hoe.load_plugins
-      self.activate_plugins
-      yield self
-      post_initialize
-    end
+    abort "Hoe.new {...} removed. Switch to Hoe.spec." if block_given?
   end
 
   ##
@@ -622,14 +625,6 @@ class Hoe
       self.urls        ||= urls
       self.description ||= desc
       self.summary     ||= summ
-      self.url         ||= case urls
-                           when Hash then
-                             urls["home"] || urls["repo"] || urls.values.first
-                           when Array then
-                             urls
-                           else
-                             raise "unknown urls format: #{urls.inspect}"
-                           end
     else
       missing readme_file
     end
@@ -711,14 +706,13 @@ class Hoe
   # Normalize the dependencies.
 
   def normalize_deps deps
-    Array(deps).map { |o|
-      if String === o then
-        warn "WAR\NING: HOE DEPRECATION: Add '>= 0' to the '#{o}' dependency."
-        [o, ">= 0"]
-      else
-        o
-      end
-    }
+    deps = Array(deps)
+
+    deps.each do |o|
+      abort "ERROR: Add '~> x.y' to the '#{o}' dependency." if String === o
+    end
+
+    deps
   end
 
   ##

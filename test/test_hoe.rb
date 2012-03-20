@@ -279,7 +279,6 @@ class TestHoe < MiniTest::Unit::TestCase
       "other" => "http://github.com/jbarnette/hoe-plugin-examples",
     }
 
-    assert_equal urls["home"], hoe.url
     assert_equal urls, hoe.urls
 
     text_files = files.grep(/txt$/).reject { |f| f =~ /template/ }
