@@ -184,9 +184,9 @@ module Hoe::Deps
     plugins.each do |name|
       dash_name = name.to_s.gsub '_', '-'
 
-      next if have_gem?(name) or
-                have_gem?("hoe-#{name}") or
-                have_gem?("hoe-#{dash_name}")
+      next if have_gem?("hoe-#{name}") or
+                have_gem?(name) or
+                have_gem?(dash_name)
 
       install_gem("hoe-#{name}", version, false) or
         install_gem(name, version, false) or
