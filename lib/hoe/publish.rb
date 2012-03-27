@@ -252,9 +252,19 @@ module Hoe::Publish
     subject = "#{name} #{version} Released"
     title   = "#{name} version #{version} has been released!"
     body    = "#{description}\n\nChanges:\n\n#{changes}".rdoc_to_markdown
-    urls    = urls.map { |s| "* <#{s.strip.rdoc_to_markdown}>" }.join("\n")
 
-    return subject, title, body, urls
+    urls =
+      case self.urls
+      when Hash then
+        self.urls.map { |k,v| "* #{k}: <#{v.strip.rdoc_to_markdown}>" }
+      when Array then
+        self.urls.map { |s| "* <#{s.strip.rdoc_to_markdown}>" }
+      else
+        raise "unknown urls format: #{urls.inspect}"
+      end
+
+
+    return subject, title, body, urls.join("\n")
   end
 end
 
