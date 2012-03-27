@@ -497,7 +497,7 @@ class Hoe
                                when Hash then
                                  urls["home"] || urls.values.first
                                when Array then
-                                 urls
+                                 urls.first
                                else
                                  raise "unknown urls format: #{urls.inspect}"
                                end
