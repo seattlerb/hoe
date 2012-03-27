@@ -252,7 +252,7 @@ module Hoe::Publish
     subject = "#{name} #{version} Released"
     title   = "#{name} version #{version} has been released!"
     body    = "#{description}\n\nChanges:\n\n#{changes}".rdoc_to_markdown
-    urls    = Array(url).map { |s| "* <#{s.strip.rdoc_to_markdown}>" }.join("\n")
+    urls    = urls.map { |s| "* <#{s.strip.rdoc_to_markdown}>" }.join("\n")
 
     return subject, title, body, urls
   end
