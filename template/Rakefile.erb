@@ -6,7 +6,7 @@ require 'hoe'
 <%=
   found = Gem.find_files("hoe/*.rb").map { |f| File.basename(f, ".rb").to_sym }
   extra = found - Hoe.plugins - [:rake]
-  extra.map { |name| "# Hoe.plugin #{name.inspect}" }.sort.join("\n")
+  extra.map { |name| "# Hoe.plugin #{name.inspect}" }.sort.uniq.join("\n")
 %>
 
 Hoe.spec '<%= project %>' do
