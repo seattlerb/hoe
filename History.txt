@@ -1,3 +1,9 @@
+=== 3.0.2 / 2012-04-03
+
+* 1 bug fix:
+
+  * Generate urls list properly in #announcement if you use k/v form
+
 === 3.0.1 / 2012-03-26
 
 * 1 minor enhancement:
