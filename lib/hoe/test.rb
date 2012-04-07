@@ -77,6 +77,7 @@ module Hoe::Test
 
       desc 'Run the test suite using multiruby.'
       task :multi do
+        ENV["EXCLUDED_VERSIONS"] = multiruby_skip.join(":")
         system "multiruby -S rake"
       end
 
