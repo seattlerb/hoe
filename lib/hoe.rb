@@ -242,12 +242,17 @@ class Hoe
   # README.txt.
   #
 
-  attr_accessor :url
+  def url
+    warn "NOTE: Hoe#url is deprecated, use urls. It will be removed on or after 2012-06-01."
+    warn "Used from #{caller.first}"
+    @url
+  end
 
-  require 'rubygems/deprecate'
-  extend Gem::Deprecate
-  deprecate :url,  :urls,  2012, 6
-  deprecate :url=, :urls=, 2012, 6
+  def url=o
+    warn "NOTE: Hoe#url= is deprecated, use urls=. It will be removed on or after 2012-06-01."
+    warn "Used from #{caller.first}"
+    @url=o
+  end
 
   ##
   # Optional: The urls of the project. This can be an array or
