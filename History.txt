@@ -1,3 +1,9 @@
+=== 3.0.4 / 2012-05-01
+
+* 1 bug fix:
+
+  * Removed rubygems/deprecated and rolled my own for users on older rubygems
+
 === 3.0.3 / 2012-04-09
 
 * 2 bug fixes:
