@@ -1,3 +1,9 @@
+=== 3.0.5 / 2012-05-07
+
+* 1 bug fix:
+
+  * Fixed ridocs argument handling (erikh)
+
 === 3.0.4 / 2012-05-01
 
 * 1 bug fix:
