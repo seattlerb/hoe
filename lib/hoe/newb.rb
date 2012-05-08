@@ -9,7 +9,7 @@ module Hoe::Newb
   # define tasks for the newb plugin
   def define_newb_tasks
     desc "Install deps, generate docs, run tests/specs."
-    task :newb => %w(check_extra_deps docs default) do
+    task :newb => %w(check_extra_deps install_plugins docs default) do
       puts <<-END
 
         GOOD TO GO! Tests are passing, docs are generated,
