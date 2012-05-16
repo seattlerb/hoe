@@ -1,3 +1,9 @@
+=== 3.0.6 / 2012-05-15
+
+* 1 minor enhancement:
+
+  * Added install_plugins to the newb task
+
 === 3.0.5 / 2012-05-07
 
 * 1 bug fix:
