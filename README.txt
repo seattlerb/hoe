@@ -107,6 +107,13 @@ have you peered under the covers and seen .DS_Store, emacs backup~
 files, vim vm files and other files completely unrelated to the
 package? I have far more times than I'd like.
 
+    "Ultimately, the manifest represents professionalism of the
+     deployment process – making sure you know what you think you are
+     releasing. Auto-generating the manifest should be avoided – and
+     this comes from a man who loves to generate things."
+
+    -- dr nic
+
 === VERSION
 
 Releases have versions and I've found it best for the version to be
