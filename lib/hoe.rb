@@ -841,10 +841,20 @@ class File
     r19 = "<3".respond_to? :encoding
     opt = r19 ? "r:bom|utf-8" : "rb"
 
-    open path, opt do |f|
-      if r19 then
-        f.read
-      else
+    if r19 then
+      begin
+        open path, "r:bom|utf-8" do |f|
+          f.read
+        end
+      rescue ArgumentError
+
+        # workaround for rubinius#1766
+        open path, "r" do |f|
+          f.read.sub(%r/\A\xEF\xBB\xBF/, '').encode "utf-8"
+        end
+      end
+    else
+      open path, opt do |f|
         f.read.sub %r/\A\xEF\xBB\xBF/, ''
       end
     end
