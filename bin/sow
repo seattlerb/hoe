@@ -79,7 +79,7 @@ project = ARGV.shift
 abort op.to_s unless project
 abort "Project #{project} seems to exist" if test ?d, project
 
-_, file_name, klass = Hoe.normalize_names project
+_, file_name, klass, test_klass = Hoe.normalize_names project
 
 FileUtils.cp_r template_path, project
 
@@ -105,12 +105,17 @@ Dir.chdir project do
   paths.grep(/file_name|\.erb$/).each do |file|
     new_file = file.sub(/file_name/, file_name).sub(/\.erb$/, '')
 
-    # TODO change template to separate a flat filename from a directory
-    # filename
-    if file =~ /^(bin|test)/ then
+    case file
+    when /^bin/ then
       dir, *rest = new_file.split File::SEPARATOR
 
       new_file = File.join dir, rest.join('_')
+    when /^test/ then
+      dir, *rest = new_file.split File::SEPARATOR
+
+      rest.last.sub! /^/, 'test_'
+
+      new_file = File.join dir, *rest
     end
 
     FileUtils.mkdir_p File.dirname new_file
