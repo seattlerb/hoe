@@ -1,3 +1,9 @@
+=== 3.0.7 / 2012-08-07
+
+* 1 minor enhancement:
+
+  * Added quote from DrNic about manifests to readme.
+
 === 3.0.6 / 2012-05-15
 
 * 1 minor enhancement:
