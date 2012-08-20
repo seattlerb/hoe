@@ -83,7 +83,7 @@ module Hoe::Test
 
       desc 'Show which test files fail when run alone.'
       task :test_deps do
-        tests = Dir["test/**/test_*.rb"]  +  Dir["test/**/*_test.rb"]
+        tests = Dir[*self.test_globs].uniq
 
         paths = ['bin', 'lib', 'test'].join(File::PATH_SEPARATOR)
         null_dev = Hoe::WINDOZE ? '> NUL 2>&1' : '&> /dev/null'

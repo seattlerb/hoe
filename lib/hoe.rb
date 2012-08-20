@@ -514,7 +514,7 @@ class Hoe
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ['--main', readme_file]
       s.post_install_message = post_install_message
-      s.test_files           = Dir[*self.test_globs]
+      s.test_files           = Dir[*self.test_globs].uniq
 
       missing "Manifest.txt" if s.files.empty?
 
@@ -599,7 +599,8 @@ class Hoe
     self.spec_extras          = {}
     self.summary              = nil
     self.summary_sentences    = 1
-    self.test_globs           = ['test/**/test_*.rb']
+    self.test_globs           = ['test/**/{test,spec}_*.rb',
+                                 'test/**/*_{test,spec}.rb']
 
     if manifest = read_manifest then
       self.readme_file  = manifest.grep(/^README\./).first
