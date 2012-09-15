@@ -319,6 +319,54 @@ class TestHoe < MiniTest::Unit::TestCase
     # flunk "not yet"
   end
 
+  def test_no_license
+    hoe = Hoe.spec("blah") do
+      self.version = '1.2.3'
+      developer 'author', 'email'
+    end
+
+    spec = hoe.spec
+
+    assert spec.licenses.empty?
+  end
+
+  def test_license
+    hoe = Hoe.spec("blah") do
+      self.version = '1.2.3'
+      developer 'author', 'email'
+      license 'MIT'
+    end
+
+    spec = hoe.spec
+
+    assert_equal %w(MIT), spec.licenses
+  end
+
+  def test_multiple_calls_to_license
+    hoe = Hoe.spec("blah") do
+      self.version = '1.2.3'
+      developer 'author', 'email'
+      license 'MIT'
+      license 'GPL-2'
+    end
+
+    spec = hoe.spec
+
+    assert_equal %w(MIT GPL-2), spec.licenses
+  end
+
+  def test_setting_licenses
+    hoe = Hoe.spec("blah") do
+      self.version = '1.2.3'
+      developer 'author', 'email'
+      self.licenses = ['MIT', 'GPL-2']
+    end
+
+    spec = hoe.spec
+
+    assert_equal %w(MIT GPL-2), spec.licenses
+  end
+
   def test_plugins
     before = Hoe.plugins.dup
 

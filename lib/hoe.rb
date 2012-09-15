@@ -183,6 +183,11 @@ class Hoe
   attr_accessor :history_file
 
   ##
+  # Optional: An array containing the license(s) under which this gem is released.
+
+  attr_accessor :licenses
+
+  ##
   # *MANDATORY*: The name of the release.
   #
   # Set via Hoe.spec.
@@ -423,6 +428,14 @@ class Hoe
   end
 
   ##
+  #  Specify a license for your gem.
+  #  Call it multiple times if you are releasing under multiple licenses.
+  #
+  def license name
+    self.licenses << name
+  end
+
+  ##
   # Add a dependency declaration to your spec. Pass :dev to
   # +type+ for developer dependencies.
 
@@ -550,6 +563,8 @@ class Hoe
       end
     end
 
+    spec.licenses = licenses unless licenses.empty?
+
     # Do any extra stuff the user wants
     spec_extras.each do |msg, val|
       case val
@@ -593,6 +608,7 @@ class Hoe
     self.extra_deps           = []
     self.extra_dev_deps       = []
     self.extra_rdoc_files     = []
+    self.licenses             = []
     self.post_install_message = nil
     self.rubyforge_name       = name.downcase
     self.spec                 = nil
