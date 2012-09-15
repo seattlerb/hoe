@@ -13,6 +13,8 @@ Hoe.spec "hoe" do
 
   blog_categories << "Seattle.rb" << "Ruby"
 
+  license "MIT"
+
   pluggable!
   require_rubygems_version '>= 1.4'
 
