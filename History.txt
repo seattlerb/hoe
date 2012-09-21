@@ -1,8 +1,12 @@
-=== Unreleased
+=== 3.1.0 / 2012-09-21
 
 * 1 minor enhancement:
 
-  * New Hoe#licenses attribute and Hoe#license helper method, for declaring gem's license(s).
+  * Added Hoe#licenses and Hoe#license for declaring your gem's license. (flavorjones)
+
+* 1 bug fix:
+
+  * Rake 0.8.7 sets verbose flag to true, breaking 2 tests. (michelboaventura)
 
 === 3.0.8 / 2012-08-20
 
