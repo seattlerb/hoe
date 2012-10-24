@@ -126,7 +126,7 @@ module Hoe::Publish
 
       desc 'Generate ri locally for testing.'
       task :ridocs => [:clean, :isolate] do
-        ruby(*make_rdoc_cmd("--ri -o ri"))
+        ruby(*make_rdoc_cmd('--ri', '-o', 'ri'))
       end
     end
 
