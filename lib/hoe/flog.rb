@@ -10,12 +10,14 @@ module Hoe::Flog
   # Optional: flog threshold to determine threshold failure. [default: 1500-200]
 
   attr_accessor :flog_threshold
+  attr_accessor :flog_method
 
   ##
   # Initialize variables for plugin.
 
   def initialize_flog
-    self.flog_threshold ||= timebomb 1500, 1000 # 80% of average :(
+    self.flog_method    ||= :max_method
+    self.flog_threshold ||= 20 # 2x industry avg
   end
 
   ##
@@ -24,8 +26,8 @@ module Hoe::Flog
   def define_flog_tasks
     begin
       require 'flog_task'
-      FlogTask.new :flog, self.flog_threshold
-    rescue Exception
+      FlogTask.new :flog, self.flog_threshold, nil, self.flog_method
+    rescue LoadError
       # skip
     end
   end

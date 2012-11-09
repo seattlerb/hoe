@@ -807,12 +807,14 @@ class Hoe
   end
 
   ##
-  # Provide a linear degrading value from n to m over start to finis dates.
+  # Provide a linear degrading value from n to m over start to finis
+  # dates. If not provided, start and finis will default to 1/1 and
+  # 12/31 of the current year.
 
-  def timebomb n, m, finis = '2010-04-01', start = '2009-03-14'
+  def timebomb n, m, finis = nil, start = nil
     require 'time'
-    finis = Time.parse finis
-    start = Time.parse start
+    finis = Time.parse(finis || "#{Time.now.year}-12-31")
+    start = Time.parse(start || "#{Time.now.year}-01-01")
     rest  = (finis - Time.now)
     full  = (finis - start)
 
