@@ -1,3 +1,11 @@
+=== 3.2.0 / 2012-11-09
+
+* 3 minor enhancements:
+
+  * Added flog_method and defaulted it to max_method
+  * Changed flog_threshold to 20, 2x the industry average. Be strong. You can do it.
+  * Hoe#timebomb will now default finis/start values to 1/1 and 12/31 of the current year if not specified.
+
 === 3.1.1 / 2012-11-03
 
 * 1 bug fix:
