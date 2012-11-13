@@ -1,3 +1,11 @@
+=== 3.3.0 / 2012-11-12
+
+* 3 minor enhancements:
+
+  * Added Sow#make_sub_modules. (bhenderson)
+  * Hoe.normalize_names now returns test class name separately. (bhenderson)
+  * Sow now generates test and impl files with proper namespacing. (bhenderson)
+
 === 3.2.0 / 2012-11-09
 
 * 3 minor enhancements:
