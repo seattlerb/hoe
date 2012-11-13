@@ -327,7 +327,7 @@ class Hoe
   end
 
   ##
-  # Normalize a project name into the project, file, and klass names that
+  # Normalize a project name into the project, file, klass and test names that
   # follow Ruby package naming guidelines.
   #
   # Project names are lowercase with _ separating package parts and -
@@ -337,14 +337,17 @@ class Hoe
   # extension parts.  net-http-persistent becomes net/http/persistent.
   #
   # Klass names are CamelCase with :: separating extension parts.
+  #
+  # Test klass names are same as Klass with Test prepended to each part.
 
   def self.normalize_names project # :nodoc:
-    project   = project.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
-    klass     = project.gsub(/(?:^|_)([a-z])/) { $1.upcase }
-    klass     = klass.  gsub(/(?:^|-)([a-z])/) { "::#{$1.upcase}" }
-    file_name = project.gsub(/-/, '/')
+    project    = project.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
+    klass      = project.gsub(/(?:^|_)([a-z])/) { $1.upcase }
+    klass      = klass.  gsub(/(?:^|-)([a-z])/) { "::#{$1.upcase}" }
+    test_klass = klass.  gsub(/(^|::)([A-Z])/) { "#{$1}Test#{$2}" }
+    file_name  = project.gsub(/-/, '/')
 
-    return project, file_name, klass
+    return project, file_name, klass, test_klass
   end
 
   ##

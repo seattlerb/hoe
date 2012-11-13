@@ -20,6 +20,16 @@ def check_subdir option
   end
 end
 
+def make_sub_modules klass
+  last = nil
+  result = ''
+  klass.split('::')[0..-2].each do |part|
+    last = [last, part].compact.join('::')
+    result << "module #{last}; end\n"
+  end
+  result << "\n" unless result.empty?
+end
+
 op = OptionParser.new do |opts|
   opts.banner = "Usage: sow [options] project_name"
 
@@ -79,7 +89,7 @@ project = ARGV.shift
 abort op.to_s unless project
 abort "Project #{project} seems to exist" if test ?d, project
 
-_, file_name, klass = Hoe.normalize_names project
+_, file_name, klass, test_klass = Hoe.normalize_names project
 
 FileUtils.cp_r template_path, project
 
@@ -96,7 +106,7 @@ Dir.chdir project do
     warn "erb: #{path}"
 
     File.open path, "w" do |io|
-      erb = ERB.new file
+      erb = ERB.new file, nil, '<>'
       erb.filename = path
       io.puts erb.result(binding)
     end
@@ -105,12 +115,17 @@ Dir.chdir project do
   paths.grep(/file_name|\.erb$/).each do |file|
     new_file = file.sub(/file_name/, file_name).sub(/\.erb$/, '')
 
-    # TODO change template to separate a flat filename from a directory
-    # filename
-    if file =~ /^(bin|test)/ then
+    case file
+    when /^bin/ then
       dir, *rest = new_file.split File::SEPARATOR
 
       new_file = File.join dir, rest.join('_')
+    when /^test/ then
+      dir, *rest = new_file.split File::SEPARATOR
+
+      rest.last.sub! /^/, 'test_'
+
+      new_file = File.join dir, *rest
     end
 
     FileUtils.mkdir_p File.dirname new_file
