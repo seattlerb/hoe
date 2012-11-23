@@ -1,3 +1,9 @@
+=== 3.3.1 / 2012-11-23
+
+* 1 minor enhancement:
+
+  * Updated rake dep to be >= 0.8 and < 11.0 for the new wack version scheme. (MichaelXavier)
+
 === 3.3.0 / 2012-11-12
 
 * 3 minor enhancements:
