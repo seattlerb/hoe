@@ -1,3 +1,10 @@
+=== 3.4.0 / 2012-12-18
+
+* 2 minor enhancements:
+
+  * Splatted version arg on require_rubygems_version and require_ruby_version.
+  * Switch default template test file to minitest
+
 === 3.3.1 / 2012-11-23
 
 * 1 minor enhancement:
