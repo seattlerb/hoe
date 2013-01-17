@@ -1,3 +1,9 @@
+=== 3.4.1 / 2013-01-16
+
+* 1 bug fix:
+
+  * Fixed MiniTest const for older stock ruby minitests. (illuminerdi)
+
 === 3.4.0 / 2012-12-18
 
 * 2 minor enhancements:
