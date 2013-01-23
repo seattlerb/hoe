@@ -21,6 +21,7 @@ require "hoe/rake"
 #
 #    - path: ~/Work/p4/zss/www/blog.zenspider.com/releases
 #      type: zenweb
+#      cmd: rake sync    (optional)
 #
 # or:
 #
@@ -159,6 +160,7 @@ module Hoe::Publish
           if site['path'] then
             msg = "post_blog_#{site['type']}"
             send msg, site
+            system site["cmd"] if site["cmd"]
           else
             require 'xmlrpc/client'
 
