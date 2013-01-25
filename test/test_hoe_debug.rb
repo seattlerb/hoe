@@ -42,6 +42,8 @@ class TestHoeDebug < MiniTest::Unit::TestCase
   end
 
   def test_check_manifest_missing
+    skip "https://github.com/MagLev/maglev/issues/224" if maglev?
+
     in_tmpdir do
       manifest
 
@@ -105,6 +107,4 @@ class TestHoeDebug < MiniTest::Unit::TestCase
   def with_config
     yield({ 'exclude' => [] }, '~/.hoerc')
   end
-
 end
-
