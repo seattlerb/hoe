@@ -591,7 +591,7 @@ class Hoe
   # Returns true if the gem +name+ is installed.
 
   def have_gem? name
-    Gem::Specification.find_by_name name
+    Gem::Specification.find_by_name name.to_s
   rescue Gem::LoadError
     false
   end
