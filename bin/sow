@@ -123,7 +123,7 @@ Dir.chdir project do
     when /^test/ then
       dir, *rest = new_file.split File::SEPARATOR
 
-      rest.last.sub! /^/, 'test_'
+      rest.last.sub!(/^/, 'test_')
 
       new_file = File.join dir, *rest
     end
