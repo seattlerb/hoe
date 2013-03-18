@@ -1,3 +1,9 @@
+=== 3.5.2 / 2013-03-18
+
+* 1 bug fix:
+
+  * 1.9: fixed warning of ambiguous args in bin/sow. (amesee)
+
 === 3.5.1 / 2013-02-22
 
 * 1 bug fix:
