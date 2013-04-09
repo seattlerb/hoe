@@ -306,7 +306,7 @@ class TestHoe < MiniTest::Unit::TestCase
 
     expected = [
       ["hoe",  :development, "~> #{Hoe::VERSION.sub(/\.\d+$/, '')}"],
-      ["rdoc", :development, "~> 3.10"],
+      ["rdoc", :development, "~> 4.0"],
     ]
 
     expected << ["rubyforge", :development, ">= #{::RubyForge::VERSION}"] if
