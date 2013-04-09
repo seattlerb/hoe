@@ -97,6 +97,9 @@ module Hoe::Publish
     self.rsync_args      ||= '-av -O --delete'
   end
 
+  ##
+  # Declare a dependency on rdoc, IF NEEDED.
+
   def activate_publish_deps
     dependency "rdoc", "~> 3.10", :developer if need_rdoc
   end
@@ -187,7 +190,7 @@ module Hoe::Publish
     task :announce => [:post_blog, :publish_on_announce ]
   end
 
-  def make_rdoc_cmd(*extra_args)
+  def make_rdoc_cmd(*extra_args) # :nodoc:
     title = "#{name}-#{version} Documentation"
     title = "#{rubyforge_name}'s #{title}" if rubyforge_name != name
     rdoc  = Gem.bin_wrapper "rdoc"
@@ -202,7 +205,7 @@ module Hoe::Publish
       spec.extra_rdoc_files
   end
 
-  def post_blog_zenweb site
+  def post_blog_zenweb site # :nodoc:
     dir = site["path"]
 
     _, title, body, urls = announcement
@@ -229,7 +232,7 @@ module Hoe::Publish
     end
   end
 
-  def generate_email full = nil
+  def generate_email full = nil # :nodoc:
     require 'time'
 
     abort "No email 'to' entry. Run `rake config_hoe` to fix." unless

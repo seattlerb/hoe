@@ -253,7 +253,7 @@ class Hoe
     @url
   end
 
-  def url=o
+  def url=o # :nodoc:
     warn "NOTE: Hoe#url= is deprecated, use urls=. It will be removed on or after 2012-06-01."
     warn "Used from #{caller.first}"
     @url=o
@@ -414,6 +414,9 @@ class Hoe
     activate_plugin_deps
   end
 
+  ##
+  # Run all initialize_* methods for plugins
+
   def initialize_plugins
     Hoe.plugins.each do |plugin|
       msg = "initialize_#{plugin}"
@@ -421,6 +424,9 @@ class Hoe
       send msg if self.respond_to? msg
     end
   end
+
+  ##
+  # Run all activate_*_deps methods for plugins
 
   def activate_plugin_deps
     Hoe.plugins.each do |plugin|
@@ -873,6 +879,6 @@ class File
   end
 end
 
-def Gem.bin_wrapper name # HACK
+def Gem.bin_wrapper name # :nodoc: HACK
   File.join Gem.bindir, Gem.default_exec_format % name
 end unless Gem.respond_to? :bin_wrapper

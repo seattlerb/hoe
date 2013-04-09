@@ -6,6 +6,10 @@
 # rcov::               Analyze code coverage with tests
 
 module Hoe::RCov
+
+  ##
+  # Activate the rcov dependencies.
+
   def activate_rcov_deps
     dependency "rcov", "~> 0.9", :development
   end
@@ -42,7 +46,7 @@ module Hoe::RCov
     end
   end
 
-  def make_rcov_cmd
+  def make_rcov_cmd # :nodoc:
     rcov  = Gem.bin_wrapper "rcov"
     tests = test_globs.sort.map { |g| Dir.glob(g) }.flatten.map(&:inspect)
 

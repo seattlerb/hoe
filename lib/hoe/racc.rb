@@ -44,6 +44,9 @@ module Hoe::Racc
     self.rex_flags  ||= "--independent"
   end
 
+  ##
+  # Activate the racc dependencies
+
   def activate_racc_deps
     dependency 'racc', '~> 1.4.6', :development
   end

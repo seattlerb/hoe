@@ -10,6 +10,10 @@ module Hoe::Flog
   # Optional: flog threshold to determine threshold failure. [default: 1500-200]
 
   attr_accessor :flog_threshold
+
+  ##
+  # Optional: flog method to run to determine threshold. [default: :max_method]
+
   attr_accessor :flog_method
 
   ##

@@ -9,7 +9,7 @@
 # release_to_rubyforge:: Release to rubyforge when release task is run.
 
 module Hoe::RubyForge
-  def initialize_rubyforge
+  def initialize_rubyforge # :nodoc:
     require 'rubyforge'
 
     dependency_target << ['rubyforge', ">= #{::RubyForge::VERSION}"]

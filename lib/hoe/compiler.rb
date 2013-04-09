@@ -29,6 +29,9 @@ module Hoe::Compiler
     clean_globs << "lib/#{self.name}/*.{so,bundle,dll}"
   end
 
+  ##
+  # Activate the rake-compiler dependencies.
+
   def activate_compiler_deps
     dependency "rake-compiler", "~> 0.7", :development
     gem "rake-compiler", "~> 0.7"

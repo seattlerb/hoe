@@ -14,14 +14,14 @@ module Rake
 
     unless method_defined? :clear_comments then
       alias :old_clear :clear
-      def clear
+      def clear # :nodoc:
         clear_prerequisites
         clear_actions
         clear_comments
         self
       end
 
-      def clear_comments
+      def clear_comments # :nodoc:
         @full_comment = nil
         @comment = nil
         self

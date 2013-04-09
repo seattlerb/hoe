@@ -18,9 +18,12 @@ require 'rbconfig'
 # +FORCE_PLATFORM+ (instead of default Gem::Platform::CURRENT)
 
 module Hoe::Inline
-  def initialize_inline
+  def initialize_inline # :nodoc:
     clean_globs << File.expand_path("~/.ruby_inline")
   end
+
+  ##
+  # Activate the inline dependencies.
 
   def activate_inline_deps
     dependency "RubyInline", "~> 3.9"
