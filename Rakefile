@@ -9,7 +9,7 @@ Hoe.plugin :isolate
 Hoe.spec "hoe" do
   developer "Ryan Davis", "ryand-ruby@zenspider.com"
 
-  self.rubyforge_name = "seattlerb"
+  self.group_name = "seattlerb"
 
   blog_categories << "Seattle.rb" << "Ruby"
 

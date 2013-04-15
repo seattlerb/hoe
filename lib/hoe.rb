@@ -205,9 +205,12 @@ class Hoe
   attr_accessor :readme_file
 
   ##
-  # Optional: The name of the rubyforge project. [default: name.downcase]
+  # Optional: The name of the group authoring the project. [default: name.downcase]
 
-  attr_accessor :rubyforge_name
+  attr_accessor :group_name
+
+  alias :rubyforge_name  :group_name  # Deprecated. Use #group_name.
+  alias :rubyforge_name= :group_name= # Deprecated. Use #group_name=.
 
   ##
   # The Gem::Specification.
@@ -528,7 +531,7 @@ class Hoe
                                else
                                  raise "unknown urls format: #{urls.inspect}"
                                end
-      s.rubyforge_project    = rubyforge_name
+      s.rubyforge_project    = group_name
       s.description          = description
       s.files                = manifest
       s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
@@ -619,7 +622,7 @@ class Hoe
     self.extra_rdoc_files     = []
     self.licenses             = []
     self.post_install_message = nil
-    self.rubyforge_name       = name.downcase
+    self.group_name           = name.downcase
     self.spec                 = nil
     self.spec_extras          = {}
     self.summary              = nil

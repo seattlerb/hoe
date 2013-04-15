@@ -192,7 +192,7 @@ module Hoe::Publish
 
   def make_rdoc_cmd(*extra_args) # :nodoc:
     title = "#{name}-#{version} Documentation"
-    title = "#{rubyforge_name}'s #{title}" if rubyforge_name != name
+    title = "#{group_name}'s #{title}" if group_name != name
     rdoc  = Gem.bin_wrapper "rdoc"
 
     %W[#{rdoc}
