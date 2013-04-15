@@ -113,7 +113,7 @@ Dir.chdir project do
   end
 
   paths.grep(/file_name|\.erb$/).each do |file|
-    new_file = file.sub(/file_name/, file_name).sub(/\.erb$/, '')
+    new_file = file.sub(/(test_)?file_name/, file_name).sub(/\.erb$/, '')
 
     case file
     when /^bin/ then
