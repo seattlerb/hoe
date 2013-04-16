@@ -550,7 +550,7 @@ class Hoe
         s.author  = author
       end
 
-      s.extra_rdoc_files += s.files.grep(/(txt|rdoc)$/)
+      s.extra_rdoc_files += s.files.grep(/\.(txt|rdoc|md)$/)
       s.extra_rdoc_files.reject! { |f| f =~ %r%^(test|spec|vendor|template|data|tmp)/% }
       s.extra_rdoc_files += @extra_rdoc_files
     end
@@ -635,8 +635,8 @@ class Hoe
       self.history_file = manifest.grep(/^History\./).first
     end
 
-    self.history_file ||= "History.txt"
-    self.readme_file  ||= "README.txt"
+    self.history_file ||= Dir.glob("History.{txt,md}").first
+    self.readme_file  ||= Dir.glob("README.{txt,md}").first
 
     abort "Hoe.new {...} removed. Switch to Hoe.spec." if block_given?
   end
@@ -691,7 +691,9 @@ class Hoe
   # should update the readme.
 
   def parse_urls text
-    lines = text.gsub(/^\* /, '').split(/\n/).grep(/\S+/)
+
+    lines = text.gsub(/^\* /, '').delete("<>").split(/\n/).grep(/\S+/)
+
     if lines.first =~ /::/ then
       Hash[lines.map { |line| line.split(/\s*::\s*/) }]
     else
