@@ -1,3 +1,17 @@
+=== 3.6.0 / 2013-04-18
+
+* 5 minor enhancements:
+
+  * Added built-in support for markdown.
+  * Renamed rubyforge_name to group_name.
+  * Aliased and deprecated rubyforge_name from group_name.
+  * Strip <> from parse_urls for markdown style raw urls.
+  * intuit_values looks for README.md and History.md as well as txt.
+
+* 1 bug fix:
+
+  * Fix file_name regex for test file. (bhenderson/veganstraightedge)
+
 === 3.5.3 / 2013-04-09
 
 * 1 minor enhancement:
