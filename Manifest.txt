@@ -31,7 +31,7 @@ template/README.txt.erb
 template/Rakefile.erb
 template/bin/file_name.erb
 template/lib/file_name.rb.erb
-template/test/file_name.rb.erb
+template/test/test_file_name.rb.erb
 test/test_hoe.rb
 test/test_hoe_debug.rb
 test/test_hoe_gemcutter.rb
