@@ -51,32 +51,16 @@ class TestHoeDebug < MiniTest::Unit::TestCase
 
       e = nil
 
-      out = capture_STDOUT do
+      out, err = capture_subprocess_io do
         e = assert_raises RuntimeError do
           check_manifest
         end
       end
 
       assert_match %r%^Command failed with status%, e.message
-
       assert_match %r%^\+missing.rb%, out
+      assert_equal "", err
     end
-  end
-
-  def capture_STDOUT
-    orig_STDOUT = STDOUT.dup
-
-    Tempfile.open __name__ do |io|
-      STDOUT.reopen io
-
-      yield
-
-      io.flush
-
-      return File.read io.path
-    end
-  ensure
-    STDOUT.reopen orig_STDOUT
   end
 
   def in_tmpdir
