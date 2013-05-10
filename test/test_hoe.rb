@@ -78,9 +78,7 @@ class TestHoe < MiniTest::Unit::TestCase
         EOM
       end
 
-      open File.join(path, '.hoerc'), 'w' do |io|
-        io.write YAML.dump('plugins' => %w[hoerc])
-      end
+      write_hoerc path, 'plugins' => %w[hoerc]
 
       methods = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
 
@@ -88,40 +86,7 @@ class TestHoe < MiniTest::Unit::TestCase
       assert_includes Hoe.plugins, :hoerc
     end
   ensure
-    Hoe.instance_variable_get(:@loaded).delete :hoerc
-    Hoe.plugins.delete :hoerc
-    Hoe.send :remove_const, :Hoerc
-    $LOAD_PATH.replace load_path
-    ENV['HOME'] = home
-  end
-
-  def test_perproject_hoerc
-    overrides = {
-      'exclude' => Regexp.union( Hoe::DEFAULT_CONFIG["exclude"], /\.hg/ ),
-      'plugins' => ['tweedledee', 'tweedledum']
-    }
-    overrides_rcfile = File.join(Dir.pwd, '.hoerc')
-
-    home = ENV['HOME']
-    Hoe.files = nil
-
-    Dir.mktmpdir do |path|
-      ENV['HOME'] = path
-
-      open File.join(path, '.hoerc'), 'w' do |io|
-        io.write YAML.dump( Hoe::DEFAULT_CONFIG )
-      end
-      open overrides_rcfile, File::CREAT|File::EXCL|File::WRONLY do |io|
-        io.write YAML.dump( overrides )
-      end
-
-      hoeconfig = hoe.with_config {|config, _| config }
-
-      assert_equal Hoe::DEFAULT_CONFIG.merge(overrides), hoeconfig
-    end
-  ensure
-    File.delete overrides_rcfile if File.exist?( overrides_rcfile )
-    ENV['HOME'] = home
+    reset_hoe load_path, home
   end
 
   def test_have_gem_eh
@@ -148,9 +113,7 @@ class TestHoe < MiniTest::Unit::TestCase
         EOM
       end
 
-      open File.join(path, '.hoerc'), 'w' do |io|
-        io.write YAML.dump('plugins' => %w[hoerc])
-      end
+      write_hoerc path, 'plugins' => %w[hoerc]
 
       methods = hoe.instance_variables.map(&:to_s)
       assert_includes(methods, '@hoerc_plugin_initialized',
@@ -158,6 +121,16 @@ class TestHoe < MiniTest::Unit::TestCase
       assert_includes Hoe.plugins, :hoerc
     end
   ensure
+    reset_hoe load_path, home
+  end
+
+  def write_hoerc path, data
+    open File.join(path, '.hoerc'), 'w' do |io|
+      io.write YAML.dump data
+    end
+  end
+
+  def reset_hoe load_path, home
     Hoe.instance_variable_get(:@loaded).delete :hoerc
     Hoe.plugins.delete :hoerc
     Hoe.send :remove_const, :Hoerc
@@ -443,9 +416,8 @@ class TestHoe < MiniTest::Unit::TestCase
     Dir.mktmpdir do |path|
       ENV['HOME'] = path
 
-      open File.join(path, '.hoerc'), 'w' do |io|
-        io.write YAML.dump( Hoe::DEFAULT_CONFIG )
-      end
+      write_hoerc path, Hoe::DEFAULT_CONFIG
+
       open overrides_rcfile, File::CREAT|File::EXCL|File::WRONLY do |io|
         io.write YAML.dump( overrides )
       end
