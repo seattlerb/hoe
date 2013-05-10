@@ -19,11 +19,20 @@ class TestHoeDebug < MiniTest::Unit::TestCase
     @generated_files = []
   end
 
+  def assert_subprocess_silent
+    out, err = capture_subprocess_io do
+      yield
+    end
+
+    assert_equal "", out
+    assert_equal "", err
+  end
+
   def test_check_manifest
     in_tmpdir do
       manifest
 
-      assert_silent do
+      assert_subprocess_silent do
         check_manifest
       end
     end
@@ -35,7 +44,7 @@ class TestHoeDebug < MiniTest::Unit::TestCase
 
       open 'generated.rb', 'w' do |io| io.puts 'generated = true' end
 
-      assert_silent do
+      assert_subprocess_silent do
         check_manifest
       end
     end
