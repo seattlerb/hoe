@@ -1,3 +1,10 @@
+=== 3.6.1 / 2013-05-10
+
+* 2 bug fixes:
+
+  * Define a blank test task just in case nothing is found
+  * Fixed an ancient test to use capture_subprocess_io. More reliable.
+
 === 3.6.0 / 2013-04-18
 
 * 5 minor enhancements:
