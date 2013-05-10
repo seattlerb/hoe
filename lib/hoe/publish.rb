@@ -158,20 +158,20 @@ module Hoe::Publish
     task :announce => [:post_blog, :publish_on_announce ]
   end
 
-  def publish_docs_task
+  def publish_docs_task # :nodoc:
     warn "no rdoc_location values" if rdoc_locations.empty?
     self.rdoc_locations.each do |dest|
       sh %{rsync #{rsync_args} #{local_rdoc_dir}/ #{dest}}
     end
   end
 
-  def publish_on_announce_task
+  def publish_on_announce_task # :nodoc:
     with_config do |config, _|
       Rake::Task['publish_docs'].invoke if config["publish_on_announce"]
     end
   end
 
-  def post_blog_task
+  def post_blog_task # :nodoc:
     with_config do |config, path|
       break unless config['blogs']
 

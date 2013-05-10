@@ -562,7 +562,7 @@ class Hoe
     run_spec_extras
   end
 
-  def check_for_version
+  def check_for_version # :nodoc:
     unless self.version then
       version    = nil
       version_re = /VERSION += +([\"\'])([\d][\w\.]+)\1/
@@ -584,7 +584,7 @@ class Hoe
     end
   end
 
-  def run_spec_extras
+  def run_spec_extras # :nodoc:
     # Do any extra stuff the user wants
     self.spec_extras.each do |msg, val|
       case val

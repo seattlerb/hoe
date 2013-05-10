@@ -52,7 +52,7 @@ module Hoe::Signing
     end
   end
 
-  def set_up_signing
+  def set_up_signing # :nodoc:
     signing_key = nil
     cert_chain = []
 
@@ -71,7 +71,7 @@ module Hoe::Signing
     end
   end
 
-  def generate_key_task
+  def generate_key_task # :nodoc:
     email = Array(spec.email)
     abort "No email in your gemspec" if email.nil? or email.empty?
 
