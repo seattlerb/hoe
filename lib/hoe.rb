@@ -555,6 +555,14 @@ class Hoe
       s.extra_rdoc_files += @extra_rdoc_files
     end
 
+    check_for_version
+
+    spec.licenses = licenses unless licenses.empty?
+
+    run_spec_extras
+  end
+
+  def check_for_version
     unless self.version then
       version    = nil
       version_re = /VERSION += +([\"\'])([\d][\w\.]+)\1/
@@ -574,11 +582,11 @@ class Hoe
         warn "   or fix your Manifest.txt"
       end
     end
+  end
 
-    spec.licenses = licenses unless licenses.empty?
-
+  def run_spec_extras
     # Do any extra stuff the user wants
-    spec_extras.each do |msg, val|
+    self.spec_extras.each do |msg, val|
       case val
       when Proc
         val.call spec.send(msg)

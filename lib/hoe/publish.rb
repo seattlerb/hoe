@@ -136,17 +136,12 @@ module Hoe::Publish
 
     desc "Publish RDoc to wherever you want."
     task :publish_docs => [:clean, :docs] do
-      warn "no rdoc_location values" if rdoc_locations.empty?
-      self.rdoc_locations.each do |dest|
-        sh %{rsync #{rsync_args} #{local_rdoc_dir}/ #{dest}}
-      end
+      publish_docs_task
     end
 
     # no doco for this one
     task :publish_on_announce do
-      with_config do |config, _|
-        Rake::Task['publish_docs'].invoke if config["publish_on_announce"]
-      end
+      publish_on_announce_task
     end
 
     desc 'Generate email announcement file.'
@@ -156,38 +151,55 @@ module Hoe::Publish
 
     desc 'Post announcement to blog. Uses the "blogs" array in your hoerc.'
     task :post_blog do
-      with_config do |config, path|
-        break unless config['blogs']
-
-        config['blogs'].each do |site|
-          if site['path'] then
-            msg = "post_blog_#{site['type']}"
-            send msg, site
-            system site["cmd"] if site["cmd"]
-          else
-            require 'xmlrpc/client'
-
-            _, title, body, urls = announcement
-            body += "\n\n#{urls}"
-
-            server = XMLRPC::Client.new2(site['url'])
-            content = site['extra_headers'].merge(:title => title,
-                                                  :description => body,
-                                                  :categories => blog_categories)
-
-            server.call('metaWeblog.newPost',
-                        site['blog_id'],
-                        site['user'],
-                        site['password'],
-                        content,
-                        true)
-          end
-        end
-      end
+      post_blog_task
     end
 
     desc 'Announce your release.'
     task :announce => [:post_blog, :publish_on_announce ]
+  end
+
+  def publish_docs_task
+    warn "no rdoc_location values" if rdoc_locations.empty?
+    self.rdoc_locations.each do |dest|
+      sh %{rsync #{rsync_args} #{local_rdoc_dir}/ #{dest}}
+    end
+  end
+
+  def publish_on_announce_task
+    with_config do |config, _|
+      Rake::Task['publish_docs'].invoke if config["publish_on_announce"]
+    end
+  end
+
+  def post_blog_task
+    with_config do |config, path|
+      break unless config['blogs']
+
+      config['blogs'].each do |site|
+        if site['path'] then
+          msg = "post_blog_#{site['type']}"
+          send msg, site
+          system site["cmd"] if site["cmd"]
+        else
+          require 'xmlrpc/client'
+
+          _, title, body, urls = announcement
+          body += "\n\n#{urls}"
+
+          server = XMLRPC::Client.new2(site['url'])
+          content = site['extra_headers'].merge(:title => title,
+                                                :description => body,
+                                                :categories => blog_categories)
+
+          server.call('metaWeblog.newPost',
+                      site['blog_id'],
+                      site['user'],
+                      site['password'],
+                      content,
+                      true)
+        end
+      end
+    end
   end
 
   def make_rdoc_cmd(*extra_args) # :nodoc:

@@ -24,105 +24,121 @@ module Hoe::Deps
     namespace :deps do
       desc "List all the dependent gems of this gem"
       task :list do
-        gems = self.get_gems_by_name
-        gem  = gems[self.name]
-
-        abort "Couldn't find gem: #{self.name}" unless gem
-
-        deps = self.dependent_upon self.name
-        max  = deps.map { |s| s.full_name.size }.max
-
-        puts "  dependents:"
-        unless deps.empty? then
-          deps.sort_by { |spec| spec.full_name }.each do |spec|
-            vers = spec.dependencies.find {|s| s.name == name}.requirements_list
-            puts "    %-*s - %s" % [max, spec.full_name, vers.join(", ")]
-          end
-        else
-          puts "    none"
-        end
+        deps_list_task
       end
 
       desc "Print a contact list for gems dependent on this gem"
       task :email do
-        gems = self.get_gems_by_name
-        gem  = gems[self.name]
-
-        abort "Couldn't find gem: #{self.name}" unless gem
-
-        deps = self.dependent_upon self.name
-        email = deps.map { |s| s.email }.compact.flatten.sort.uniq
-        email = email.map { |s| s.split(/,\s*/) }.flatten.sort.uniq
-
-        email.map! { |s| # don't you people realize how easy this is?
-          s.gsub(/ at | _at_ |\s*(atmark|@nospam@|-at?-|@at?@|<at?>|\[at?\]|\(at?\))\s*/i, '@').gsub(/\s*(dot|\[d(ot)?\]|\.dot\.)\s*/i, '.').gsub(/\s+com$/, '.com')
-        }
-
-        bad, good = email.partition { |e| e !~ /^[\w.+-]+\@[\w.+-]+$/ }
-
-        warn "Rejecting #{bad.size} email. I couldn't unmunge them." unless
-          bad.empty?
-
-        puts good.join(", ")
-
-        warn "Warning: couldn't extract any email addresses" if good.empty?
+        deps_email_task
       end
 
       desc "Fetch all the dependent gems of this gem into tarballs"
       task :fetch do
-        deps = self.dependent_upon self.name
-
-        mkdir "deps" unless File.directory? "deps"
-        Dir.chdir "deps" do
-          begin
-            deps.sort_by { |spec| spec.full_name }.each do |spec|
-              full_name = spec.full_name
-              tgz_name  = "#{full_name}.tgz"
-              gem_name  = "#{full_name}.gem"
-
-              next if File.exist? tgz_name
-              FileUtils.rm_rf [full_name, gem_name]
-
-              begin
-                warn "downloading #{full_name}"
-                Gem::RemoteFetcher.fetcher.download(spec, GEMURL, Dir.pwd)
-                FileUtils.mv "cache/#{gem_name}", '.'
-              rescue Gem::RemoteFetcher::FetchError
-                warn "  failed"
-                next
-              end
-
-              warn "converting #{gem_name} to tarball"
-
-              system "gem unpack #{gem_name} 2> /dev/null"
-              system "gem spec -l #{gem_name} > #{full_name}/gemspec.rb"
-              system "tar zmcf #{tgz_name} #{full_name}"
-              FileUtils.rm_rf [full_name, gem_name, "cache"]
-            end
-          ensure
-            FileUtils.rm_rf "cache"
-          end
-        end
+        deps_fetch_task
       end
     end
 
     desc 'Install missing dependencies.'
     task :check_extra_deps do
-      # extra_deps = [["rubyforge", ">= 1.0.0"], ["rake", ">= 0.8.1"]]
-      (extra_deps + extra_dev_deps).each do |dep|
-        begin
-          gem(*dep)
-        rescue Gem::LoadError
-          name, req, = dep
-
-          install_gem name, req, false
-        end
-      end
+      check_extra_deps_task
     end
 
     desc 'Install missing plugins.'
     task :install_plugins do
       install_missing_plugins
+    end
+  end
+
+  def check_extra_deps_task # :nodoc:
+    # extra_deps = [["rubyforge", ">= 1.0.0"], ["rake", ">= 0.8.1"]]
+    (extra_deps + extra_dev_deps).each do |dep|
+      begin
+        gem(*dep)
+      rescue Gem::LoadError
+        name, req, = dep
+
+        install_gem name, req, false
+      end
+    end
+  end
+
+  def deps_list_task # :nodoc:
+    gems = self.get_gems_by_name
+    gem  = gems[self.name]
+
+    abort "Couldn't find gem: #{self.name}" unless gem
+
+    deps = self.dependent_upon self.name
+    max  = deps.map { |s| s.full_name.size }.max
+
+    puts "  dependents:"
+    unless deps.empty? then
+      deps.sort_by { |spec| spec.full_name }.each do |spec|
+        vers = spec.dependencies.find {|s| s.name == name}.requirements_list
+        puts "    %-*s - %s" % [max, spec.full_name, vers.join(", ")]
+      end
+    else
+      puts "    none"
+    end
+  end
+
+  def deps_email_task # :nodoc:
+    gems = self.get_gems_by_name
+    gem  = gems[self.name]
+
+    abort "Couldn't find gem: #{self.name}" unless gem
+
+    deps = self.dependent_upon self.name
+    email = deps.map { |s| s.email }.compact.flatten.sort.uniq
+    email = email.map { |s| s.split(/,\s*/) }.flatten.sort.uniq
+
+    email.map! { |s| # don't you people realize how easy this is?
+      s.gsub(/ at | _at_ |\s*(atmark|@nospam@|-at?-|@at?@|<at?>|\[at?\]|\(at?\))\s*/i, '@').gsub(/\s*(dot|\[d(ot)?\]|\.dot\.)\s*/i, '.').gsub(/\s+com$/, '.com')
+    }
+
+    bad, good = email.partition { |e| e !~ /^[\w.+-]+\@[\w.+-]+$/ }
+
+    warn "Rejecting #{bad.size} email. I couldn't unmunge them." unless
+      bad.empty?
+
+    puts good.join(", ")
+
+    warn "Warning: couldn't extract any email addresses" if good.empty?
+  end
+
+  def deps_fetch_task # :nodoc:
+    deps = self.dependent_upon self.name
+
+    mkdir "deps" unless File.directory? "deps"
+    Dir.chdir "deps" do
+      begin
+        deps.sort_by { |spec| spec.full_name }.each do |spec|
+          full_name = spec.full_name
+          tgz_name  = "#{full_name}.tgz"
+          gem_name  = "#{full_name}.gem"
+
+          next if File.exist? tgz_name
+          FileUtils.rm_rf [full_name, gem_name]
+
+          begin
+            warn "downloading #{full_name}"
+            Gem::RemoteFetcher.fetcher.download(spec, GEMURL, Dir.pwd)
+            FileUtils.mv "cache/#{gem_name}", '.'
+          rescue Gem::RemoteFetcher::FetchError
+            warn "  failed"
+            next
+          end
+
+          warn "converting #{gem_name} to tarball"
+
+          system "gem unpack #{gem_name} 2> /dev/null"
+          system "gem spec -l #{gem_name} > #{full_name}/gemspec.rb"
+          system "tar zmcf #{tgz_name} #{full_name}"
+          FileUtils.rm_rf [full_name, gem_name, "cache"]
+        end
+      ensure
+        FileUtils.rm_rf "cache"
+      end
     end
   end
 

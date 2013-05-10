@@ -44,6 +44,15 @@ module Hoe::Signing
   # Define tasks for plugin.
 
   def define_signing_tasks
+    set_up_signing
+
+    desc 'Generate a key for signing your gems.'
+    task :generate_key do
+      generate_key_task
+    end
+  end
+
+  def set_up_signing
     signing_key = nil
     cert_chain = []
 
@@ -60,60 +69,59 @@ module Hoe::Signing
       spec.signing_key = signing_key
       spec.cert_chain = cert_chain
     end
+  end
 
-    desc 'Generate a key for signing your gems.'
-    task :generate_key do
-      email = Array(spec.email)
-      abort "No email in your gemspec" if email.nil? or email.empty?
+  def generate_key_task
+    email = Array(spec.email)
+    abort "No email in your gemspec" if email.nil? or email.empty?
+
+    key_file = with_config { |config, _| config['signing_key_file'] }
+    cert_file = with_config { |config, _| config['signing_cert_file'] }
+
+    if key_file.nil? or cert_file.nil? then
+      ENV['SHOW_EDITOR'] ||= 'no'
+      Rake::Task['config_hoe'].invoke
 
       key_file = with_config { |config, _| config['signing_key_file'] }
       cert_file = with_config { |config, _| config['signing_cert_file'] }
+    end
 
-      if key_file.nil? or cert_file.nil? then
-        ENV['SHOW_EDITOR'] ||= 'no'
-        Rake::Task['config_hoe'].invoke
+    key_file = File.expand_path key_file
+    cert_file = File.expand_path cert_file
 
-        key_file = with_config { |config, _| config['signing_key_file'] }
-        cert_file = with_config { |config, _| config['signing_cert_file'] }
+    unless File.exist? key_file then
+      puts "Generating certificate"
+
+      if File.exist? key_file then
+        abort "Have #{key_file} but no #{cert_file}, aborting as a precaution"
       end
 
-      key_file = File.expand_path key_file
-      cert_file = File.expand_path cert_file
+      warn "NOTICE: using #{email.first} for certificate" if email.size > 1
 
-      unless File.exist? key_file then
-        puts "Generating certificate"
+      sh "gem cert --build #{email.first}"
+      mv "gem-private_key.pem", key_file, :verbose => true
+      mv "gem-public_cert.pem", cert_file, :verbose => true
 
-        if File.exist? key_file then
-          abort "Have #{key_file} but no #{cert_file}, aborting as a precaution"
-        end
+      puts "Installed key and certificate."
+    end
 
-        warn "NOTICE: using #{email.first} for certificate" if email.size > 1
+    rf = RubyForge.new.configure
+    rf.login
 
-        sh "gem cert --build #{email.first}"
-        mv "gem-private_key.pem", key_file, :verbose => true
-        mv "gem-public_cert.pem", cert_file, :verbose => true
+    cert_package = "#{rubyforge_name}-certificates"
 
-        puts "Installed key and certificate."
-      end
+    begin
+      rf.lookup 'package', cert_package
+    rescue
+      rf.create_package rubyforge_name, cert_package
+    end
 
-      rf = RubyForge.new.configure
-      rf.login
-
-      cert_package = "#{rubyforge_name}-certificates"
-
-      begin
-        rf.lookup 'package', cert_package
-      rescue
-        rf.create_package rubyforge_name, cert_package
-      end
-
-      unless rf.lookup('release', cert_package)['certificates'] then
-        rf.add_release rubyforge_name, cert_package, 'certificates', cert_file
-        puts "Uploaded certificates to release \"certificates\" in package #{cert_package}"
-      else
-        puts '"certificates" release exists, adding file anyway (will not overwrite)'
-        rf.add_file rubyforge_name, cert_package, 'certificates', cert_file
-      end
+    unless rf.lookup('release', cert_package)['certificates'] then
+      rf.add_release rubyforge_name, cert_package, 'certificates', cert_file
+      puts "Uploaded certificates to release \"certificates\" in package #{cert_package}"
+    else
+      puts '"certificates" release exists, adding file anyway (will not overwrite)'
+      rf.add_file rubyforge_name, cert_package, 'certificates', cert_file
     end
   end
 end
