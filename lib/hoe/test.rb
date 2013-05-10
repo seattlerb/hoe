@@ -69,6 +69,8 @@ module Hoe::Test
   def define_test_tasks
     default_tasks = []
 
+    task :test
+
     if File.directory? "test" then
       desc 'Run the test suite. Use FILTER or TESTOPTS to add flags/args.'
       task :test do
