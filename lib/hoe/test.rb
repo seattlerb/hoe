@@ -33,7 +33,7 @@ module Hoe::Test
   attr_accessor :multiruby_skip
 
   ##
-  # Optional: What test library to require [default: :testunit]
+  # Optional: What test library to require [default: :minitest]
 
   attr_accessor :testlib
 
@@ -57,7 +57,7 @@ module Hoe::Test
 
   def initialize_test
     self.multiruby_skip ||= []
-    self.testlib        ||= :testunit
+    self.testlib        ||= :minitest
     self.test_prelude   ||= nil
     self.rspec_dirs     ||= %w(spec lib)
     self.rspec_options  ||= []
