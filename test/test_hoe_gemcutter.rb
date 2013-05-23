@@ -2,7 +2,7 @@ require "hoe"
 require "hoe/gemcutter" unless defined? Hoe::Gemcutter
 require "minitest/autorun"
 
-class TestHoeGemcutter < MiniTest::Unit::TestCase
+class TestHoeGemcutter < Minitest::Test
   include Hoe::Gemcutter
 
   def test_gemcutter_tasks_defined

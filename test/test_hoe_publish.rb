@@ -2,7 +2,7 @@ require 'rubygems'
 require 'minitest/autorun'
 require 'hoe'
 
-class TestHoePublish < MiniTest::Unit::TestCase
+class TestHoePublish < Minitest::Test
   def setup
     @hoe = Hoe.spec 'blah' do
       self.version = '1.0'

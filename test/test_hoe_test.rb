@@ -3,7 +3,7 @@ require "hoe"
 
 Hoe.load_plugins # make sure Hoe::Test is loaded
 
-class TestHoeTest < MiniTest::Unit::TestCase
+class TestHoeTest < Minitest::Test
   def setup
     @tester = Module.new do
       include Hoe::Test

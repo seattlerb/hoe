@@ -10,7 +10,7 @@ end
 
 $rakefile = nil # shuts up a warning in rdoctask.rb
 
-class TestHoe < MiniTest::Unit::TestCase
+class TestHoe < Minitest::Test
   def hoe
     @hoe ||= Hoe.spec("blah") do
       developer 'author', 'email'

@@ -4,7 +4,7 @@ require 'tmpdir'
 require 'tempfile'
 require 'minitest/autorun'
 
-class TestHoeDebug < MiniTest::Unit::TestCase
+class TestHoeDebug < Minitest::Test
 
   include Hoe::Debug
 
