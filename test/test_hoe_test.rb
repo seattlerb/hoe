@@ -26,6 +26,11 @@ class TestHoeTest < MiniTest::Unit::TestCase
                 "' -- ",
                ].join
 
+    # default
+    autorun = %(require "minitest/autorun"; )
+    assert_equal expected % autorun, @tester.make_test_cmd
+
+    @tester.testlib = :testunit
     testunit = %(require "test/unit"; )
     assert_equal expected % testunit, @tester.make_test_cmd
 
