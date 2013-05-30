@@ -5,6 +5,7 @@ require './lib/hoe.rb'
 
 Hoe.plugin :seattlerb
 Hoe.plugin :isolate
+Hoe.plugin :minitest
 
 Hoe.spec "hoe" do
   developer "Ryan Davis", "ryand-ruby@zenspider.com"
