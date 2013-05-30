@@ -1,3 +1,9 @@
+=== 3.6.2 / 2013-05-29
+
+* 1 minor enhancement:
+
+  * Um... the default test lib should probably be minitest, not testunit.
+
 === 3.6.1 / 2013-05-10
 
 * 2 bug fixes:
