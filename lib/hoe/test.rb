@@ -88,7 +88,7 @@ module Hoe::Test
         tests = Dir[*self.test_globs].uniq
 
         paths = ['bin', 'lib', 'test'].join(File::PATH_SEPARATOR)
-        null_dev = Hoe::WINDOZE ? '> NUL 2>&1' : '&> /dev/null'
+        null_dev = Hoe::WINDOZE ? '> NUL 2>&1' : '> /dev/null 2>&1'
 
         tests.each do |test|
           if not system "ruby -I#{paths} #{test} #{null_dev}" then
