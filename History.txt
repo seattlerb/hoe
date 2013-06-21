@@ -1,3 +1,9 @@
+=== 3.6.3 / 2013-06-20
+
+* 1 bug fix:
+
+  * Fixed problems with shell redirection on non-bash systems. (kou)
+
 === 3.6.2 / 2013-05-29
 
 * 1 minor enhancement:
