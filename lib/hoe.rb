@@ -184,6 +184,8 @@ class Hoe
 
   ##
   # Optional: An array containing the license(s) under which this gem is released.
+  #
+  # Warns and defaults to "MIT" if not set.
 
   attr_accessor :licenses
 
@@ -557,7 +559,13 @@ class Hoe
 
     check_for_version
 
-    spec.licenses = licenses unless licenses.empty?
+    if licenses.empty?
+      warn "Defaulting gemspec to MIT license."
+      warn "Call license in hoe spec to change."
+      license "MIT"
+    end
+
+    spec.licenses = licenses
 
     run_spec_extras
   end

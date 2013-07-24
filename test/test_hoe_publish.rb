@@ -8,6 +8,7 @@ class TestHoePublish < Minitest::Test
       self.version = '1.0'
 
       developer 'author', ''
+      license 'MIT'
     end
   end
 

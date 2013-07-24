@@ -14,6 +14,7 @@ class TestHoe < Minitest::Test
   def hoe
     @hoe ||= Hoe.spec("blah") do
       developer 'author', 'email'
+      license 'MIT'
     end
   end
 
@@ -153,6 +154,7 @@ class TestHoe < Minitest::Test
         hoe = Hoe.spec 'blah' do
           self.version = '1.0'
           developer 'nobody', 'nobody@example'
+          license 'MIT'
         end
 
         assert_equal 'History.rdoc', hoe.history_file
@@ -179,6 +181,7 @@ class TestHoe < Minitest::Test
         hoe = Hoe.spec 'blah' do
           self.version = '1.0'
           developer 'nobody', 'nobody@example'
+          license 'MIT'
         end
 
         assert_equal 'README.ja.rdoc', hoe.readme_file
@@ -237,6 +240,7 @@ class TestHoe < Minitest::Test
     hoe = Hoe.spec("blah") do
       self.version = '1.2.3'
       developer 'author', 'email'
+      license 'MIT'
     end
 
     files = File.read("Manifest.txt").split(/\n/) + [".gemtest"]
@@ -288,19 +292,20 @@ class TestHoe < Minitest::Test
     assert_equal expected, deps.map { |dep|
       [dep.name, dep.type, dep.requirement.to_s]
     }
-
-    # flunk "not yet"
   end
 
   def test_no_license
-    hoe = Hoe.spec("blah") do
-      self.version = '1.2.3'
-      developer 'author', 'email'
+    out, err = capture_io do
+      hoe = Hoe.spec("blah") do
+        self.version = '1.2.3'
+        developer 'author', 'email'
+      end
+
+      assert_equal ["MIT"], hoe.spec.licenses
     end
 
-    spec = hoe.spec
-
-    assert spec.licenses.empty?
+    assert_equal "", out
+    assert_match "Defaulting gemspec to MIT", err
   end
 
   def test_license
@@ -353,6 +358,7 @@ class TestHoe < Minitest::Test
   def test_read_manifest
     hoe = Hoe.spec 'blah'  do
       developer 'author', 'email'
+      license 'MIT'
     end
 
     expected = File.read_utf('Manifest.txt').split
@@ -375,6 +381,7 @@ class TestHoe < Minitest::Test
     hoe = Hoe.spec("blah") do
       self.version = '1.2.3'
       developer 'author', 'email'
+      license 'MIT'
 
       def system cmd
         cmd
