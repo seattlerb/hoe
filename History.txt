@@ -1,3 +1,9 @@
+=== 3.7.0 / 2013-07-24
+
+* 1 minor enhancement:
+
+  * Warn and default to MIT license if not set.
+
 === 3.6.3 / 2013-06-20
 
 * 1 bug fix:
