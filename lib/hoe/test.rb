@@ -24,7 +24,8 @@ module Hoe::Test
   #
   # eg FILTER="-n test_blah"
 
-  FILTER = ENV['FILTER'] || ENV['TESTOPTS']
+  FILTER = ENV['FILTER'] || ENV['TESTOPTS'] || ""
+  FILTER << "-n #{ENV['N']}" if ENV['N']
 
   ##
   # Optional: Array of incompatible versions for multiruby filtering.
