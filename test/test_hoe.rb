@@ -270,7 +270,7 @@ class TestHoe < Minitest::Test
     assert_equal ['email'], spec.email
     assert_equal ['sow'], spec.executables
     assert_equal text_files, spec.extra_rdoc_files
-    assert_equal files, spec.files
+    assert_equal files.sort, spec.files.sort
     assert_equal urls["home"], spec.homepage
     assert_equal ['--main', 'README.txt'], spec.rdoc_options
     assert_equal ['lib'], spec.require_paths
