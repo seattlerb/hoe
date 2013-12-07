@@ -89,7 +89,7 @@ project = ARGV.shift
 abort op.to_s unless project
 abort "Project #{project} seems to exist" if test ?d, project
 
-_, file_name, klass, test_klass = Hoe.normalize_names project
+_, file_name, _, _ = Hoe.normalize_names project
 
 FileUtils.cp_r template_path, project
 
