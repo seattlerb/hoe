@@ -1,3 +1,9 @@
+=== 3.7.4 / 2014-01-06
+
+* 1 bug fix:
+
+  * Fix path in template/Rakefile.erb since we now have template styles. (mikestok)
+
 === 3.7.3 / 2013-12-13
 
 * 1 bug fix:
