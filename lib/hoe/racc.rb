@@ -59,7 +59,7 @@ module Hoe::Racc
     rex_files    = self.spec.files.find_all { |f| f =~ /\.rex$/ }
 
     parser_files = racc_files.map { |f| f.sub(/\.y$/, ".rb") }
-    lexer_files  = rex_files.map  { |f| f.sub(/\.rex$/, ".rb") }
+    lexer_files  = rex_files.map  { |f| f.sub(/\.rex$/, ".rex.rb") }
 
     self.clean_globs += parser_files
     self.clean_globs += lexer_files
@@ -69,14 +69,6 @@ module Hoe::Racc
         sh "racc #{racc_flags} -o #{t.name} #{t.source}"
       rescue
         abort "need racc, sudo gem install racc"
-      end
-    end
-
-    rule ".rb" => ".rex" do |t|
-      begin
-        sh "rex #{rex_flags} -o #{t.name} #{t.source}"
-      rescue
-        abort "need rexical, sudo gem install rexical"
       end
     end
 
