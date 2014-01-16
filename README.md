@@ -56,16 +56,16 @@ extra YAML files, config directories, ruby files, or any other
 artifacts in your release that you wouldn't already have.
 
 ### Structure Overview
-
-  project_dir/
-    History.txt
-    Manifest.txt
-    README.txt
-    Rakefile
-    bin/...
-    lib/...
-    test/...
-
+```
+project_dir/
+	History.txt
+	Manifest.txt
+	README.txt
+	Rakefile
+	bin/...
+	lib/...
+	test/...
+```
 ### README.txt
 
 Most projects have a readme file of some kind that describes the
@@ -85,9 +85,9 @@ your announcements.
 
 ### Manifest.txt
 
-***manifest [noun]**</strong> a document giving comprehensive
+__*manifest [noun]* a document giving comprehensive
 details of a ship and its cargo and other contents, passengers, and
-crew for the use of customs officers.*
+crew for the use of customs officers.__
 
 Every project should know what it is shipping. This is done via an
 explicit list of everything that goes out in a release. Hoe uses this
@@ -112,7 +112,7 @@ package? I have far more times than I'd like.
 > "Ultimately, the manifest represents professionalism of the
      deployment process – making sure you know what you think you are
      releasing. Auto-generating the manifest should be avoided – and
-     this comes from a man who loves to generate things." -- dr nic
+     this comes from a man who loves to generate things." -- Dr. Nic
 
 ### VERSION
 
@@ -148,12 +148,14 @@ to make it easier to turn off or replace code you don't want.
 * To activate a plugin, add the following to your Rakefile above your
   Hoe spec:
 
+```
     Hoe.plugin :plugin_name
-
+```
 * To deactivate a plugin, remove its name from the plugins array:
 
+```
     Hoe.plugins.delete :plugin_name
-
+```
 Again, this must be done before the Hoe spec, or it won't be useful.
 
 ### Plug-ins Provided:
@@ -242,9 +244,10 @@ All of the plugins that ship with hoe are activated by default. This is
 because they're providing the same functionality that the previous Hoe was and
 without them, it'd be rather useless. Other plugins should be "opt-in" and are
 activated by:
-          
+```
     Hoe::plugin :thingy
-          
+```
+
 Put this _above_ your hoe-spec. All it does is add `:thingy` to `Hoe.plugins`.
 You could also deactivate a plugin by removing it from `Hoe.plugins` although
 that shouldn't be necessary for the most part.
