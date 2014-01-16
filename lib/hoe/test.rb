@@ -24,8 +24,13 @@ module Hoe::Test
   #
   # eg FILTER="-n test_blah"
 
-  FILTER = ENV['FILTER'] || ENV['TESTOPTS'] || ""
-  FILTER << "-n #{ENV['N']}" if ENV['N']
+  FILTER = (ENV["FILTER"] || ENV["TESTOPTS"] || "").dup
+  FILTER << " -n #{ENV["N"]}" if ENV["N"]
+
+  # this is an unfortunate naming collision. I don't use the CPU (N)
+  # specifier so it is shifting to "C" inside of Hoe.
+  ENV.delete "N" if ENV["N"]
+  ENV["N"] = ENV['C'] if ENV['C']
 
   ##
   # Optional: Array of incompatible versions for multiruby filtering.
