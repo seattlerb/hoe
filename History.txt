@@ -1,3 +1,10 @@
+=== 3.8.0 / 2014-01-15
+
+* 2 minor enhancements:
+
+  * Change racc plugin to support oedipus_lex, not rexical.
+  * Switched .rb to .rex rule to oedipus_lex.
+
 === 3.7.4 / 2014-01-06
 
 * 1 bug fix:
