@@ -6,7 +6,7 @@
 # lexer            :: Generate lexers for all .rex files in your Manifest.txt.
 # parser           :: Generate parsers for all .y files in your Manifest.txt.
 # .y   -> .rb rule :: Generate a parser using racc.
-# .rex -> .rb rule :: Generate a lexer using rexical.
+# .rex -> .rb rule :: Generate a lexer using oedipus_lex.
 
 module Hoe::Racc
 
@@ -28,9 +28,9 @@ module Hoe::Racc
   attr_accessor :racc_flags
 
   ##
-  # Optional: Defines what flags to use for rex. default: "--independent"
+  # Optional: Defines what flags to use for oedipus_lex. default: "--independent"
 
-  attr_accessor :rex_flags
+  attr_accessor :oedipus_options
 
   ##
   # Initialize variables for racc plugin.
@@ -41,7 +41,9 @@ module Hoe::Racc
     # -v = verbose
     # -l = no-line-convert (they don't ever line up anyhow)
     self.racc_flags ||= "-v -l"
-    self.rex_flags  ||= "--independent"
+    self.oedipus_options ||= {
+                              :do_parse => false
+                             }
   end
 
   ##
@@ -69,6 +71,18 @@ module Hoe::Racc
         sh "racc #{racc_flags} -o #{t.name} #{t.source}"
       rescue
         abort "need racc, sudo gem install racc"
+      end
+    end
+
+    # HACK: taken from oedipus_lex's .rake file to bypass isolate bootstrap
+    rule ".rex.rb" => proc {|path| path.sub(/\.rb$/, "") } do |t|
+      require "oedipus_lex"
+      warn "Generating #{t.name} from #{t.source}"
+      oedipus = OedipusLex.new oedipus_options
+      oedipus.parse_file t.source
+
+      File.open t.name, "w" do |f|
+        f.write oedipus.generate
       end
     end
 
