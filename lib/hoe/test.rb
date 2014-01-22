@@ -83,6 +83,11 @@ module Hoe::Test
         ruby make_test_cmd
       end
 
+      desc 'Print out the test command. Good for profiling and other tools.'
+      task :test_cmd do
+        puts make_test_cmd
+      end
+
       desc 'Run the test suite using multiruby.'
       task :multi do
         ENV["EXCLUDED_VERSIONS"] = multiruby_skip.join(":")
