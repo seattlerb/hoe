@@ -1,3 +1,14 @@
+=== 3.8.1 / 2014-01-22
+
+* 2 minor enhancements:
+
+  * Added C=<#cpus> for minitest parallel testing support.
+  * Added test_cmd task to make running tests in subcommands (eg profiling) easy.
+
+* 1 bug fix:
+
+  * Fixed bug when mixing TESTOPTS & N.
+
 === 3.8.0 / 2014-01-15
 
 * 2 minor enhancements:
