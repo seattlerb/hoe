@@ -52,6 +52,18 @@ module Hoe::Debug
     task :debug_gem do
       puts spec.to_ruby
     end
+
+    task :isolate # stub
+    task :irb => :isolate do
+      name = spec.name.gsub("-", '/')
+      file = (spec.files.grep(/^lib\/#{name}\.rb$/).first ||
+              spec.files.grep(/^lib\/[^\/]*\.rb$/).first)
+
+      require = File.basename(file, ".rb") if file
+      require &&= "-r#{require}"
+
+      ruby "#{Hoe::RUBY_FLAGS} -S irb #{require}"
+    end
   end
 
   ##
