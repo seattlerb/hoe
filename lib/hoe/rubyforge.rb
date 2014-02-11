@@ -12,7 +12,7 @@ module Hoe::RubyForge
   def initialize_rubyforge # :nodoc:
     require 'rubyforge'
 
-    dependency_target << ['rubyforge', ">= #{::RubyForge::VERSION}"]
+    dependency_target << ['rubyforge', "~> #{::RubyForge::VERSION}"]
   end
 
   def define_rubyforge_tasks # :nodoc:
