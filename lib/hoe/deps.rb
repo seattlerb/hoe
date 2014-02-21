@@ -50,7 +50,6 @@ module Hoe::Deps
   end
 
   def check_extra_deps_task # :nodoc:
-    # extra_deps = [["rubyforge", ">= 1.0.0"], ["rake", ">= 0.8.1"]]
     (extra_deps + extra_dev_deps).each do |dep|
       begin
         gem(*dep)
