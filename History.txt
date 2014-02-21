@@ -1,4 +1,4 @@
-=== today / 3.9.0
+=== 3.9.0 / 2014-02-10
 
 * 1 minor enhancement:
 
