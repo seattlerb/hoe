@@ -15,7 +15,7 @@ module Hoe::Deps
   ##
   # The main rubygems repository.
 
-  GEMURL = URI.parse 'http://gems.rubyforge.org'
+  GEMURL = URI.parse 'http://rubygems.org'
 
   ##
   # Define tasks for plugin.

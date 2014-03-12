@@ -17,7 +17,6 @@
 # 1. Configure your ~/.hoerc.
 # 2. Generate a signing key and certificate.
 # 3. Install the private key and public certificate files into ~/.gem.
-# 4. Upload the certificate to RubyForge.
 #
 # Hoe will now generate signed gems when the package task is run.  If you have
 # multiple machines you build gems on, be sure to install your key and
@@ -105,23 +104,10 @@ module Hoe::Signing
       puts "Installed key and certificate."
     end
 
-    rf = RubyForge.new.configure
-    rf.login
-
-    cert_package = "#{rubyforge_name}-certificates"
-
-    begin
-      rf.lookup 'package', cert_package
-    rescue
-      rf.create_package rubyforge_name, cert_package
-    end
-
-    unless rf.lookup('release', cert_package)['certificates'] then
-      rf.add_release rubyforge_name, cert_package, 'certificates', cert_file
-      puts "Uploaded certificates to release \"certificates\" in package #{cert_package}"
-    else
-      puts '"certificates" release exists, adding file anyway (will not overwrite)'
-      rf.add_file rubyforge_name, cert_package, 'certificates', cert_file
-    end
+    puts "Key file = #{key_file}"
+    puts "Cert file = #{cert_file}"
+    puts
+    puts "Until rubygems.org has a better strategy for signing, that's"
+    puts "the best we can do at this point."
   end
 end

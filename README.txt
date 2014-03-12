@@ -3,8 +3,8 @@
 home  :: http://www.zenspider.com/projects/hoe.html
 code  :: https://github.com/seattlerb/hoe
 bugs  :: https://github.com/seattlerb/hoe/issues
-rdoc  :: http://seattlerb.rubyforge.org/hoe/
-doco  :: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
+rdoc  :: http://docs.seattlerb.org/hoe/
+doco  :: http://docs.seattlerb.org/hoe/Hoe.pdf
 other :: http://github.com/jbarnette/hoe-plugin-examples
 
 == DESCRIPTION:

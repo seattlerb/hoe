@@ -5,11 +5,10 @@ require "hoe/rake"
 #
 # === Tasks Provided:
 #
-# announce::           Create news email file and post to rubyforge.
+# announce::           Create news email file and optionally publish docs.
 # debug_email::        Generate email announcement file.
 # post_blog::          Post announcement to blog.
-# post_news::          Post announcement to rubyforge.
-# publish_docs::       Publish RDoc to RubyForge.
+# publish_docs::       Publish RDoc to `rdoc_locations`.
 # ridocs::             Generate ri locally for testing.
 #
 # === Extra Configuration Options:
@@ -63,7 +62,7 @@ module Hoe::Publish
   attr_accessor :rdoc_locations
 
   ##
-  # Optional: Name of RDoc destination directory on Rubyforge. [default: +name+]
+  # Optional: Name of RDoc destination directory. [default: +name+]
 
   attr_accessor :remote_rdoc_dir
 

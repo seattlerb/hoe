@@ -205,13 +205,13 @@ class TestHoe < Minitest::Test
 
   def test_parse_urls_ary
     ary  = ["* https://github.com/seattlerb/hoe",
-            "* http://seattlerb.rubyforge.org/hoe/",
-            "* http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+            "* http://docs.seattlerb.org/hoe/",
+            "* http://docs.seattlerb.org/hoe/Hoe.pdf",
             "* http://github.com/jbarnette/hoe-plugin-examples"].join "\n"
 
     exp = ["https://github.com/seattlerb/hoe",
-           "http://seattlerb.rubyforge.org/hoe/",
-           "http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+           "http://docs.seattlerb.org/hoe/",
+           "http://docs.seattlerb.org/hoe/Hoe.pdf",
            "http://github.com/jbarnette/hoe-plugin-examples"]
 
     assert_equal exp, hoe.parse_urls(ary)
@@ -220,15 +220,15 @@ class TestHoe < Minitest::Test
   def test_parse_urls_hash
     hash = [
             "home  :: https://github.com/seattlerb/hoe",
-            "rdoc  :: http://seattlerb.rubyforge.org/hoe/",
-            "doco  :: http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+            "rdoc  :: http://docs.seattlerb.org/hoe/",
+            "doco  :: http://docs.seattlerb.org/hoe/Hoe.pdf",
             "other :: http://github.com/jbarnette/hoe-plugin-examples",
            ].join "\n"
 
     exp = {
       "home"  => "https://github.com/seattlerb/hoe",
-      "rdoc"  => "http://seattlerb.rubyforge.org/hoe/",
-      "doco"  => "http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+      "rdoc"  => "http://docs.seattlerb.org/hoe/",
+      "doco"  => "http://docs.seattlerb.org/hoe/Hoe.pdf",
       "other" => "http://github.com/jbarnette/hoe-plugin-examples",
     }
 
@@ -251,8 +251,8 @@ class TestHoe < Minitest::Test
       "home"  => "http://www.zenspider.com/projects/hoe.html",
       "code"  => "https://github.com/seattlerb/hoe",
       "bugs"  => "https://github.com/seattlerb/hoe/issues",
-      "rdoc"  => "http://seattlerb.rubyforge.org/hoe/",
-      "doco"  => "http://seattlerb.rubyforge.org/hoe/Hoe.pdf",
+      "rdoc"  => "http://docs.seattlerb.org/hoe/",
+      "doco"  => "http://docs.seattlerb.org/hoe/Hoe.pdf",
       "other" => "http://github.com/jbarnette/hoe-plugin-examples",
     }
 
@@ -274,7 +274,6 @@ class TestHoe < Minitest::Test
     assert_equal urls["home"], spec.homepage
     assert_equal ['--main', 'README.txt'], spec.rdoc_options
     assert_equal ['lib'], spec.require_paths
-    assert_equal 'blah', spec.rubyforge_project
     assert_equal Gem::RubyGemsVersion, spec.rubygems_version
     assert_match(/^Hoe.*Rakefiles$/, spec.summary)
     assert_equal files.grep(/^test/).sort, spec.test_files.sort
@@ -285,9 +284,6 @@ class TestHoe < Minitest::Test
       ["hoe",  :development, "~> #{Hoe::VERSION.sub(/\.\d+$/, '')}"],
       ["rdoc", :development, "~> 4.0"],
     ]
-
-    expected << ["rubyforge", :development, ">= #{::RubyForge::VERSION}"] if
-      defined? ::RubyForge
 
     assert_equal expected, deps.map { |dep|
       [dep.name, dep.type, dep.requirement.to_s]

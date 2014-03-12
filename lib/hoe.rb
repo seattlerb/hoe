@@ -211,9 +211,6 @@ class Hoe
 
   attr_accessor :group_name
 
-  alias :rubyforge_name  :group_name  # Deprecated. Use #group_name.
-  alias :rubyforge_name= :group_name= # Deprecated. Use #group_name=.
-
   ##
   # The Gem::Specification.
 
@@ -533,7 +530,6 @@ class Hoe
                                else
                                  raise "unknown urls format: #{urls.inspect}"
                                end
-      s.rubyforge_project    = group_name
       s.description          = description
       s.files                = manifest
       s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
