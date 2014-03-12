@@ -21,7 +21,6 @@ lib/hoe/publish.rb
 lib/hoe/racc.rb
 lib/hoe/rake.rb
 lib/hoe/rcov.rb
-lib/hoe/rubyforge.rb
 lib/hoe/signing.rb
 lib/hoe/test.rb
 template/.autotest.erb

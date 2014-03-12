@@ -18,7 +18,7 @@ testing, packaging, deployment, and announcement..
 See class rdoc for help. Hint: `ri Hoe` or any of the plugins listed
 below.
 
-For extra goodness, see: http://seattlerb.rubyforge.org/hoe/Hoe.pdf
+For extra goodness, see: http://docs.seattlerb.org/hoe/Hoe.pdf
 
 == FEATURES/PROBLEMS:
 
@@ -130,9 +130,9 @@ That really is all there is to it. Behind the scenes it:
 * Branches the release in our perforce server. (via hoe-seattlerb plugin)
 * Performs sanity checks to ensure the release has integrity. (hoe-seattlerb)
 * Packages into gem and tarballs.
-* Uploads the packages to rubyforge.
-* Posts news of the release to rubyforge and my blog.
-* Sends an announcement email. (hoe-seattlerb)
+* Uploads the packages to rubygems.org.
+* Posts news of the release my blog.
+* Sends an announcement email. (via the hoe-seattlerb plugin gem)
       
 That `VERSION=x.y.z` is there as a last-chance sanity check that you
 know what you're releasing. You'd be surprised how blurry eyed/brained
@@ -172,7 +172,6 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * Hoe::Publish
 * Hoe::Racc
 * Hoe::RCov
-* Hoe::RubyForge
 * Hoe::Signing
 * Hoe::Test
 
@@ -276,7 +275,6 @@ and it is here that you'll define all your tasks.
 == REQUIREMENTS:
 
 * rake
-* rubyforge
 * rubygems
 
 == INSTALL:
