@@ -1,3 +1,13 @@
+=== 3.10.0 / 2014-03-14
+
+* 1 major enhancement:
+
+  * Removed all references to rubyforge, including the rubyforge plugin.
+
+* 1 minor enhancement:
+
+  * Updated template project (minitest usage, readme format, etc)
+
 === 3.9.0 / 2014-02-10
 
 * 1 minor enhancement:
