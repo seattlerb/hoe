@@ -108,6 +108,13 @@ module Hoe::Test
         end
       end
 
+      if testlib == :minitest then
+        desc "Show bottom 25 tests wrt time."
+        task "test:slow" do
+          sh "rake TESTOPTS=-v | sort -n -k2 -t= | tail -25"
+        end
+      end
+
       default_tasks << :test
     end
 
