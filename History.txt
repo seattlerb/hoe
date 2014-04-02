@@ -1,3 +1,9 @@
+=== 3.11.0 / 2014-04-02
+
+* 1 minor enhancement:
+
+  * Added test:slow task so I don't have to remember sort's flags anymore. YAY for UNIX!
+
 === 3.10.0 / 2014-03-14
 
 * 1 major enhancement:
