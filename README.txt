@@ -184,10 +184,13 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * hoe-gemcutter  - Adds gemcutter release automation to Hoe.
 * hoe-geminabox  - Allows you to push your gems to geminabox
 * hoe-gemspec    - Generate a prerelease gemspec based on a Hoe spec.
+* hoe-gemspec2   - ??? submit a PR to add description
 * hoe-git        - A set of Hoe plugins for tighter Git integration.
 * hoe-heroku     - Helps you get your stuff on Heroku.
 * hoe-hg         - A Hoe plugin for Mercurial integration.
 * hoe-highline   - A Hoe plugin for building interactive Rake tasks
+* hoe-ignore     - ??? submit a PR to add description
+* hoe-manifest   - ??? submit a PR to add description
 * hoe-manualgen  - A manual-generation plugin for Hoe
 * hoe-mercurial  - A Hoe plugin for Mercurial integration.
 * hoe-reek       - Integrates the reek code smell engine into your hoe projects.
@@ -196,6 +199,7 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * hoe-seattlerb  - Minitest, email announcements, release branching.
 * hoe-telicopter - Provides tasks used by hotelicopter.
 * hoe-travis     - Allows your gem to gain maximum benefit from <http://travis-ci.org>.
+* hoe-version    - ??? submit a PR to add description
 * hoe-yard       - A Hoe plugin for generating YARD documentation.
 
 === Writing Plugins:
