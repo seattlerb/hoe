@@ -1,8 +1,8 @@
 .autotest
-History.txt
+History.rdoc
 Hoe.pdf
 Manifest.txt
-README.txt
+README.rdoc
 Rakefile
 bin/sow
 lib/hoe.rb
@@ -21,6 +21,7 @@ lib/hoe/publish.rb
 lib/hoe/racc.rb
 lib/hoe/rake.rb
 lib/hoe/rcov.rb
+lib/hoe/rdoc.rb
 lib/hoe/signing.rb
 lib/hoe/test.rb
 template/.autotest.erb

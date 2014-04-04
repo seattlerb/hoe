@@ -11,10 +11,14 @@ end
 $rakefile = nil # shuts up a warning in rdoctask.rb
 
 class TestHoe < Minitest::Test
-  def hoe
-    @hoe ||= Hoe.spec("blah") do
-      developer 'author', 'email'
-      license 'MIT'
+  def hoe(*skips, &b)
+    @hoe ||= Hoe.spec "blah" do
+      developer "author", "email"
+      license "MIT"                      unless skips.include? :skip_license
+      self.version      = "1.0"          unless skips.include? :skip_version
+      self.readme_file  = "README.rdoc"  unless skips.include? :skip_files
+      self.history_file = "History.rdoc" unless skips.include? :skip_files
+      self.instance_eval(&b) if b
     end
   end
 
@@ -151,12 +155,6 @@ class TestHoe < Minitest::Test
         open 'README.rdoc',  'w' do |io| io.puts '= blah' end
         open 'History.rdoc', 'w' do |io| io.puts '=== 1.0' end
 
-        hoe = Hoe.spec 'blah' do
-          self.version = '1.0'
-          developer 'nobody', 'nobody@example'
-          license 'MIT'
-        end
-
         assert_equal 'History.rdoc', hoe.history_file
         assert_equal 'README.rdoc', hoe.readme_file
         assert_equal %w[FAQ.rdoc History.rdoc README.rdoc],
@@ -178,13 +176,7 @@ class TestHoe < Minitest::Test
         open 'README.ja.rdoc', 'w' do |io| io.puts '= blah' end
         open 'History.rdoc',   'w' do |io| io.puts '=== 1.0' end
 
-        hoe = Hoe.spec 'blah' do
-          self.version = '1.0'
-          developer 'nobody', 'nobody@example'
-          license 'MIT'
-        end
-
-        assert_equal 'README.ja.rdoc', hoe.readme_file
+        assert_equal 'README.ja.rdoc', hoe(:skip_files).readme_file
       end
     end
   end
@@ -237,10 +229,9 @@ class TestHoe < Minitest::Test
 
   def test_possibly_better
     t = Gem::Specification::TODAY
-    hoe = Hoe.spec("blah") do
+
+    hoe = self.hoe do
       self.version = '1.2.3'
-      developer 'author', 'email'
-      license 'MIT'
     end
 
     files = File.read("Manifest.txt").split(/\n/) + [".gemtest"]
@@ -258,7 +249,7 @@ class TestHoe < Minitest::Test
 
     assert_equal urls, hoe.urls
 
-    text_files = files.grep(/txt$/).reject { |f| f =~ /template/ }
+    text_files = files.grep(/(txt|rdoc)$/).reject { |f| f =~ /template/ }
 
     assert_equal 'blah', spec.name
     assert_equal '1.2.3', spec.version.to_s
@@ -272,7 +263,7 @@ class TestHoe < Minitest::Test
     assert_equal text_files, spec.extra_rdoc_files
     assert_equal files.sort, spec.files.sort
     assert_equal urls["home"], spec.homepage
-    assert_equal ['--main', 'README.txt'], spec.rdoc_options
+    assert_equal ['--main', 'README.rdoc'], spec.rdoc_options
     assert_equal ['lib'], spec.require_paths
     assert_equal Gem::RubyGemsVersion, spec.rubygems_version
     assert_match(/^Hoe.*Rakefiles$/, spec.summary)
@@ -292,12 +283,7 @@ class TestHoe < Minitest::Test
 
   def test_no_license
     out, err = capture_io do
-      hoe = Hoe.spec("blah") do
-        self.version = '1.2.3'
-        developer 'author', 'email'
-      end
-
-      assert_equal ["MIT"], hoe.spec.licenses
+      assert_equal ["MIT"], self.hoe(:skip_license).spec.licenses
     end
 
     assert_equal "", out
@@ -305,21 +291,13 @@ class TestHoe < Minitest::Test
   end
 
   def test_license
-    hoe = Hoe.spec("blah") do
-      self.version = '1.2.3'
-      developer 'author', 'email'
-      license 'MIT'
-    end
-
-    spec = hoe.spec
+    spec = self.hoe.spec
 
     assert_equal %w(MIT), spec.licenses
   end
 
   def test_multiple_calls_to_license
-    hoe = Hoe.spec("blah") do
-      self.version = '1.2.3'
-      developer 'author', 'email'
+    hoe = self.hoe :skip_license do
       license 'MIT'
       license 'GPL-2'
     end
@@ -330,9 +308,7 @@ class TestHoe < Minitest::Test
   end
 
   def test_setting_licenses
-    hoe = Hoe.spec("blah") do
-      self.version = '1.2.3'
-      developer 'author', 'email'
+    hoe = self.hoe :skip_license do
       self.licenses = ['MIT', 'GPL-2']
     end
 
@@ -352,11 +328,6 @@ class TestHoe < Minitest::Test
   end
 
   def test_read_manifest
-    hoe = Hoe.spec 'blah'  do
-      developer 'author', 'email'
-      license 'MIT'
-    end
-
     expected = File.read_utf('Manifest.txt').split
 
     assert_equal expected, hoe.read_manifest
@@ -374,11 +345,7 @@ class TestHoe < Minitest::Test
   end
 
   def test_nosudo
-    hoe = Hoe.spec("blah") do
-      self.version = '1.2.3'
-      developer 'author', 'email'
-      license 'MIT'
-
+    hoe = self.hoe do
       def system cmd
         cmd
       end
@@ -433,5 +400,4 @@ class TestHoe < Minitest::Test
     File.delete overrides_rcfile if File.exist?( overrides_rcfile )
     ENV['HOME'] = home
   end
-
 end

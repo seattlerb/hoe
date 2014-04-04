@@ -5,6 +5,7 @@ require './lib/hoe.rb'
 
 Hoe.plugin :seattlerb
 Hoe.plugin :isolate
+Hoe.plugin :rdoc
 
 Hoe.spec "hoe" do
   developer "Ryan Davis", "ryand-ruby@zenspider.com"
@@ -39,11 +40,9 @@ task :known_plugins do
   end
 end
 
-[:redocs, :docs].each do |t|
-  task t do
-    cp "Hoe.pdf", "doc"
-    sh "chmod ug+w doc/Hoe.pdf"
-  end
+task :docs do
+  cp "Hoe.pdf", "doc"
+  sh "chmod ug+w doc/Hoe.pdf"
 end
 
 # vim: syntax=ruby

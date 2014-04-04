@@ -12,15 +12,18 @@ class TestHoePublish < Minitest::Test
     end
   end
 
+  make_my_diffs_pretty!
+
   def test_make_rdoc_cmd
     expected = %W[
                 #{Gem.bin_wrapper "rdoc"}
                 --title blah-1.0\ Documentation
                 -o doc
-                --main README.txt
+                --main README.rdoc
                 lib
-                History.txt Manifest.txt README.txt
+                History.rdoc Manifest.txt README.rdoc
                ]
+
     assert_equal expected, @hoe.make_rdoc_cmd
   end
 end
