@@ -336,12 +336,12 @@ class TestHoe < Minitest::Test
   def test_rename
     # project, file_name, klass, test_klass = Hoe.normalize_names 'project_name'
 
-    assert_equal %w(    word      word     Word    TestWord),           Hoe.normalize_names('word')
-    assert_equal %w(    word      word     Word    TestWord),           Hoe.normalize_names('Word')
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names('TwoWords')
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names('twoWords')
-    assert_equal %w(two-words two/words Two::Words TestTwo::TestWords), Hoe.normalize_names('two-words')
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names('two_words')
+    assert_equal %w(    word      word     test_word     Word    TestWord),           Hoe.normalize_names('word')
+    assert_equal %w(    word      word     test_word     Word    TestWord),           Hoe.normalize_names('Word')
+    assert_equal %w(two_words two_words test_two_words TwoWords   TestTwoWords),       Hoe.normalize_names('TwoWords')
+    assert_equal %w(two_words two_words test_two_words TwoWords   TestTwoWords),       Hoe.normalize_names('twoWords')
+    assert_equal %w(two-words two/words two/test_words Two::Words TestTwo::TestWords), Hoe.normalize_names('two-words')
+    assert_equal %w(two_words two_words test_two_words TwoWords   TestTwoWords),       Hoe.normalize_names('two_words')
   end
 
   def test_nosudo
