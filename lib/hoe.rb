@@ -348,8 +348,11 @@ class Hoe
     klass      = klass.  gsub(/(?:^|-)([a-z])/) { "::#{$1.upcase}" }
     test_klass = klass.  gsub(/(^|::)([A-Z])/) { "#{$1}Test#{$2}" }
     file_name  = project.gsub(/-/, '/')
+    test_name  = project.gsub(/-/, '/').split(/\//)
+    test_name[-1] = "test_#{test_name.last}"
+    test_name  = test_name.join('/')
 
-    return project, file_name, klass, test_klass
+    return project, file_name, test_name, klass, test_klass
   end
 
   ##
