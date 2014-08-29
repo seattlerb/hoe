@@ -90,6 +90,7 @@ abort op.to_s unless project
 abort "Project #{project} seems to exist" if test ?d, project
 
 _, file_name, klass, test_klass = Hoe.normalize_names project
+ext_name = File.basename file_name # minitest/plugin => plugin
 
 klass = klass           # quell unused warnings if they're not used in templates
 test_klass = test_klass # ditto
@@ -100,6 +101,11 @@ Dir.chdir project do
   dirs = Dir["**/*"].select { |f| File.directory? f }.sort.reverse
   dirs.grep(/file_name$/).each do |file|
     FileUtils.mv file, file.sub(/file_name$/, file_name)
+  end
+
+  dirs = Dir["**/*"].select { |f| File.directory? f }.sort.reverse
+  dirs.grep(/ext_name$/).each do |file|
+    FileUtils.mv file, file.sub(/ext_name$/, ext_name)
   end
 
   paths = (Dir["**/*"] + Dir["**/.*"]).select { |f| File.file? f }.sort
@@ -115,8 +121,11 @@ Dir.chdir project do
     end
   end
 
-  paths.grep(/file_name|\.erb$/).each do |file|
-    new_file = file.sub(/(test_)?file_name/, file_name).sub(/\.erb$/, '')
+  paths.grep(/(file|ext)_name|\.erb$/).each do |file|
+    new_file = file.
+      sub(/(test_)?file_name/, file_name).
+      sub(/(test_)?ext_name/, ext_name).
+      sub(/\.erb$/, '')
 
     case file
     when /^bin/ then
