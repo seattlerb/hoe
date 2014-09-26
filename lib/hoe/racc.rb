@@ -77,7 +77,7 @@ module Hoe::Racc
     # HACK: taken from oedipus_lex's .rake file to bypass isolate bootstrap
     rule ".rex.rb" => proc {|path| path.sub(/\.rb$/, "") } do |t|
       require "oedipus_lex"
-      warn "Generating #{t.name} from #{t.source}"
+      warn "Generating #{t.name} from #{t.source} from #{OedipusLex::VERSION}"
       oedipus = OedipusLex.new oedipus_options
       oedipus.parse_file t.source
 
