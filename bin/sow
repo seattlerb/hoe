@@ -8,6 +8,91 @@ require "erb"
 
 XIF = "FI" + "X" # prevents extra hits on my TAG reporter
 
+class TemplateFinder
+  attr_reader :dir
+  attr_reader :source
+
+  def initialize
+    @dir = File.expand_path('~/.hoe_template')
+    @source = File.join(File.dirname(File.dirname(__FILE__)), "template")
+
+    load_all_plugins
+    find_template_roots
+    find_templates
+  end
+
+  def default
+    File.join(@dir, 'default')
+  end
+
+  def list_templates
+    l = [ %w(default hoe) ] + @templates.map { |n, t| [ n, t[:source] ] }
+    l.map { |n, t| "%-20s  %s" % [ n, t ] }.join("\n")
+  end
+
+  def has_style?(name)
+    @templates.has_key? name
+  end
+
+  def style(name)
+    @templates[name]
+  end
+
+  def style_path(name)
+    style(name)[:path]
+  end
+
+  private
+  def load_all_plugins
+    @plugins = Hoe.find_plugins
+    Hoe.plugin(*@plugins.keys)
+    Hoe.load_plugins Hoe.plugins
+
+    names = Hoe.constants.map { |s| s.to_s }
+    names.reject! { |n| n =~ /^[A-Z_]+$/ }
+    names.each do |name|
+      next unless Hoe.plugins.include? name.downcase.intern
+      warn "extend #{name}" if $DEBUG
+      self.extend Hoe.const_get(name)
+    end
+  end
+
+  def find_template_roots
+    @roots = { :user => @dir }
+
+    Hoe.plugins.each do |plugin|
+      msg = "templates_#{plugin}"
+      warn msg if $DEBUG
+      @roots[plugin] = send(msg) if self.respond_to? msg
+    end
+  end
+
+  def find_templates
+    @templates = {}
+    @roots.each { |source, dir|
+      paths = Dir["#{dir}/*"].select { |item| File.directory? item }
+
+      paths.each { |path|
+        duplicate = false
+        name = File.basename(path)
+
+        if @templates.has_key? name
+          name = "#{source}-#{name}"
+          duplicate = true
+        end
+
+        @templates[name] = {
+          :path => path,
+          :source => source,
+          :duplicate => duplicate
+        }
+      }
+    }
+  end
+end
+
+templates = TemplateFinder.new
+
 option = {
   :style  => "default",
   :subdir => nil,
@@ -49,6 +134,11 @@ op = OptionParser.new do |opts|
     option[:style] = s
   end
 
+  opts.on("-S",  "--list-styles", String, "Show known style templates.") do |s|
+    puts templates.list_templates
+    exit
+  end
+
   opts.on("-h", "--help", "Show this message.") do
     puts opts
     exit
@@ -60,10 +150,17 @@ op.parse!
 include FileUtils::Verbose
 
 # variables for erb:
-template_dir  = File.expand_path("~/.hoe_template")
-template_path = File.join template_dir, option[:style]
-source_path   = File.join(File.dirname(File.dirname(__FILE__)), "template")
-default_dir   = File.join template_dir, "default"
+template_dir  = templates.dir
+template_path = File.join(template_dir, option[:style])
+
+if templates.has_style? option[:style]
+  template_src  = templates.style_path(option[:style])
+else
+  abort "Template #{option[:style]} does not exist."
+end
+
+source_path   = templates.source
+default_dir   = templates.default
 
 if File.directory? template_dir and not File.directory? default_dir then
   warn "Detected old #{template_dir}"
@@ -77,7 +174,7 @@ end
 unless File.directory? template_path then
   warn "Creating missing #{option[:style]} template."
   FileUtils.mkdir_p File.dirname(template_path)
-  FileUtils.cp_r source_path, template_path
+  FileUtils.cp_r template_src, template_path
   paths = (Dir["#{template_path}/**/*"] +
            Dir["#{template_path}/**/.*"]).select { |f| File.file? f }
   FileUtils.chmod 0644, paths
