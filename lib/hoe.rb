@@ -398,12 +398,12 @@ class Hoe
     with_config do |config, _|
       config_plugins = config["plugins"]
       break unless config_plugins
-      Hoe.plugins.concat config_plugins.map { |plugin| plugin.intern }
+      Hoe.plugins.concat config_plugins.map(&:intern)
     end
 
     Hoe.load_plugins Hoe.plugins
 
-    names = Hoe.constants.map { |s| s.to_s }
+    names = Hoe.constants.map(&:to_s)
     names.reject! { |n| n =~ /^[A-Z_]+$/ }
 
     names.each do |name|

@@ -57,7 +57,7 @@ class TestHoe < Minitest::Test
   end
 
   def test_activate_plugins
-    initializers = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
+    initializers = hoe.methods.grep(/^initialize/).map(&:to_s)
 
     assert_includes initializers, "initialize_package"
     assert_includes initializers, "initialize_publish"
@@ -85,7 +85,7 @@ class TestHoe < Minitest::Test
 
       write_hoerc path, "plugins" => %w[hoerc]
 
-      methods = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
+      methods = hoe.methods.grep(/^initialize/).map(&:to_s)
 
       assert_includes methods, "initialize_hoerc"
       assert_includes Hoe.plugins, :hoerc
@@ -268,7 +268,7 @@ class TestHoe < Minitest::Test
     assert_equal Gem::RubyGemsVersion, spec.rubygems_version
     assert_match(/^Hoe.*Rakefiles$/, spec.summary)
 
-    deps = spec.dependencies.sort_by { |dep| dep.name }
+    deps = spec.dependencies.sort_by(&:name)
 
     expected = [
       ["hoe",  :development, "~> #{Hoe::VERSION.sub(/\.\d+$/, "")}"],

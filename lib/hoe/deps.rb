@@ -72,7 +72,7 @@ module Hoe::Deps
 
     puts "  dependents:"
     unless deps.empty? then
-      deps.sort_by { |spec| spec.full_name }.each do |spec|
+      deps.sort_by(&:full_name).each do |spec|
         vers = spec.dependencies.find {|s| s.name == name}.requirements_list
         puts "    %-*s - %s" % [max, spec.full_name, vers.join(", ")]
       end
@@ -88,7 +88,7 @@ module Hoe::Deps
     abort "Couldn't find gem: #{self.name}" unless gem
 
     deps = self.dependent_upon self.name
-    email = deps.map { |s| s.email }.compact.flatten.sort.uniq
+    email = deps.map(&:email).compact.flatten.sort.uniq
     email = email.map { |s| s.split(/,\s*/) }.flatten.sort.uniq
 
     email.map! { |s| # don't you people realize how easy this is?
@@ -111,7 +111,7 @@ module Hoe::Deps
     mkdir "deps" unless File.directory? "deps"
     Dir.chdir "deps" do
       begin
-        deps.sort_by { |spec| spec.full_name }.each do |spec|
+        deps.sort_by(&:full_name).each do |spec|
           full_name = spec.full_name
           tgz_name  = "#{full_name}.tgz"
           gem_name  = "#{full_name}.gem"
