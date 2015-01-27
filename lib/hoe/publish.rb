@@ -176,7 +176,7 @@ module Hoe::Publish
 
       config["blogs"].each do |site|
         if site["path"] then
-          msg = "post_blog_#{site['type']}"
+          msg = "post_blog_#{site["type"]}"
           send msg, site
           system site["cmd"] if site["cmd"]
         else

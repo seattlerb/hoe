@@ -157,7 +157,7 @@ module Hoe::Test
     desc "Run ZenTest against the package."
     task :audit do
       libs = %w[lib test ext].join(File::PATH_SEPARATOR)
-      sh "zentest -I=#{libs} #{spec.files.grep(/^(lib|test)/).join(' ')}"
+      sh "zentest -I=#{libs} #{spec.files.grep(/^(lib|test)/).join(" ")}"
     end
   end
 

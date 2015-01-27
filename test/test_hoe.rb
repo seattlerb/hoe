@@ -271,7 +271,7 @@ class TestHoe < Minitest::Test
     deps = spec.dependencies.sort_by { |dep| dep.name }
 
     expected = [
-      ["hoe",  :development, "~> #{Hoe::VERSION.sub(/\.\d+$/, '')}"],
+      ["hoe",  :development, "~> #{Hoe::VERSION.sub(/\.\d+$/, "")}"],
       ["rdoc", :development, "~> 4.0"],
     ]
 
