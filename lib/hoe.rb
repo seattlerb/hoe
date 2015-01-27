@@ -537,7 +537,6 @@ class Hoe
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ['--main', readme_file]
       s.post_install_message = post_install_message
-      s.test_files           = Dir[*self.test_globs].uniq
 
       missing "Manifest.txt" if s.files.empty?
 

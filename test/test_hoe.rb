@@ -267,7 +267,6 @@ class TestHoe < Minitest::Test
     assert_equal ['lib'], spec.require_paths
     assert_equal Gem::RubyGemsVersion, spec.rubygems_version
     assert_match(/^Hoe.*Rakefiles$/, spec.summary)
-    assert_equal files.grep(/^test/).sort, spec.test_files.sort
 
     deps = spec.dependencies.sort_by { |dep| dep.name }
 
