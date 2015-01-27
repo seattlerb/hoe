@@ -106,12 +106,13 @@ module Hoe::Package
 
   def prerelease_version # :nodoc:
     pre = ENV["PRERELEASE"] || ENV["PRE"]
-    if pre then
-      spec.version.version << "." << pre if pre
 
-      abort "ERROR: You should format PRE like pre or alpha.1 or something" if
-        (Gem::VERSION < "1.4"  and pre !~ /^[a-z]+(\.\d+)?$/) or
-        (Gem::VERSION >= "1.4" and pre !~ /^[a-z]+(\.?\d+)?$/)
-    end
+    return unless pre
+
+    spec.version.version << "." << pre if pre
+
+    abort "ERROR: You should format PRE like pre or alpha.1 or something" if
+      (Gem::VERSION < "1.4"  and pre !~ /^[a-z]+(\.\d+)?$/) or
+      (Gem::VERSION >= "1.4" and pre !~ /^[a-z]+(\.?\d+)?$/)
   end
 end

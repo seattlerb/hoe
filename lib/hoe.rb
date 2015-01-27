@@ -566,24 +566,24 @@ class Hoe
   end
 
   def check_for_version # :nodoc:
+    return if self.version
+
+    version    = nil
+    version_re = /VERSION += +([\"\'])([\d][\w\.]+)\1/
+
+    spec.files.each do |file|
+      next unless File.exist? file
+      version = File.read_utf(file)[version_re, 2] rescue nil
+      break if version
+    end
+
+    spec.version = self.version = version if version
+
     unless self.version then
-      version    = nil
-      version_re = /VERSION += +([\"\'])([\d][\w\.]+)\1/
-
-      spec.files.each do |file|
-        next unless File.exist? file
-        version = File.read_utf(file)[version_re, 2] rescue nil
-        break if version
-      end
-
-      spec.version = self.version = version if version
-
-      unless self.version then
-        spec.version = self.version = "0.borked"
-        warn "** Add 'VERSION = \"x.y.z\"' to your code,"
-        warn "   add a version to your hoe spec,"
-        warn "   or fix your Manifest.txt"
-      end
+      spec.version = self.version = "0.borked"
+      warn "** Add 'VERSION = \"x.y.z\"' to your code,"
+      warn "   add a version to your hoe spec,"
+      warn "   or fix your Manifest.txt"
     end
   end
 

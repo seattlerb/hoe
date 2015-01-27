@@ -35,36 +35,36 @@ module Hoe::Inline
   def define_inline_tasks
     task :test => :clean
 
-    if ENV["INLINE"] then
-      s.platform = ENV["FORCE_PLATFORM"] || Gem::Platform::CURRENT
+    return unless ENV["INLINE"]
 
-      # Try collecting Inline extensions for +name+
-      if defined?(Inline) then
-        directory "lib/inline"
+    s.platform = ENV["FORCE_PLATFORM"] || Gem::Platform::CURRENT
 
-        dlext = RbConfig::CONFIG["DLEXT"]
+    return unless defined? Inline
 
-        Inline.registered_inline_classes.each do |cls|
-          name = cls.name.gsub(/::/, "")
-          # name of the extension is CamelCase
-          alternate_name = if name =~ /[A-Z]/ then
-                             name.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, "")
-                           elsif name =~ /_/ then
-                             name.capitalize.gsub(/_([a-z])/) { $1.upcase }
-                           end
-          extensions = Dir.chdir(Inline.directory) {
-            Dir["Inline_{#{name},#{alternate_name}}_*.#{dlext}"]
-          }
+    # Try collecting Inline extensions for +name+
+    directory "lib/inline"
 
-          extensions.each do |ext|
-            # add the inlined extension to the spec files
-            s.files += ["lib/inline/#{ext}"]
+    dlext = RbConfig::CONFIG["DLEXT"]
 
-            # include the file in the tasks
-            file "lib/inline/#{ext}" => ["lib/inline"] do
-              cp File.join(Inline.directory, ext), "lib/inline"
-            end
-          end
+    Inline.registered_inline_classes.each do |cls|
+      name = cls.name.gsub(/::/, "")
+      # name of the extension is CamelCase
+      alternate_name = if name =~ /[A-Z]/ then
+                         name.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, "")
+                       elsif name =~ /_/ then
+                         name.capitalize.gsub(/_([a-z])/) { $1.upcase }
+                       end
+      extensions = Dir.chdir(Inline.directory) {
+        Dir["Inline_{#{name},#{alternate_name}}_*.#{dlext}"]
+      }
+
+      extensions.each do |ext|
+        # add the inlined extension to the spec files
+        s.files += ["lib/inline/#{ext}"]
+
+        # include the file in the tasks
+        file "lib/inline/#{ext}" => ["lib/inline"] do
+          cp File.join(Inline.directory, ext), "lib/inline"
         end
       end
     end

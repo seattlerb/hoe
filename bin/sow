@@ -14,10 +14,10 @@ option = {
 }
 
 def check_subdir option
-  if option[:subdir] then
-    warn "ERROR: you can't specify multiple subdirs"
-    abort opts.to_s
-  end
+  return unless option[:subdir]
+
+  warn "ERROR: you can't specify multiple subdirs"
+  abort opts.to_s
 end
 
 def make_sub_modules klass
