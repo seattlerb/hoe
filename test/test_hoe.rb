@@ -364,7 +364,7 @@ class TestHoe < Minitest::Test
     Dir.mktmpdir do |path|
       ENV["HOME"] = path
 
-      hoeconfig = hoe.with_config {|config, _| config }
+      hoeconfig = hoe.with_config { |config, _| config }
 
       assert_equal Hoe::DEFAULT_CONFIG, hoeconfig
     end
@@ -375,7 +375,7 @@ class TestHoe < Minitest::Test
   def test_with_config_overrides
     overrides = {
       "exclude" => Regexp.union( Hoe::DEFAULT_CONFIG["exclude"], /\.hg/ ),
-      "plugins" => ["tweedledee", "tweedledum"]
+      "plugins" => %w[tweedledee tweedledum],
     }
     overrides_rcfile = File.join(Dir.pwd, ".hoerc")
 
@@ -391,7 +391,7 @@ class TestHoe < Minitest::Test
         io.write YAML.dump( overrides )
       end
 
-      hoeconfig = hoe.with_config {|config, _| config }
+      hoeconfig = hoe.with_config { |config, _| config }
 
       assert_equal Hoe::DEFAULT_CONFIG.merge(overrides), hoeconfig
     end

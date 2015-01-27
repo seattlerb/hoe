@@ -52,7 +52,7 @@ module Hoe::Inline
                            elsif name =~ /_/ then
                              name.capitalize.gsub(/_([a-z])/) { $1.upcase }
                            end
-          extensions = Dir.chdir(Inline::directory) {
+          extensions = Dir.chdir(Inline.directory) {
             Dir["Inline_{#{name},#{alternate_name}}_*.#{dlext}"]
           }
 
@@ -62,7 +62,7 @@ module Hoe::Inline
 
             # include the file in the tasks
             file "lib/inline/#{ext}" => ["lib/inline"] do
-              cp File.join(Inline::directory, ext), "lib/inline"
+              cp File.join(Inline.directory, ext), "lib/inline"
             end
           end
         end

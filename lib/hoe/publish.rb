@@ -79,9 +79,9 @@ module Hoe::Publish
                                     "url"      => "url",
                                     "blog_id"  => "blog_id",
                                     "extra_headers" => {
-                                      "mt_convert_breaks" => "markdown"
+                                      "mt_convert_breaks" => "markdown",
                                     },
-                                  }
+                                  },
                                  ]
 
   ##
@@ -171,7 +171,7 @@ module Hoe::Publish
   end
 
   def post_blog_task # :nodoc:
-    with_config do |config, path|
+    with_config do |config, _path|
       break unless config["blogs"]
 
       config["blogs"].each do |site|
@@ -257,9 +257,12 @@ module Hoe::Publish
      full && "To: #{email_to.join(", ")}",
      full && "Date: #{Time.now.rfc2822}",
      "Subject: [ANN] #{subject}",
-     "", title,
-     "", urls,
-     "", body,
+     "",
+     title,
+     "",
+     urls,
+     "",
+     body,
     ].compact.join("\n")
   end
 
@@ -272,13 +275,12 @@ module Hoe::Publish
     urls =
       case self.urls
       when Hash then
-        self.urls.map { |k,v| "* #{k}: <#{v.strip.rdoc_to_markdown}>" }
+        self.urls.map { |k, v| "* #{k}: <#{v.strip.rdoc_to_markdown}>" }
       when Array then
         self.urls.map { |s| "* <#{s.strip.rdoc_to_markdown}>" }
       else
         raise "unknown urls format: #{urls.inspect}"
       end
-
 
     return subject, title, body, urls.join("\n")
   end

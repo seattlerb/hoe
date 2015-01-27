@@ -55,7 +55,7 @@ module Hoe::Signing
     signing_key = nil
     cert_chain = []
 
-    with_config do |config, path|
+    with_config do |config, _path|
       break unless config["signing_key_file"] and config["signing_cert_file"]
       key_file = File.expand_path config["signing_key_file"].to_s
       signing_key = key_file if File.exist? key_file

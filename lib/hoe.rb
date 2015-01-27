@@ -515,7 +515,7 @@ class Hoe
              "Manifest is missing or couldn't be read.",
              "The Manifest is kind of a big deal.",
              "Maybe you're using a gem packaged by a linux project.",
-             "It seems like they enjoy breaking other people's code."
+             "It seems like they enjoy breaking other people's code.",
              ].join "\n" unless manifest
 
       s.name                 = name
@@ -641,7 +641,9 @@ class Hoe
     self.test_globs           = ["test/**/{test,spec}_*.rb",
                                  "test/**/*_{test,spec}.rb"]
 
-    if manifest = read_manifest then
+    manifest = read_manifest
+
+    if manifest then
       self.readme_file  = manifest.grep(/^README\./).first
       self.history_file = manifest.grep(/^History\./).first
     end
@@ -702,7 +704,6 @@ class Hoe
   # should update the readme.
 
   def parse_urls text
-
     lines = text.gsub(/^\* /, "").delete("<>").split(/\n/).grep(/\S+/)
 
     if lines.first =~ /::/ then

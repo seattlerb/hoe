@@ -51,7 +51,7 @@ module Rake
     tasks.flatten.each do |name|
       case name
       when Regexp then
-        all_tasks.delete_if { |k,_| k =~ name }
+        all_tasks.delete_if { |k, _| k =~ name }
       else
         all_tasks.delete(name)
       end

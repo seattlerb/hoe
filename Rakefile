@@ -32,7 +32,7 @@ task :known_plugins do
   fetcher     = Gem::SpecFetcher.fetcher
   spec_tuples = fetcher.find_matching dep
 
-  max = spec_tuples.map { |(tuple, source)| tuple.first.size }.max
+  max = spec_tuples.map { |(tuple, _source)| tuple.first.size }.max
 
   spec_tuples.each do |(tuple, source)|
     spec = Gem::SpecFetcher.fetcher.fetch_spec(tuple, URI.parse(source))

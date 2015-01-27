@@ -22,11 +22,9 @@ module Hoe::Flay
   # Define tasks for plugin.
 
   def define_flay_tasks
-    begin
-      require "flay_task"
-      FlayTask.new :flay, self.flay_threshold
-    rescue Exception
-      # skip
-    end
+    require "flay_task"
+    FlayTask.new :flay, self.flay_threshold
+  rescue Exception
+    # skip
   end
 end

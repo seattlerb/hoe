@@ -28,11 +28,9 @@ module Hoe::Flog
   # Define tasks for plugin.
 
   def define_flog_tasks
-    begin
-      require "flog_task"
-      FlogTask.new :flog, self.flog_threshold, nil, self.flog_method
-    rescue LoadError
-      # skip
-    end
+    require "flog_task"
+    FlogTask.new :flog, self.flog_threshold, nil, self.flog_method
+  rescue LoadError
+    # skip
   end
 end

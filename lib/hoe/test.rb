@@ -98,11 +98,11 @@ module Hoe::Test
       task :test_deps do
         tests = Dir[*self.test_globs].uniq
 
-        paths = ["bin", "lib", "test"].join(File::PATH_SEPARATOR)
+        paths = %w[bin lib test].join(File::PATH_SEPARATOR)
         null_dev = Hoe::WINDOZE ? "> NUL 2>&1" : "> /dev/null 2>&1"
 
         tests.each do |test|
-          if not system "ruby -I#{paths} #{test} #{null_dev}" then
+          unless system "ruby -I#{paths} #{test} #{null_dev}" then
             puts "Dependency Issues: #{test}"
           end
         end
@@ -165,7 +165,7 @@ module Hoe::Test
   # Generate the test command-line.
 
   def make_test_cmd
-    unless SUPPORTED_TEST_FRAMEWORKS.has_key?(testlib)
+    unless SUPPORTED_TEST_FRAMEWORKS.key?(testlib)
       raise "unsupported test framework #{testlib}"
     end
 
@@ -175,7 +175,7 @@ module Hoe::Test
     tests << framework if framework
     tests << test_globs.sort.map { |g| Dir.glob(g) }
     tests.flatten!
-    tests.map! {|f| %(require "#{f}")}
+    tests.map! { |f| %(require "#{f}") }
 
     tests.insert 1, test_prelude if test_prelude
 

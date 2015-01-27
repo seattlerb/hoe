@@ -87,7 +87,7 @@ module Hoe::Package
   ##
   # Install the named gem.
 
-  def install_gem name, version = nil, rdoc=true
+  def install_gem name, version = nil, rdoc = true
     should_not_sudo = Hoe::WINDOZE || ENV["NOSUDO"] || File.writable?(Gem.dir)
     null_dev = Hoe::WINDOZE ? "> NUL 2>&1" : "> /dev/null 2>&1"
 

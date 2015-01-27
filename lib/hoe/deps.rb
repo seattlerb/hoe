@@ -73,7 +73,7 @@ module Hoe::Deps
     puts "  dependents:"
     unless deps.empty? then
       deps.sort_by(&:full_name).each do |spec|
-        vers = spec.dependencies.find {|s| s.name == name}.requirements_list
+        vers = spec.dependencies.find { |s| s.name == name }.requirements_list
         puts "    %-*s - %s" % [max, spec.full_name, vers.join(", ")]
       end
     else
@@ -160,7 +160,7 @@ module Hoe::Deps
 
              h = {}
              Hash[ary].values.sort.each { |spec| h[spec.name] = spec }
-             ary = h.map { |k,v| [v.full_name, v] }
+             ary = h.map { |_, v| [v.full_name, v] }
 
              dump = Marshal.dump ary
 

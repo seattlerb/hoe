@@ -42,7 +42,7 @@ module Hoe::Racc
     # -l = no-line-convert (they don't ever line up anyhow)
     self.racc_flags ||= "-v -l"
     self.oedipus_options ||= {
-                              :do_parse => false
+                              :do_parse => false,
                              }
   end
 
@@ -75,7 +75,7 @@ module Hoe::Racc
     end
 
     # HACK: taken from oedipus_lex's .rake file to bypass isolate bootstrap
-    rule ".rex.rb" => proc {|path| path.sub(/\.rb$/, "") } do |t|
+    rule ".rex.rb" => proc { |path| path.sub(/\.rb$/, "") } do |t|
       require "oedipus_lex"
       warn "Generating #{t.name} from #{t.source} from #{OedipusLex::VERSION}"
       oedipus = OedipusLex.new oedipus_options
