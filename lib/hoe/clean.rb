@@ -15,8 +15,8 @@ module Hoe::Clean
   # Initialize variables for plugin.
 
   def initialize_clean
-    self.clean_globs ||= %w(diff diff.txt TAGS ri deps .source_index
-                            *.gem **/*~ **/.*~ **/*.rbc coverage*)
+    self.clean_globs ||= %w[diff diff.txt TAGS ri deps .source_index
+                            *.gem **/*~ **/.*~ **/*.rbc coverage*]
   end
 
   ##

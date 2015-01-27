@@ -292,7 +292,7 @@ class TestHoe < Minitest::Test
   def test_license
     spec = self.hoe.spec
 
-    assert_equal %w(MIT), spec.licenses
+    assert_equal %w[MIT], spec.licenses
   end
 
   def test_multiple_calls_to_license
@@ -303,7 +303,7 @@ class TestHoe < Minitest::Test
 
     spec = hoe.spec
 
-    assert_equal %w(MIT GPL-2), spec.licenses
+    assert_equal %w[MIT GPL-2], spec.licenses
   end
 
   def test_setting_licenses
@@ -313,7 +313,7 @@ class TestHoe < Minitest::Test
 
     spec = hoe.spec
 
-    assert_equal %w(MIT GPL-2), spec.licenses
+    assert_equal %w[MIT GPL-2], spec.licenses
   end
 
   def test_plugins
@@ -335,12 +335,12 @@ class TestHoe < Minitest::Test
   def test_rename
     # project, file_name, klass, test_klass = Hoe.normalize_names 'project_name'
 
-    assert_equal %w(    word      word     Word    TestWord),           Hoe.normalize_names("word")
-    assert_equal %w(    word      word     Word    TestWord),           Hoe.normalize_names("Word")
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names("TwoWords")
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names("twoWords")
-    assert_equal %w(two-words two/words Two::Words TestTwo::TestWords), Hoe.normalize_names("two-words")
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names("two_words")
+    assert_equal %w[word      word     Word    TestWord],           Hoe.normalize_names("word")
+    assert_equal %w[word      word     Word    TestWord],           Hoe.normalize_names("Word")
+    assert_equal %w[two_words two_words TwoWords   TestTwoWords],       Hoe.normalize_names("TwoWords")
+    assert_equal %w[two_words two_words TwoWords   TestTwoWords],       Hoe.normalize_names("twoWords")
+    assert_equal %w[two-words two/words Two::Words TestTwo::TestWords], Hoe.normalize_names("two-words")
+    assert_equal %w[two_words two_words TwoWords   TestTwoWords],       Hoe.normalize_names("two_words")
   end
 
   def test_nosudo

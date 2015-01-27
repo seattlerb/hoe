@@ -160,7 +160,7 @@ module Hoe::Publish
   def publish_docs_task # :nodoc:
     warn "no rdoc_location values" if rdoc_locations.empty?
     self.rdoc_locations.each do |dest|
-      sh %{rsync #{rsync_args} #{local_rdoc_dir}/ #{dest}}
+      sh %(rsync #{rsync_args} #{local_rdoc_dir}/ #{dest})
     end
   end
 

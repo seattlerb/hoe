@@ -65,7 +65,7 @@ module Hoe::Test
     self.multiruby_skip ||= []
     self.testlib        ||= :minitest
     self.test_prelude   ||= nil
-    self.rspec_dirs     ||= %w(spec lib)
+    self.rspec_dirs     ||= %w[spec lib]
     self.rspec_options  ||= []
   end
 
@@ -156,7 +156,7 @@ module Hoe::Test
 
     desc "Run ZenTest against the package."
     task :audit do
-      libs = %w(lib test ext).join(File::PATH_SEPARATOR)
+      libs = %w[lib test ext].join(File::PATH_SEPARATOR)
       sh "zentest -I=#{libs} #{spec.files.grep(/^(lib|test)/).join(' ')}"
     end
   end

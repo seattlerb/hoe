@@ -103,7 +103,7 @@ class Hoe
 
   RUBY_DEBUG = ENV["RUBY_DEBUG"]
 
-  default_ruby_flags = "-w -I#{%w(lib bin test .).join(File::PATH_SEPARATOR)}" +
+  default_ruby_flags = "-w -I#{%w[lib bin test .].join(File::PATH_SEPARATOR)}" +
     (RUBY_DEBUG ? " #{RUBY_DEBUG}" : "")
 
   ##
@@ -626,7 +626,7 @@ class Hoe
     self.author               = []
     self.changes              = nil
     self.description          = nil
-    self.description_sections = %w(description)
+    self.description_sections = %w[description]
     self.email                = []
     self.extra_deps           = []
     self.extra_dev_deps       = []
@@ -850,7 +850,7 @@ class Hoe
   # Verify that mandatory fields are set.
 
   def validate_fields
-    %w(email author).each do |field|
+    %w[email author].each do |field|
       value = self.send(field)
       abort "Hoe #{field} value not set. aborting" if value.nil? or value.empty?
     end
@@ -889,7 +889,7 @@ class File
       if r19 then
         f.read
       else
-        f.read.sub %r/\A\xEF\xBB\xBF/, ""
+        f.read.sub %r%\A\xEF\xBB\xBF%, ""
       end
     end
   end
