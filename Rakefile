@@ -1,7 +1,7 @@
 # -*- ruby -*-
 
-$:.unshift 'lib'
-require './lib/hoe.rb'
+$:.unshift "lib"
+require "./lib/hoe.rb"
 
 Hoe.plugin :seattlerb
 Hoe.plugin :isolate
@@ -17,14 +17,14 @@ Hoe.spec "hoe" do
   license "MIT"
 
   pluggable!
-  require_rubygems_version '>= 1.4'
+  require_rubygems_version ">= 1.4"
 
   dependency "rake", [">= 0.8", "< 11.0"] # FIX: to force it to exist pre-isolate
 end
 
 task :plugins do
   puts `find lib/hoe -name \*.rb | xargs grep -h module.Hoe::`.
-    gsub(/module/, '*')
+    gsub(/module/, "*")
 end
 
 task :known_plugins do

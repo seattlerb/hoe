@@ -23,7 +23,7 @@ module Hoe::Clean
   # Define tasks for plugin.
 
   def define_clean_tasks
-    desc 'Clean up all the extras.'
+    desc "Clean up all the extras."
     task :clean => [ :clobber_docs, :clobber_package ] do
       clean_globs.each do |pattern|
         files = Dir[pattern]

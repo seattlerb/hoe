@@ -1,24 +1,24 @@
 # -*- mode: ruby; coding: us-ascii; -*-
 
-require 'rubygems'
+require "rubygems"
 
 begin
-  gem 'rake'
+  gem "rake"
 rescue Gem::LoadError
   warn "Using the crusty system installed rake... you probably want to upgrade"
 end
-require 'rake'
-require 'rake/testtask'
-require 'rbconfig'
+require "rake"
+require "rake/testtask"
+require "rbconfig"
 
 begin
-  require 'psych'
+  require "psych"
 rescue LoadError
   # do nothing
 end
-require 'yaml'
+require "yaml"
 
-require 'hoe/rake'
+require "hoe/rake"
 
 ##
 # Hoe is a simple rake/rubygems helper for project Rakefiles. It helps
@@ -101,15 +101,15 @@ class Hoe
   ##
   # Used to add extra flags to RUBY_FLAGS.
 
-  RUBY_DEBUG = ENV['RUBY_DEBUG']
+  RUBY_DEBUG = ENV["RUBY_DEBUG"]
 
   default_ruby_flags = "-w -I#{%w(lib bin test .).join(File::PATH_SEPARATOR)}" +
-    (RUBY_DEBUG ? " #{RUBY_DEBUG}" : '')
+    (RUBY_DEBUG ? " #{RUBY_DEBUG}" : "")
 
   ##
   # Used to specify flags to ruby [has smart default].
 
-  RUBY_FLAGS = ENV['RUBY_FLAGS'] || default_ruby_flags
+  RUBY_FLAGS = ENV["RUBY_FLAGS"] || default_ruby_flags
 
   ##
   # Default configuration values for .hoerc. Plugins should populate
@@ -122,7 +122,7 @@ class Hoe
   ##
   # True if you're a masochistic developer. Used for building commands.
 
-  WINDOZE = RbConfig::CONFIG['host_os'] =~ /mswin|mingw/
+  WINDOZE = RbConfig::CONFIG["host_os"] =~ /mswin|mingw/
 
   ##
   # *MANDATORY*: The author(s) of the package. (can be array)
@@ -343,11 +343,11 @@ class Hoe
   # Test klass names are same as Klass with Test prepended to each part.
 
   def self.normalize_names project # :nodoc:
-    project    = project.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
+    project    = project.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, "")
     klass      = project.gsub(/(?:^|_)([a-z])/) { $1.upcase }
     klass      = klass.  gsub(/(?:^|-)([a-z])/) { "::#{$1.upcase}" }
     test_klass = klass.  gsub(/(^|::)([A-Z])/) { "#{$1}Test#{$2}" }
-    file_name  = project.gsub(/-/, '/')
+    file_name  = project.gsub(/-/, "/")
 
     return project, file_name, klass, test_klass
   end
@@ -396,7 +396,7 @@ class Hoe
 
   def activate_plugins
     with_config do |config, _|
-      config_plugins = config['plugins']
+      config_plugins = config["plugins"]
       break unless config_plugins
       Hoe.plugins.concat config_plugins.map { |plugin| plugin.intern }
     end
@@ -471,7 +471,7 @@ class Hoe
     self.extra_dev_deps = normalize_deps extra_dev_deps
 
     case name
-    when 'hoe' then
+    when "hoe" then
       dependency "rake", [">= 0.8", "< 11.0"]
     else
       version = VERSION.split(/\./).first(2).join(".")
@@ -499,7 +499,7 @@ class Hoe
   # Returns the proper dependency list for the thingy.
 
   def dependency_target
-    self.name == 'hoe' ? extra_deps : extra_dev_deps
+    self.name == "hoe" ? extra_deps : extra_dev_deps
   end
 
   ##
@@ -507,7 +507,7 @@ class Hoe
 
   def define_spec
     self.spec = Gem::Specification.new do |s|
-      dirs = Dir['lib']
+      dirs = Dir["lib"]
 
       manifest = read_manifest
 
@@ -535,7 +535,7 @@ class Hoe
       s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
       s.bindir               = "bin"
       s.require_paths        = dirs unless dirs.empty?
-      s.rdoc_options         = ['--main', readme_file]
+      s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
 
       missing "Manifest.txt" if s.files.empty?
@@ -638,8 +638,8 @@ class Hoe
     self.spec_extras          = {}
     self.summary              = nil
     self.summary_sentences    = 1
-    self.test_globs           = ['test/**/{test,spec}_*.rb',
-                                 'test/**/*_{test,spec}.rb']
+    self.test_globs           = ["test/**/{test,spec}_*.rb",
+                                 "test/**/*_{test,spec}.rb"]
 
     if manifest = read_manifest then
       self.readme_file  = manifest.grep(/^README\./).first
@@ -657,11 +657,11 @@ class Hoe
 
   def intuit_values
     header_re = /^((?:=+|#+) .*)$/
-    readme    = File.read_utf(readme_file).split(header_re)[1..-1] rescue ''
+    readme    = File.read_utf(readme_file).split(header_re)[1..-1] rescue ""
 
     unless readme.empty? then
       sections = Hash[*readme.map { |s|
-        s =~ /^[=#]/ ? s.strip.downcase.chomp(':').split.last : s.strip
+        s =~ /^[=#]/ ? s.strip.downcase.chomp(":").split.last : s.strip
       }]
       desc     = sections.values_at(*description_sections).join("\n\n")
       summ     = desc.split(/\.\s+/).first(summary_sentences).join(". ")
@@ -679,7 +679,7 @@ class Hoe
                        h.split(/^(={2,}|\#{2,})/)[1..2].join.strip
                      rescue
                        missing history_file
-                       ''
+                       ""
                      end
   end
 
@@ -703,7 +703,7 @@ class Hoe
 
   def parse_urls text
 
-    lines = text.gsub(/^\* /, '').delete("<>").split(/\n/).grep(/\S+/)
+    lines = text.gsub(/^\* /, "").delete("<>").split(/\n/).grep(/\S+/)
 
     if lines.first =~ /::/ then
       Hash[lines.map { |line| line.split(/\s*::\s*/) }]
@@ -780,7 +780,7 @@ class Hoe
 
   def pluggable!
     abort "update rubygems to >= 1.3.1" unless  Gem.respond_to? :find_files
-    require_rubygems_version '>= 1.3.1'
+    require_rubygems_version ">= 1.3.1"
   end
 
   ##
@@ -837,7 +837,7 @@ class Hoe
   # 12/31 of the current year.
 
   def timebomb n, m, finis = nil, start = nil
-    require 'time'
+    require "time"
     finis = Time.parse(finis || "#{Time.now.year}-12-31")
     start = Time.parse(start || "#{Time.now.year}-01-01")
     rest  = (finis - Time.now)
@@ -869,7 +869,7 @@ class Hoe
 
     config = config.merge homeconfig
 
-    localrc = File.join Dir.pwd, '.hoerc'
+    localrc = File.join Dir.pwd, ".hoerc"
     exists = File.exist? localrc
     localconfig = exists ? YAML.load_file(localrc) : {}
 
@@ -889,7 +889,7 @@ class File
       if r19 then
         f.read
       else
-        f.read.sub %r/\A\xEF\xBB\xBF/, ''
+        f.read.sub %r/\A\xEF\xBB\xBF/, ""
       end
     end
   end

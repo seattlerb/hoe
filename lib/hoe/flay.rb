@@ -23,7 +23,7 @@ module Hoe::Flay
 
   def define_flay_tasks
     begin
-      require 'flay_task'
+      require "flay_task"
       FlayTask.new :flay, self.flay_threshold
     rescue Exception
       # skip

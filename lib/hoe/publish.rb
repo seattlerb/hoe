@@ -89,11 +89,11 @@ module Hoe::Publish
 
   def initialize_publish
     self.blog_categories ||= [self.name]
-    self.local_rdoc_dir  ||= 'doc'
+    self.local_rdoc_dir  ||= "doc"
     self.need_rdoc       ||= true
     self.rdoc_locations  ||= []
     self.remote_rdoc_dir ||= self.name
-    self.rsync_args      ||= '-av -O --delete'
+    self.rsync_args      ||= "-av -O --delete"
   end
 
   ##
@@ -117,7 +117,7 @@ module Hoe::Publish
 
       desc "Generate rdoc coverage report"
       task :dcov => :isolate do
-        sh(*make_rdoc_cmd('-C'))
+        sh(*make_rdoc_cmd("-C"))
       end
 
       desc "Remove RDoc files"
@@ -127,9 +127,9 @@ module Hoe::Publish
 
       task :clobber => :clobber_docs
 
-      desc 'Generate ri locally for testing.'
+      desc "Generate ri locally for testing."
       task :ridocs => [:clean, :isolate] do
-        ruby(*make_rdoc_cmd('--ri', '-o', 'ri'))
+        ruby(*make_rdoc_cmd("--ri", "-o", "ri"))
       end
     end
 
@@ -143,7 +143,7 @@ module Hoe::Publish
       publish_on_announce_task
     end
 
-    desc 'Generate email announcement file.'
+    desc "Generate email announcement file."
     task :debug_email do
       puts generate_email
     end
@@ -153,7 +153,7 @@ module Hoe::Publish
       post_blog_task
     end
 
-    desc 'Announce your release.'
+    desc "Announce your release."
     task :announce => [:post_blog, :publish_on_announce ]
   end
 
@@ -166,34 +166,34 @@ module Hoe::Publish
 
   def publish_on_announce_task # :nodoc:
     with_config do |config, _|
-      Rake::Task['publish_docs'].invoke if config["publish_on_announce"]
+      Rake::Task["publish_docs"].invoke if config["publish_on_announce"]
     end
   end
 
   def post_blog_task # :nodoc:
     with_config do |config, path|
-      break unless config['blogs']
+      break unless config["blogs"]
 
-      config['blogs'].each do |site|
-        if site['path'] then
+      config["blogs"].each do |site|
+        if site["path"] then
           msg = "post_blog_#{site['type']}"
           send msg, site
           system site["cmd"] if site["cmd"]
         else
-          require 'xmlrpc/client'
+          require "xmlrpc/client"
 
           _, title, body, urls = announcement
           body += "\n\n#{urls}"
 
-          server = XMLRPC::Client.new2(site['url'])
-          content = site['extra_headers'].merge(:title => title,
+          server = XMLRPC::Client.new2(site["url"])
+          content = site["extra_headers"].merge(:title => title,
                                                 :description => body,
                                                 :categories => blog_categories)
 
-          server.call('metaWeblog.newPost',
-                      site['blog_id'],
-                      site['user'],
-                      site['password'],
+          server.call("metaWeblog.newPost",
+                      site["blog_id"],
+                      site["user"],
+                      site["password"],
                       content,
                       true)
         end
@@ -225,7 +225,7 @@ module Hoe::Publish
     Dir.chdir File.expand_path dir do
       time = Time.at Time.now.to_i # nukes fractions
       path = [time.strftime("%Y-%m-%d-"),
-              title.sub(/\W+$/, '').gsub(/\W+/, '-'),
+              title.sub(/\W+$/, "").gsub(/\W+/, "-"),
               ".html.md"].join
 
       header = {
@@ -235,7 +235,7 @@ module Hoe::Publish
       }
 
       File.open path, "w" do |f|
-        f.puts header.to_yaml.gsub(/\s$/, '')
+        f.puts header.to_yaml.gsub(/\s$/, "")
         f.puts "..."
         f.puts
         f.puts body
@@ -244,7 +244,7 @@ module Hoe::Publish
   end
 
   def generate_email full = nil # :nodoc:
-    require 'time'
+    require "time"
 
     abort "No email 'to' entry. Run `rake config_hoe` to fix." unless
       !full || email_to
@@ -293,6 +293,6 @@ class String
   # Very basic munge from rdoc to markdown format.
 
   def rdoc_to_markdown
-    self.gsub(/^mailto:/, '').gsub(/^(=+)/) { "#" * $1.size }
+    self.gsub(/^mailto:/, "").gsub(/^(=+)/) { "#" * $1.size }
   end
 end

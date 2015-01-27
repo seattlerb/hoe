@@ -45,7 +45,7 @@ module Hoe::Signing
   def define_signing_tasks
     set_up_signing
 
-    desc 'Generate a key for signing your gems.'
+    desc "Generate a key for signing your gems."
     task :generate_key do
       generate_key_task
     end
@@ -56,11 +56,11 @@ module Hoe::Signing
     cert_chain = []
 
     with_config do |config, path|
-      break unless config['signing_key_file'] and config['signing_cert_file']
-      key_file = File.expand_path config['signing_key_file'].to_s
+      break unless config["signing_key_file"] and config["signing_cert_file"]
+      key_file = File.expand_path config["signing_key_file"].to_s
       signing_key = key_file if File.exist? key_file
 
-      cert_file = File.expand_path config['signing_cert_file'].to_s
+      cert_file = File.expand_path config["signing_cert_file"].to_s
       cert_chain << cert_file if File.exist? cert_file
     end
 
@@ -74,15 +74,15 @@ module Hoe::Signing
     email = Array(spec.email)
     abort "No email in your gemspec" if email.nil? or email.empty?
 
-    key_file = with_config { |config, _| config['signing_key_file'] }
-    cert_file = with_config { |config, _| config['signing_cert_file'] }
+    key_file = with_config { |config, _| config["signing_key_file"] }
+    cert_file = with_config { |config, _| config["signing_cert_file"] }
 
     if key_file.nil? or cert_file.nil? then
-      ENV['SHOW_EDITOR'] ||= 'no'
-      Rake::Task['config_hoe'].invoke
+      ENV["SHOW_EDITOR"] ||= "no"
+      Rake::Task["config_hoe"].invoke
 
-      key_file = with_config { |config, _| config['signing_key_file'] }
-      cert_file = with_config { |config, _| config['signing_cert_file'] }
+      key_file = with_config { |config, _| config["signing_key_file"] }
+      cert_file = with_config { |config, _| config["signing_cert_file"] }
     end
 
     key_file = File.expand_path key_file

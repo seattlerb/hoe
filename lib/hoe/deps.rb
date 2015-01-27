@@ -1,5 +1,5 @@
-require 'rubygems/remote_fetcher'
-require 'uri'
+require "rubygems/remote_fetcher"
+require "uri"
 
 ##
 # Deps plugin for hoe.
@@ -15,7 +15,7 @@ module Hoe::Deps
   ##
   # The main rubygems repository.
 
-  GEMURL = URI.parse 'http://rubygems.org'
+  GEMURL = URI.parse "http://rubygems.org"
 
   ##
   # Define tasks for plugin.
@@ -38,12 +38,12 @@ module Hoe::Deps
       end
     end
 
-    desc 'Install missing dependencies.'
+    desc "Install missing dependencies."
     task :check_extra_deps do
       check_extra_deps_task
     end
 
-    desc 'Install missing plugins.'
+    desc "Install missing plugins."
     task :install_plugins do
       install_missing_plugins
     end
@@ -92,7 +92,7 @@ module Hoe::Deps
     email = email.map { |s| s.split(/,\s*/) }.flatten.sort.uniq
 
     email.map! { |s| # don't you people realize how easy this is?
-      s.gsub(/ at | _at_ |\s*(atmark|@nospam@|-at?-|@at?@|<at?>|\[at?\]|\(at?\))\s*/i, '@').gsub(/\s*(dot|\[d(ot)?\]|\.dot\.)\s*/i, '.').gsub(/\s+com$/, '.com')
+      s.gsub(/ at | _at_ |\s*(atmark|@nospam@|-at?-|@at?@|<at?>|\[at?\]|\(at?\))\s*/i, "@").gsub(/\s*(dot|\[d(ot)?\]|\.dot\.)\s*/i, ".").gsub(/\s+com$/, ".com")
     }
 
     bad, good = email.partition { |e| e !~ /^[\w.+-]+\@[\w.+-]+$/ }
@@ -122,7 +122,7 @@ module Hoe::Deps
           begin
             warn "downloading #{full_name}"
             Gem::RemoteFetcher.fetcher.download(spec, GEMURL, Dir.pwd)
-            FileUtils.mv "cache/#{gem_name}", '.'
+            FileUtils.mv "cache/#{gem_name}", "."
           rescue Gem::RemoteFetcher::FetchError
             warn "  failed"
             next
@@ -149,7 +149,7 @@ module Hoe::Deps
 
     return @@index if @@index
 
-    dump = unless File.exist? '.source_index' then
+    dump = unless File.exist? ".source_index" then
              warn "Fetching full index and caching. This can take a while."
              url = GEMURL + "Marshal.#{Gem.marshal_version}.Z"
              dump = Gem::RemoteFetcher.fetcher.fetch_path url
@@ -164,11 +164,11 @@ module Hoe::Deps
 
              dump = Marshal.dump ary
 
-             open '.source_index', 'wb' do |io| io.write dump end
+             open ".source_index", "wb" do |io| io.write dump end
 
              dump
            else
-             open '.source_index', 'rb' do |io| io.read end
+             open ".source_index", "rb" do |io| io.read end
            end
 
     @@index = Marshal.load dump
@@ -194,10 +194,10 @@ module Hoe::Deps
   # Installs plugins that aren't currently installed
 
   def install_missing_plugins plugins = Hoe.bad_plugins
-    version = '>= 0'
+    version = ">= 0"
 
     plugins.each do |name|
-      dash_name = name.to_s.gsub '_', '-'
+      dash_name = name.to_s.gsub "_", "-"
 
       next if have_gem?("hoe-#{name}") or
                 have_gem?(name) or

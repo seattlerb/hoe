@@ -16,12 +16,12 @@ module Hoe::Debug
   # :stopdoc:
 
   DIFF = if Hoe::WINDOZE
-           'diff.exe'
+           "diff.exe"
          else
            if system("gdiff", __FILE__, __FILE__)
-             'gdiff' # solaris and kin suck
+             "gdiff" # solaris and kin suck
            else
-             'diff'
+             "diff"
            end
          end unless defined? DIFF
 
@@ -31,31 +31,31 @@ module Hoe::Debug
   # Define tasks for plugin.
 
   def define_debug_tasks
-    desc 'Create a fresh ~/.hoerc file.'
+    desc "Create a fresh ~/.hoerc file."
     task :config_hoe do
       with_config do |config, path|
         File.open(path, "w") do |f|
           YAML.dump(Hoe::DEFAULT_CONFIG.merge(config), f)
         end
 
-        editor = ENV['EDITOR'] || 'vi'
-        system "#{editor} #{path}" if ENV['SHOW_EDITOR'] != 'no'
+        editor = ENV["EDITOR"] || "vi"
+        system "#{editor} #{path}" if ENV["SHOW_EDITOR"] != "no"
       end
     end
 
-    desc 'Verify the manifest.'
+    desc "Verify the manifest."
     task :check_manifest => :clean do
       check_manifest
     end
 
-    desc 'Show information about the gem.'
+    desc "Show information about the gem."
     task :debug_gem do
       puts spec.to_ruby
     end
 
     task :isolate # stub
     task :irb => :isolate do
-      name = spec.name.gsub("-", '/')
+      name = spec.name.gsub("-", "/")
       file = (spec.files.grep(/^lib\/#{name}\.rb$/).first ||
               spec.files.grep(/^lib\/[^\/]*\.rb$/).first)
 
@@ -71,12 +71,12 @@ module Hoe::Debug
 
   def check_manifest
     f = "Manifest.tmp"
-    require 'find'
+    require "find"
     files = []
     with_config do |config, _|
       exclusions = config["exclude"]
 
-      Find.find '.' do |path|
+      Find.find "." do |path|
         next unless File.file? path
         next if path =~ exclusions
         files << path[2..-1]
@@ -84,7 +84,7 @@ module Hoe::Debug
 
       files = files.sort.join "\n"
 
-      File.open f, 'w' do |fp| fp.puts files end
+      File.open f, "w" do |fp| fp.puts files end
 
       verbose = { :verbose => Rake.application.options.verbose }
 

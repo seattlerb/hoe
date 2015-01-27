@@ -50,7 +50,7 @@ module Hoe::Racc
   # Activate the racc dependencies
 
   def activate_racc_deps
-    dependency 'racc', '~> 1.4.6', :development
+    dependency "racc", "~> 1.4.6", :development
   end
 
   ##

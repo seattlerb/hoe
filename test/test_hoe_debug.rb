@@ -1,8 +1,8 @@
-require 'hoe'
-require File.expand_path 'lib/hoe/debug.rb' # ugh. avoid dupe warnings
-require 'tmpdir'
-require 'tempfile'
-require 'minitest/autorun'
+require "hoe"
+require File.expand_path "lib/hoe/debug.rb" # ugh. avoid dupe warnings
+require "tmpdir"
+require "tempfile"
+require "minitest/autorun"
 
 class TestHoeDebug < Minitest::Test
 
@@ -40,9 +40,9 @@ class TestHoeDebug < Minitest::Test
 
   def test_check_manifest_generated
     in_tmpdir do
-      manifest 'generated.rb'
+      manifest "generated.rb"
 
-      open 'generated.rb', 'w' do |io| io.puts 'generated = true' end
+      open "generated.rb", "w" do |io| io.puts "generated = true" end
 
       assert_subprocess_silent do
         check_manifest
@@ -56,7 +56,7 @@ class TestHoeDebug < Minitest::Test
     in_tmpdir do
       manifest
 
-      open 'missing.rb', 'w' do |io| io.puts 'missing = true' end
+      open "missing.rb", "w" do |io| io.puts "missing = true" end
 
       e = nil
 
@@ -86,18 +86,18 @@ class TestHoeDebug < Minitest::Test
   end
 
   def manifest extra = nil
-    open 'Manifest.txt', 'w' do |io| # sorted
-      io.puts 'History.txt'
-      io.puts 'Manifest.txt'
-      io.puts 'README.txt'
+    open "Manifest.txt", "w" do |io| # sorted
+      io.puts "History.txt"
+      io.puts "Manifest.txt"
+      io.puts "README.txt"
       io.puts extra if extra
     end
 
-    open 'README.txt',  'w'  do |io| io.puts '= blah' end
-    open 'History.txt', 'w'  do |io| io.puts '=== 1.0' end
+    open "README.txt",  "w"  do |io| io.puts "= blah" end
+    open "History.txt", "w"  do |io| io.puts "=== 1.0" end
   end
 
   def with_config
-    yield({ 'exclude' => [] }, '~/.hoerc')
+    yield({ "exclude" => [] }, "~/.hoerc")
   end
 end

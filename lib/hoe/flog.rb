@@ -29,7 +29,7 @@ module Hoe::Flog
 
   def define_flog_tasks
     begin
-      require 'flog_task'
+      require "flog_task"
       FlogTask.new :flog, self.flog_threshold, nil, self.flog_method
     rescue LoadError
       # skip

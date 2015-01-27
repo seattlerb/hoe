@@ -1,14 +1,14 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'hoe'
+require "rubygems"
+require "minitest/autorun"
+require "hoe"
 
 class TestHoePublish < Minitest::Test
   def setup
-    @hoe = Hoe.spec 'blah' do
-      self.version = '1.0'
+    @hoe = Hoe.spec "blah" do
+      self.version = "1.0"
 
-      developer 'author', ''
-      license 'MIT'
+      developer "author", ""
+      license "MIT"
     end
   end
 

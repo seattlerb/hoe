@@ -1,4 +1,4 @@
-require 'rake'
+require "rake"
 
 module Hoe::Gemcutter
   include Rake::DSL if defined?(Rake::DSL)

@@ -1,8 +1,8 @@
 begin
-  require 'rubygems/package_task'
+  require "rubygems/package_task"
 rescue LoadError
   # rake/gempackagetask will go away some day
-  require 'rake/gempackagetask'
+  require "rake/gempackagetask"
   Gem::PackageTask = Rake::GemPackageTask
 end
 
@@ -46,12 +46,12 @@ module Hoe::Package
       pkg.need_zip = @need_zip
     end
 
-    desc 'Install the package as a gem. (opt. NOSUDO=1)'
+    desc "Install the package as a gem. (opt. NOSUDO=1)"
     task :install_gem => [:clean, :package, :check_extra_deps] do
-      install_gem Dir['pkg/*.gem'].first
+      install_gem Dir["pkg/*.gem"].first
     end
 
-    desc 'Package and upload; Requires VERSION=x.y.z (optional PRE=a.1)'
+    desc "Package and upload; Requires VERSION=x.y.z (optional PRE=a.1)"
     task :release => [:prerelease, :release_to, :postrelease]
 
     # no doco, invisible hook
@@ -69,7 +69,7 @@ module Hoe::Package
     task :release_sanity do
       v = ENV["VERSION"] or abort "Must supply VERSION=x.y.z"
 
-      pre = ENV['PRERELEASE'] || ENV['PRE']
+      pre = ENV["PRERELEASE"] || ENV["PRE"]
       v += ".#{pre}" if pre
 
       abort "Versions don't match #{v} vs #{version}" if v != version
@@ -89,11 +89,11 @@ module Hoe::Package
 
   def install_gem name, version = nil, rdoc=true
     should_not_sudo = Hoe::WINDOZE || ENV["NOSUDO"] || File.writable?(Gem.dir)
-    null_dev = Hoe::WINDOZE ? '> NUL 2>&1' : '> /dev/null 2>&1'
+    null_dev = Hoe::WINDOZE ? "> NUL 2>&1" : "> /dev/null 2>&1"
 
-    gem_cmd = Gem.default_exec_format % 'gem'
-    sudo    = 'sudo '                  unless should_not_sudo
-    local   = '--local'                unless version
+    gem_cmd = Gem.default_exec_format % "gem"
+    sudo    = "sudo "                  unless should_not_sudo
+    local   = "--local"                unless version
     version = "--version '#{version}'" if     version
 
     cmd  = "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
@@ -105,7 +105,7 @@ module Hoe::Package
   end
 
   def prerelease_version # :nodoc:
-    pre = ENV['PRERELEASE'] || ENV['PRE']
+    pre = ENV["PRERELEASE"] || ENV["PRE"]
     if pre then
       spec.version.version << "." << pre if pre
 

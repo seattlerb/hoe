@@ -1,4 +1,4 @@
-require 'rbconfig'
+require "rbconfig"
 
 ##
 # Hoe allows bundling of pre-compiled extensions in the +package+ task.
@@ -35,20 +35,20 @@ module Hoe::Inline
   def define_inline_tasks
     task :test => :clean
 
-    if ENV['INLINE'] then
-      s.platform = ENV['FORCE_PLATFORM'] || Gem::Platform::CURRENT
+    if ENV["INLINE"] then
+      s.platform = ENV["FORCE_PLATFORM"] || Gem::Platform::CURRENT
 
       # Try collecting Inline extensions for +name+
       if defined?(Inline) then
-        directory 'lib/inline'
+        directory "lib/inline"
 
-        dlext = RbConfig::CONFIG['DLEXT']
+        dlext = RbConfig::CONFIG["DLEXT"]
 
         Inline.registered_inline_classes.each do |cls|
-          name = cls.name.gsub(/::/, '')
+          name = cls.name.gsub(/::/, "")
           # name of the extension is CamelCase
           alternate_name = if name =~ /[A-Z]/ then
-                             name.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, '')
+                             name.gsub(/([A-Z])/, '_\1').downcase.sub(/^_/, "")
                            elsif name =~ /_/ then
                              name.capitalize.gsub(/_([a-z])/) { $1.upcase }
                            end

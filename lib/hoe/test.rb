@@ -30,7 +30,7 @@ module Hoe::Test
   # this is an unfortunate naming collision. I don't use the CPU (N)
   # specifier so it is shifting to "C" inside of Hoe.
   ENV.delete "N" if ENV["N"]
-  ENV["N"] = ENV['C'] if ENV['C']
+  ENV["N"] = ENV["C"] if ENV["C"]
 
   ##
   # Optional: Array of incompatible versions for multiruby filtering.
@@ -78,28 +78,28 @@ module Hoe::Test
     task :test
 
     if File.directory? "test" then
-      desc 'Run the test suite. Use FILTER or TESTOPTS to add flags/args.'
+      desc "Run the test suite. Use FILTER or TESTOPTS to add flags/args."
       task :test do
         ruby make_test_cmd
       end
 
-      desc 'Print out the test command. Good for profiling and other tools.'
+      desc "Print out the test command. Good for profiling and other tools."
       task :test_cmd do
         puts make_test_cmd
       end
 
-      desc 'Run the test suite using multiruby.'
+      desc "Run the test suite using multiruby."
       task :multi do
         ENV["EXCLUDED_VERSIONS"] = multiruby_skip.join(":")
         system "multiruby -S rake"
       end
 
-      desc 'Show which test files fail when run alone.'
+      desc "Show which test files fail when run alone."
       task :test_deps do
         tests = Dir[*self.test_globs].uniq
 
-        paths = ['bin', 'lib', 'test'].join(File::PATH_SEPARATOR)
-        null_dev = Hoe::WINDOZE ? '> NUL 2>&1' : '> /dev/null 2>&1'
+        paths = ["bin", "lib", "test"].join(File::PATH_SEPARATOR)
+        null_dev = Hoe::WINDOZE ? "> NUL 2>&1" : "> /dev/null 2>&1"
 
         tests.each do |test|
           if not system "ruby -I#{paths} #{test} #{null_dev}" then
@@ -128,7 +128,7 @@ module Hoe::Test
       end
     end
 
-    desc 'Run the default task(s).'
+    desc "Run the default task(s)."
     task :default => default_tasks
 
     unless default_tasks.empty? then
@@ -154,7 +154,7 @@ module Hoe::Test
       file "#{pkg}.gem" => turd
     end
 
-    desc 'Run ZenTest against the package.'
+    desc "Run ZenTest against the package."
     task :audit do
       libs = %w(lib test ext).join(File::PATH_SEPARATOR)
       sh "zentest -I=#{libs} #{spec.files.grep(/^(lib|test)/).join(' ')}"
@@ -186,7 +186,7 @@ module Hoe::Test
   # Attempt to load RSpec 2, returning true if successful
 
   def try_loading_rspec2
-    require 'rspec/core/rake_task'
+    require "rspec/core/rake_task"
 
     desc "Run all specifications"
     RSpec::Core::RakeTask.new(:spec) do |t|
@@ -205,7 +205,7 @@ module Hoe::Test
   # Attempt to load RSpec 1, returning true if successful
 
   def try_loading_rspec1
-    require 'spec/rake/spectask'
+    require "spec/rake/spectask"
 
     desc "Run all specifications"
     Spec::Rake::SpecTask.new(:spec) do |t|

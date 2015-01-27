@@ -1,6 +1,6 @@
-require 'minitest/autorun'
-require 'hoe'
-require 'tempfile'
+require "minitest/autorun"
+require "hoe"
+require "tempfile"
 
 class Hoe
   def self.files= x
@@ -59,22 +59,22 @@ class TestHoe < Minitest::Test
   def test_activate_plugins
     initializers = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
 
-    assert_includes initializers, 'initialize_package'
-    assert_includes initializers, 'initialize_publish'
-    assert_includes initializers, 'initialize_test'
+    assert_includes initializers, "initialize_package"
+    assert_includes initializers, "initialize_publish"
+    assert_includes initializers, "initialize_test"
   end
 
   def test_activate_plugins_hoerc
-    home = ENV['HOME']
+    home = ENV["HOME"]
     load_path = $LOAD_PATH.dup
     Hoe.files = nil
 
     Dir.mktmpdir do |path|
-      ENV['HOME'] = path
+      ENV["HOME"] = path
       $LOAD_PATH << path
 
-      Dir.mkdir File.join(path, 'hoe')
-      open File.join(path, 'hoe', 'hoerc.rb'), 'w' do |io|
+      Dir.mkdir File.join(path, "hoe")
+      open File.join(path, "hoe", "hoerc.rb"), "w" do |io|
         io.write <<-EOM
           module Hoe::Hoerc
             def initialize_hoerc; end
@@ -83,11 +83,11 @@ class TestHoe < Minitest::Test
         EOM
       end
 
-      write_hoerc path, 'plugins' => %w[hoerc]
+      write_hoerc path, "plugins" => %w[hoerc]
 
       methods = hoe.methods.grep(/^initialize/).map { |s| s.to_s }
 
-      assert_includes methods, 'initialize_hoerc'
+      assert_includes methods, "initialize_hoerc"
       assert_includes Hoe.plugins, :hoerc
     end
   ensure
@@ -95,21 +95,21 @@ class TestHoe < Minitest::Test
   end
 
   def test_have_gem_eh
-    assert hoe.have_gem? 'rake'
-    refute hoe.have_gem? 'nonexistent'
+    assert hoe.have_gem? "rake"
+    refute hoe.have_gem? "nonexistent"
   end
 
   def test_initialize_plugins_hoerc
-    home = ENV['HOME']
+    home = ENV["HOME"]
     load_path = $LOAD_PATH.dup
     Hoe.files = nil
 
     Dir.mktmpdir do |path|
-      ENV['HOME'] = path
+      ENV["HOME"] = path
       $LOAD_PATH << path
 
-      Dir.mkdir File.join(path, 'hoe')
-      open File.join(path, 'hoe', 'hoerc.rb'), 'w' do |io|
+      Dir.mkdir File.join(path, "hoe")
+      open File.join(path, "hoe", "hoerc.rb"), "w" do |io|
         io.write <<-EOM
           module Hoe::Hoerc
             def initialize_hoerc; @hoerc_plugin_initialized = true; end
@@ -118,10 +118,10 @@ class TestHoe < Minitest::Test
         EOM
       end
 
-      write_hoerc path, 'plugins' => %w[hoerc]
+      write_hoerc path, "plugins" => %w[hoerc]
 
       methods = hoe.instance_variables.map(&:to_s)
-      assert_includes(methods, '@hoerc_plugin_initialized',
+      assert_includes(methods, "@hoerc_plugin_initialized",
                       "Hoerc plugin wasn't initialized")
       assert_includes Hoe.plugins, :hoerc
     end
@@ -130,7 +130,7 @@ class TestHoe < Minitest::Test
   end
 
   def write_hoerc path, data
-    open File.join(path, '.hoerc'), 'w' do |io|
+    open File.join(path, ".hoerc"), "w" do |io|
       io.write YAML.dump data
     end
   end
@@ -140,23 +140,23 @@ class TestHoe < Minitest::Test
     Hoe.plugins.delete :hoerc
     Hoe.send :remove_const, :Hoerc
     $LOAD_PATH.replace load_path
-    ENV['HOME'] = home
+    ENV["HOME"] = home
   end
 
   def test_initialize_intuit
     Dir.mktmpdir do |path|
       Dir.chdir path do
-        open 'Manifest.txt', 'w' do |io| # sorted
-          io.puts 'FAQ.rdoc'
-          io.puts 'History.rdoc'
-          io.puts 'README.rdoc'
+        open "Manifest.txt", "w" do |io| # sorted
+          io.puts "FAQ.rdoc"
+          io.puts "History.rdoc"
+          io.puts "README.rdoc"
         end
 
-        open 'README.rdoc',  'w' do |io| io.puts '= blah' end
-        open 'History.rdoc', 'w' do |io| io.puts '=== 1.0' end
+        open "README.rdoc",  "w" do |io| io.puts "= blah" end
+        open "History.rdoc", "w" do |io| io.puts "=== 1.0" end
 
-        assert_equal 'History.rdoc', hoe.history_file
-        assert_equal 'README.rdoc', hoe.readme_file
+        assert_equal "History.rdoc", hoe.history_file
+        assert_equal "README.rdoc", hoe.readme_file
         assert_equal %w[FAQ.rdoc History.rdoc README.rdoc],
                      hoe.spec.extra_rdoc_files
       end
@@ -166,28 +166,28 @@ class TestHoe < Minitest::Test
   def test_initialize_intuit_ambiguous
     Dir.mktmpdir do |path|
       Dir.chdir path do
-        open 'Manifest.txt', 'w' do |io|
-          io.puts 'History.rdoc' # sorted
-          io.puts 'README.ja.rdoc'
-          io.puts 'README.rdoc'
+        open "Manifest.txt", "w" do |io|
+          io.puts "History.rdoc" # sorted
+          io.puts "README.ja.rdoc"
+          io.puts "README.rdoc"
         end
 
-        open 'README.rdoc',    'w' do |io| io.puts '= blah' end
-        open 'README.ja.rdoc', 'w' do |io| io.puts '= blah' end
-        open 'History.rdoc',   'w' do |io| io.puts '=== 1.0' end
+        open "README.rdoc",    "w" do |io| io.puts "= blah" end
+        open "README.ja.rdoc", "w" do |io| io.puts "= blah" end
+        open "History.rdoc",   "w" do |io| io.puts "=== 1.0" end
 
-        assert_equal 'README.ja.rdoc', hoe(:skip_files).readme_file
+        assert_equal "README.ja.rdoc", hoe(:skip_files).readme_file
       end
     end
   end
 
   def test_file_read_utf
-    Tempfile.open 'BOM' do |io|
+    Tempfile.open "BOM" do |io|
       io.write "\xEF\xBB\xBFBOM"
       io.rewind
 
       content = File.read_utf io.path
-      assert_equal 'BOM', content
+      assert_equal "BOM", content
 
       if content.respond_to? :encoding then
         assert_equal Encoding::UTF_8, content.encoding
@@ -231,7 +231,7 @@ class TestHoe < Minitest::Test
     t = Gem::Specification::TODAY
 
     hoe = self.hoe do
-      self.version = '1.2.3'
+      self.version = "1.2.3"
     end
 
     files = File.read("Manifest.txt").split(/\n/) + [".gemtest"]
@@ -251,20 +251,20 @@ class TestHoe < Minitest::Test
 
     text_files = files.grep(/(txt|rdoc)$/).reject { |f| f =~ /template/ }
 
-    assert_equal 'blah', spec.name
-    assert_equal '1.2.3', spec.version.to_s
-    assert_equal '>= 0', spec.required_rubygems_version.to_s
+    assert_equal "blah", spec.name
+    assert_equal "1.2.3", spec.version.to_s
+    assert_equal ">= 0", spec.required_rubygems_version.to_s
 
-    assert_equal ['author'], spec.authors
+    assert_equal ["author"], spec.authors
     assert_equal t, spec.date
     assert_match(/Hoe.*Rakefiles/, spec.description)
-    assert_equal ['email'], spec.email
-    assert_equal ['sow'], spec.executables
+    assert_equal ["email"], spec.email
+    assert_equal ["sow"], spec.executables
     assert_equal text_files, spec.extra_rdoc_files
     assert_equal files.sort, spec.files.sort
     assert_equal urls["home"], spec.homepage
-    assert_equal ['--main', 'README.rdoc'], spec.rdoc_options
-    assert_equal ['lib'], spec.require_paths
+    assert_equal ["--main", "README.rdoc"], spec.rdoc_options
+    assert_equal ["lib"], spec.require_paths
     assert_equal Gem::RubyGemsVersion, spec.rubygems_version
     assert_match(/^Hoe.*Rakefiles$/, spec.summary)
 
@@ -297,8 +297,8 @@ class TestHoe < Minitest::Test
 
   def test_multiple_calls_to_license
     hoe = self.hoe :skip_license do
-      license 'MIT'
-      license 'GPL-2'
+      license "MIT"
+      license "GPL-2"
     end
 
     spec = hoe.spec
@@ -308,7 +308,7 @@ class TestHoe < Minitest::Test
 
   def test_setting_licenses
     hoe = self.hoe :skip_license do
-      self.licenses = ['MIT', 'GPL-2']
+      self.licenses = ["MIT", "GPL-2"]
     end
 
     spec = hoe.spec
@@ -327,7 +327,7 @@ class TestHoe < Minitest::Test
   end
 
   def test_read_manifest
-    expected = File.read_utf('Manifest.txt').split
+    expected = File.read_utf("Manifest.txt").split
 
     assert_equal expected, hoe.read_manifest
   end
@@ -335,12 +335,12 @@ class TestHoe < Minitest::Test
   def test_rename
     # project, file_name, klass, test_klass = Hoe.normalize_names 'project_name'
 
-    assert_equal %w(    word      word     Word    TestWord),           Hoe.normalize_names('word')
-    assert_equal %w(    word      word     Word    TestWord),           Hoe.normalize_names('Word')
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names('TwoWords')
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names('twoWords')
-    assert_equal %w(two-words two/words Two::Words TestTwo::TestWords), Hoe.normalize_names('two-words')
-    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names('two_words')
+    assert_equal %w(    word      word     Word    TestWord),           Hoe.normalize_names("word")
+    assert_equal %w(    word      word     Word    TestWord),           Hoe.normalize_names("Word")
+    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names("TwoWords")
+    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names("twoWords")
+    assert_equal %w(two-words two/words Two::Words TestTwo::TestWords), Hoe.normalize_names("two-words")
+    assert_equal %w(two_words two_words TwoWords   TestTwoWords),       Hoe.normalize_names("two_words")
   end
 
   def test_nosudo
@@ -350,40 +350,40 @@ class TestHoe < Minitest::Test
       end
     end
 
-    assert_match(/^(sudo )?(j|maglev-)?gem.*/, hoe.install_gem('foo'))
-    ENV['NOSUDO'] = '1'
-    assert_match(/^(j|maglev-)?gem.*/, hoe.install_gem('foo'))
+    assert_match(/^(sudo )?(j|maglev-)?gem.*/, hoe.install_gem("foo"))
+    ENV["NOSUDO"] = "1"
+    assert_match(/^(j|maglev-)?gem.*/, hoe.install_gem("foo"))
   ensure
     ENV.delete "NOSUDO"
   end
 
   def test_with_config_default
-    home = ENV['HOME']
+    home = ENV["HOME"]
     Hoe.files = nil
 
     Dir.mktmpdir do |path|
-      ENV['HOME'] = path
+      ENV["HOME"] = path
 
       hoeconfig = hoe.with_config {|config, _| config }
 
       assert_equal Hoe::DEFAULT_CONFIG, hoeconfig
     end
   ensure
-    ENV['HOME'] = home
+    ENV["HOME"] = home
   end
 
   def test_with_config_overrides
     overrides = {
-      'exclude' => Regexp.union( Hoe::DEFAULT_CONFIG["exclude"], /\.hg/ ),
-      'plugins' => ['tweedledee', 'tweedledum']
+      "exclude" => Regexp.union( Hoe::DEFAULT_CONFIG["exclude"], /\.hg/ ),
+      "plugins" => ["tweedledee", "tweedledum"]
     }
-    overrides_rcfile = File.join(Dir.pwd, '.hoerc')
+    overrides_rcfile = File.join(Dir.pwd, ".hoerc")
 
-    home = ENV['HOME']
+    home = ENV["HOME"]
     Hoe.files = nil
 
     Dir.mktmpdir do |path|
-      ENV['HOME'] = path
+      ENV["HOME"] = path
 
       write_hoerc path, Hoe::DEFAULT_CONFIG
 
@@ -397,6 +397,6 @@ class TestHoe < Minitest::Test
     end
   ensure
     File.delete overrides_rcfile if File.exist?( overrides_rcfile )
-    ENV['HOME'] = home
+    ENV["HOME"] = home
   end
 end
