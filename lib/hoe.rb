@@ -116,7 +116,7 @@ class Hoe
   # this on load.
 
   DEFAULT_CONFIG = {
-    "exclude" => /tmp$|CVS|\.svn|TAGS|extconf.h|\.o$|\.log$/,
+    "exclude" => /\/tmp\/|CVS|\.svn|\.git|TAGS|extconf.h|\.bundle$|\.o$|\.log$/,
   }
 
   ##

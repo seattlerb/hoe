@@ -91,9 +91,11 @@ abort "Project #{project} seems to exist" if File.directory? project
 
 _, file_name, klass, test_klass = Hoe.normalize_names project
 ext_name = File.basename file_name # minitest/plugin => plugin
+so_name = RbConfig::CONFIG["DLEXT"]
 
 klass = klass           # quell unused warnings if they're not used in templates
 test_klass = test_klass # ditto
+so_name = so_name       # ditto
 
 FileUtils.cp_r template_path, project
 

@@ -24,17 +24,22 @@ module Hoe::Compiler
 
   def initialize_compiler
     self.compile_tasks = [:multi, :test, :check_manifest]
-    self.spec_extras   = { :extensions => ["ext/#{self.name}/extconf.rb"] }
-
-    clean_globs << "lib/#{self.name}/*.{so,bundle,dll}"
   end
 
   ##
   # Activate the rake-compiler dependencies.
 
   def activate_compiler_deps
-    dependency "rake-compiler", "~> 0.7", :development
-    gem "rake-compiler", "~> 0.7"
+    dependency "rake-compiler", "~> 0.9", :development
+
+    gem "rake-compiler", "~> 0.9"
+  rescue LoadError
+    warn "Couldn't load rake-compiler. Skipping. Run `rake newb` to fix."
+  end
+
+  def extension name
+    @extensions ||= []
+    @extensions << name
   end
 
   ##
@@ -43,12 +48,20 @@ module Hoe::Compiler
   def define_compiler_tasks
     require "rake/extensiontask"
 
-    Rake::ExtensionTask.new self.name, spec do |ext|
-      ext.lib_dir = File.join(*["lib", self.name, ENV["FAT_DIR"]].compact)
+    @extensions.each do |name|
+      clean_globs << "lib/#{name}/*.{so,bundle,dll}"
+
+      Rake::ExtensionTask.new name, spec do |ext|
+        ext.lib_dir = File.join(*["lib", name.to_s, ENV["FAT_DIR"]].compact)
+      end
     end
+
+    spec_extras[:extensions] = @extensions.map! { |name| "ext/#{name}/extconf.rb" }
 
     compile_tasks.each do |t|
       task t => :compile
     end
+  rescue LoadError
+    warn "Couldn't load rake-compiler. Skipping. Run `rake newb` to fix."
   end
 end

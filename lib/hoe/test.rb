@@ -131,29 +131,6 @@ module Hoe::Test
     desc "Run the default task(s)."
     task :default => default_tasks
 
-    unless default_tasks.empty? then
-      ##
-      # This is for Erik Hollensbe's rubygems-test project. Hoe is
-      # test-happy, so by using this plugin you're already testable. For
-      # more information, see: <https://github.com/erikh/rubygems-test>
-      # and/or <http://www.gem-testers.org/>
-
-      gemtest = ".gemtest"
-
-      gemtest.encode!(Encoding::UTF_8) if gemtest.respond_to?(:encoding)
-
-      self.spec.files += [gemtest]
-
-      pkg  = pkg_path
-      turd = "#{pkg}/.gemtest"
-
-      file turd => pkg_path do
-        touch turd
-      end
-
-      file "#{pkg}.gem" => turd
-    end
-
     desc "Run ZenTest against the package."
     task :audit do
       libs = %w[lib test ext].join(File::PATH_SEPARATOR)
