@@ -109,7 +109,7 @@ module Hoe::Package
 
     return unless pre
 
-    spec.version.version << "." << pre if pre
+    spec.version = "#{spec.version}.#{pre}"
 
     abort "ERROR: You should format PRE like pre or alpha.1 or something" if
       (Gem::VERSION < "1.4"  and pre !~ /^[a-z]+(\.\d+)?$/) or
