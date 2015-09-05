@@ -1,3 +1,10 @@
+=== X.YY.Z / YYYY-MM-DD
+
+* 1 major enhancement:
+
+  * Added plugin-based template discovery to sow.
+  * Added known-template listing to sow.
+
 === 3.13.1 / 2015-02-03
 
 * 1 bug fix:

@@ -45,7 +45,7 @@ require "hoe/rake"
 #
 # Hoe maintains a config file for cross-project values. The file is
 # located at <tt>~/.hoerc</tt>. The file is a YAML formatted config file with
-# the following settings (extended by plugins):
+# the following settings (extended by plug-ins):
 #
 # exclude:: A regular expression of files to exclude from +check_manifest+.
 #
@@ -53,7 +53,7 @@ require "hoe/rake"
 #
 # == Extending Hoe
 #
-# Hoe can be extended via its plugin system. Hoe searches out all
+# Hoe can be extended via its plug-in system. Hoe searches out all
 # installed files matching <tt>'hoe/*.rb'</tt> and loads them. Those
 # files are expected to define a module matching the file name. The
 # module must define a define task method and can optionally define an
@@ -69,7 +69,7 @@ require "hoe/rake"
 #     end
 #   end
 #
-# === Hoe Plugin Loading Sequence
+# === Hoe Plug-in Loading Sequence
 #
 #   Hoe.spec
 #     Hoe.load_plugins
@@ -85,6 +85,22 @@ require "hoe/rake"
 #       define_spec # gemspec, not hoespec
 #       load_plugin_tasks
 #       add_dependencies
+#
+# === Sow Template Plug-ins
+#
+# <tt>`sow`</tt> can be extended to offer other templates by defining a
+# templates method. The method must be named to match the file and must
+# return the directory that contains templates provided by the plug-in.
+#
+#   module Hoe::Blah
+#     def templates_blah
+#       File.join(File.dirname(__FILE__), 'templates')
+#     end
+#   end
+#
+# <tt>`sow`</tt> will add these templates to those found in found in
+# '~/.hoe_template' and the default template provided by Hoe itself. The
+# name of the templates will be formatted as <tt>'blah-name'</tt>.
 
 class Hoe
 
@@ -293,18 +309,27 @@ class Hoe
   end
 
   ##
+  # Find all plugin files.
+  def self.find_plugins
+    @found ||= {}
+    @files ||= Gem.find_files "hoe/*.rb"
+
+    @files.reverse.each do |path|
+      @found[File.basename(path, ".rb").intern] = path
+    end
+
+    return @found
+  end
+
+  ##
   # Find and load all plugin files.
   #
   # It is called at the end of hoe.rb
 
   def self.load_plugins plugins = Hoe.plugins
-    @found  ||= {}
     @loaded ||= {}
-    @files  ||= Gem.find_files "hoe/*.rb"
 
-    @files.reverse.each do |path|
-      @found[File.basename(path, ".rb").intern] = path
-    end
+    find_plugins
 
     :keep_doing_this while @found.map { |name, plugin|
       next unless plugins.include? name
