@@ -35,5 +35,6 @@ template/test/test_file_name.rb.erb
 test/test_hoe.rb
 test/test_hoe_debug.rb
 test/test_hoe_gemcutter.rb
+test/test_hoe_package.rb
 test/test_hoe_publish.rb
 test/test_hoe_test.rb
