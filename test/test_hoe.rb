@@ -234,7 +234,7 @@ class TestHoe < Minitest::Test
       self.version = "1.2.3"
     end
 
-    files = File.read("Manifest.txt").split(/\n/) + [".gemtest"]
+    files = File.read("Manifest.txt").split(/\n/)
 
     spec = hoe.spec
 
