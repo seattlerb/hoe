@@ -1,3 +1,17 @@
+=== 3.14.0 / 2015-09-12
+
+* 5 minor enhancements:
+
+  * Added so_name variable to bin/sow for using hoe w/ c-extensions.
+  * Default config now excludes tmp, .git, and .bundle.
+  * Extended :compiler plugin to define #extension for hoe spec decls.
+  * Failures to detect/load rake-compiler are handled gracefully.
+  * Removed generation of synthesized .gemtest file. Dead.
+
+* 1 bug fix:
+
+  * Fix PRERELEASE= for packaging against newer versions of rubygems. (drbrain)
+
 === 3.13.1 / 2015-02-03
 
 * 1 bug fix:
