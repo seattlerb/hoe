@@ -33,7 +33,7 @@ module Hoe::Inline
   # Define tasks for plugin.
 
   def define_inline_tasks
-    task :test => :clean
+    task test: :clean
 
     return unless ENV["INLINE"]
 

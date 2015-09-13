@@ -42,7 +42,7 @@ module Hoe::Racc
     # -l = no-line-convert (they don't ever line up anyhow)
     self.racc_flags ||= "-v -l"
     self.oedipus_options ||= {
-                              :do_parse => false,
+                              do_parse: false,
                              }
   end
 
@@ -89,13 +89,13 @@ module Hoe::Racc
     task :isolate # stub task
 
     desc "build the parser" unless parser_files.empty?
-    task :parser => :isolate
+    task parser: :isolate
 
     desc "build the lexer" unless lexer_files.empty?
-    task :lexer  => :isolate
+    task lexer: :isolate
 
-    task :parser => parser_files
-    task :lexer  => lexer_files
+    task parser: parser_files
+    task lexer: lexer_files
 
     racc_tasks.each do |t|
       task t => [:parser, :lexer]

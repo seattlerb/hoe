@@ -47,12 +47,12 @@ module Hoe::Package
     end
 
     desc "Install the package as a gem. (opt. NOSUDO=1)"
-    task :install_gem => [:clean, :package, :check_extra_deps] do
+    task install_gem: [:clean, :package, :check_extra_deps] do
       install_gem Dir["pkg/*.gem"].first
     end
 
     desc "Package and upload; Requires VERSION=x.y.z (optional PRE=a.1)"
-    task :release => [:prerelease, :release_to, :postrelease]
+    task release: [:prerelease, :release_to, :postrelease]
 
     # no doco, invisible hook
     task :prerelease do
