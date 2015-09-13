@@ -357,6 +357,32 @@ class TestHoe < Minitest::Test
     ENV.delete "NOSUDO"
   end
 
+  def test_extensions
+    Hoe.plugin :compiler
+    Hoe.load_plugins
+
+    hoe = nil
+
+    capture_io do
+      hoe = self.hoe do
+        extension "a"
+      end
+    end
+
+    assert_equal %w[ext/a/extconf.rb], hoe.spec.extensions
+
+    @hoe = nil # clear cache
+
+    capture_io do
+      hoe = self.hoe do
+        extension "a"
+        extension "b"
+      end
+    end
+
+    assert_equal %w[ext/a/extconf.rb ext/b/extconf.rb], hoe.spec.extensions
+  end
+
   def test_with_config_default
     home = ENV["HOME"]
     Hoe.files = nil

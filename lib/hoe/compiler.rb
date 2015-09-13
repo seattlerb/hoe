@@ -40,7 +40,7 @@ module Hoe::Compiler
   def extension name
     @extensions ||= []
     @extensions << name
-    spec_extras[:extensions] = @extensions.map! { |name| "ext/#{name}/extconf.rb" }
+    spec_extras[:extensions] = @extensions.map { |n| "ext/#{n}/extconf.rb" }
   end
 
   ##
