@@ -40,6 +40,7 @@ module Hoe::Compiler
   def extension name
     @extensions ||= []
     @extensions << name
+    spec_extras[:extensions] = @extensions.map! { |name| "ext/#{name}/extconf.rb" }
   end
 
   ##
@@ -55,8 +56,6 @@ module Hoe::Compiler
         ext.lib_dir = File.join(*["lib", name.to_s, ENV["FAT_DIR"]].compact)
       end
     end
-
-    spec_extras[:extensions] = @extensions.map! { |name| "ext/#{name}/extconf.rb" }
 
     compile_tasks.each do |t|
       task t => :compile
