@@ -1,3 +1,9 @@
+=== 3.14.1 / 2015-09-13
+
+* 1 bug fix:
+
+  * *sigh* fixed bug setting up extensions data for spec.
+
 === 3.14.0 / 2015-09-12
 
 * 5 minor enhancements:
