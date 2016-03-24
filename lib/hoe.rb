@@ -833,6 +833,48 @@ class Hoe
   end
 
   ##
+  # Declare that this gem requires ruby to be in the 1.8+ family.
+
+  def ruby18!
+    require_ruby_version "~> 1.8"
+  end
+
+  ##
+  # Declare that this gem requires ruby to be in the 1.9 family.
+
+  def ruby19!
+    require_ruby_version "~> 1.9"
+  end
+
+  ##
+  # Declare that this gem requires ruby to be in the 2.0+ family.
+
+  def ruby20!
+    require_ruby_version "~> 2.0"
+  end
+
+  ##
+  # Declare that this gem requires ruby to be in the 2.1+ family.
+
+  def ruby21!
+    require_ruby_version "~> 2.1"
+  end
+
+  ##
+  # Declare that this gem requires ruby to be in the 2.2+ family.
+
+  def ruby22!
+    require_ruby_version "~> 2.2"
+  end
+
+  ##
+  # Declare that this gem requires ruby to be in the 2.3+ family.
+
+  def ruby23!
+    require_ruby_version "~> 2.3"
+  end
+
+  ##
   # Provide a linear degrading value from n to m over start to finis
   # dates. If not provided, start and finis will default to 1/1 and
   # 12/31 of the current year.
