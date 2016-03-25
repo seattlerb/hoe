@@ -206,7 +206,7 @@ module Hoe::Publish
     title = "#{group_name}'s #{title}" if group_name != name
     rdoc  = Gem.bin_wrapper "rdoc"
 
-    unless File.exists? rdoc then
+    unless File.exist? rdoc then
       warn "Can't find #{rdoc}. Falling back."
       rdoc = "rdoc"
     end
