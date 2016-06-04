@@ -57,6 +57,7 @@ module Hoe::Deps
         name, req, = dep
 
         install_gem name, req, false
+        gem(*dep)
       end
     end
   end
