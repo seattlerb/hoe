@@ -1,3 +1,9 @@
+=== 3.15.1 / 2016-06-15
+
+* 1 bug fix:
+
+  * rake newb does a better job of activating gems it had to install. (duckinator)
+
 === 3.15.0 / 2016-03-25
 
 * 1 minor enhancement:
