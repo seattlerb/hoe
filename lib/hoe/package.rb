@@ -101,7 +101,7 @@ module Hoe::Package
     cmd += " #{null_dev}" unless Rake.application.options.trace
 
     puts cmd if Rake.application.options.trace
-    system cmd
+    system(cmd).tap { Gem::Specification.reset }
   end
 
   def prerelease_version # :nodoc:
