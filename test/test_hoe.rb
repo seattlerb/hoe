@@ -11,7 +11,7 @@ end
 $rakefile = nil # shuts up a warning in rdoctask.rb
 
 class TestHoe < Minitest::Test
-  def hoe(*skips, &b)
+  def hoe *skips, &b
     @hoe ||= Hoe.spec "blah" do
       developer "author", "email"
       license "MIT"                      unless skips.include? :skip_license
