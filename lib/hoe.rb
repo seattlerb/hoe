@@ -413,7 +413,6 @@ class Hoe
     end
 
     initialize_plugins
-    activate_plugin_deps
   end
 
   ##
@@ -802,6 +801,7 @@ class Hoe
   # Finalize configuration
 
   def post_initialize
+    activate_plugin_deps
     intuit_values
     validate_fields
     define_spec
