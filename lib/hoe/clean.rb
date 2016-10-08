@@ -23,6 +23,9 @@ module Hoe::Clean
   # Define tasks for plugin.
 
   def define_clean_tasks
+    task :clobber_docs # no-op, just in case
+    task :clobber_package # no-op, just in case
+
     desc "Clean up all the extras."
     task :clean => [ :clobber_docs, :clobber_package ] do
       clean_globs.each do |pattern|
