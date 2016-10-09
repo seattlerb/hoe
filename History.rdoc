@@ -1,3 +1,10 @@
+=== 3.15.2 / 2016-10-09
+
+* 2 bug fixes:
+
+  * Add noop clobber_docs and clobber_package tasks in case they are disabled.
+  * Moved activate_plugin_deps to post_initialize.
+
 === 3.15.1 / 2016-06-15
 
 * 1 bug fix:
