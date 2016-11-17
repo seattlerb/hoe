@@ -1,3 +1,9 @@
+=== 3.15.3 / 2016-11-17
+
+* 1 bug fix:
+
+  * Call Gem::Specification.reset after installing a gem. (segiddins)
+
 === 3.15.2 / 2016-10-09
 
 * 2 bug fixes:
