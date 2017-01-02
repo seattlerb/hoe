@@ -211,7 +211,8 @@ module Hoe::Publish
       rdoc = "rdoc"
     end
 
-    %W[#{rdoc}
+    %W[#{Gem.ruby}
+       #{rdoc}
        --title #{title}
        -o #{local_rdoc_dir}
       ] +
