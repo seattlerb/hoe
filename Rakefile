@@ -47,4 +47,9 @@ task :docs do
   sh "chmod ug+w doc/Hoe.pdf"
 end
 
+desc "Installs the gem"
+task :install => :gem do
+  sh "gem install pkg/hoe-#{Hoe::VERSION}.gem --no-rdoc --no-ri"
+end
+
 # vim: syntax=ruby
