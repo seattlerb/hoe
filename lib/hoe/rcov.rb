@@ -20,7 +20,7 @@ module Hoe::RCov
   def define_rcov_tasks
     task :isolate # ensure it exists
 
-    task :rcov => :isolate do
+    task rcov: :isolate do
       sh(*make_rcov_cmd)
     end
 
@@ -28,7 +28,7 @@ module Hoe::RCov
       rm_rf "coverage"
     end
 
-    task :clobber => :clobber_rcov
+    task clobber: :clobber_rcov
 
     # this is for my emacs rcov overlay stuff on emacswiki.
     task :rcov_overlay do
@@ -65,4 +65,4 @@ module Hoe::RCov
   end
 end
 
-task :clean => :clobber_rcov
+task clean: :clobber_rcov

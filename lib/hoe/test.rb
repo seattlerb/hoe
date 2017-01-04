@@ -14,9 +14,9 @@ module Hoe::Test
   # Configuration for the supported test frameworks for test task.
 
   SUPPORTED_TEST_FRAMEWORKS = {
-    :testunit => "test/unit",
-    :minitest => "minitest/autorun",
-    :none     => nil,
+    testunit: "test/unit",
+    minitest: "minitest/autorun",
+    none: nil,
   }
 
   ##
@@ -129,7 +129,7 @@ module Hoe::Test
     end
 
     desc "Run the default task(s)."
-    task :default => default_tasks
+    task default: default_tasks
 
     desc "Run ZenTest against the package."
     task :audit do

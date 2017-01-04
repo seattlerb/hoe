@@ -111,12 +111,12 @@ module Hoe::Publish
       task :isolate # ensure it exists
 
       desc "Generate rdoc"
-      task :docs => [:clobber_docs, :isolate] do
+      task docs: [:clobber_docs, :isolate] do
         sh(*make_rdoc_cmd)
       end
 
       desc "Generate rdoc coverage report"
-      task :dcov => :isolate do
+      task dcov: :isolate do
         sh(*make_rdoc_cmd("-C"))
       end
 
@@ -125,16 +125,16 @@ module Hoe::Publish
         rm_rf local_rdoc_dir
       end
 
-      task :clobber => :clobber_docs
+      task clobber: :clobber_docs
 
       desc "Generate ri locally for testing."
-      task :ridocs => [:clean, :isolate] do
+      task ridocs: [:clean, :isolate] do
         ruby(*make_rdoc_cmd("--ri", "-o", "ri"))
       end
     end
 
     desc "Publish RDoc to wherever you want."
-    task :publish_docs => [:clean, :docs] do
+    task publish_docs: [:clean, :docs] do
       publish_docs_task
     end
 
@@ -154,7 +154,7 @@ module Hoe::Publish
     end
 
     desc "Announce your release."
-    task :announce => [:post_blog, :publish_on_announce ]
+    task announce: [:post_blog, :publish_on_announce ]
   end
 
   def publish_docs_task # :nodoc:
@@ -186,9 +186,9 @@ module Hoe::Publish
           body += "\n\n#{urls}"
 
           server = XMLRPC::Client.new2(site["url"])
-          content = site["extra_headers"].merge(:title => title,
-                                                :description => body,
-                                                :categories => blog_categories)
+          content = site["extra_headers"].merge(title: title,
+                                                description: body,
+                                                categories: blog_categories)
 
           server.call("metaWeblog.newPost",
                       site["blog_id"],

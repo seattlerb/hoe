@@ -27,10 +27,10 @@ module Hoe::Clean
     task :clobber_package # no-op, just in case
 
     desc "Clean up all the extras."
-    task :clean => [ :clobber_docs, :clobber_package ] do
+    task clean: [ :clobber_docs, :clobber_package ] do
       clean_globs.each do |pattern|
         files = Dir[pattern]
-        rm_rf files, :verbose => true unless files.empty?
+        rm_rf files, verbose: true unless files.empty?
       end
     end
   end

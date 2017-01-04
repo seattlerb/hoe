@@ -98,8 +98,8 @@ module Hoe::Signing
       warn "NOTICE: using #{email.first} for certificate" if email.size > 1
 
       sh "gem cert --build #{email.first}"
-      mv "gem-private_key.pem", key_file, :verbose => true
-      mv "gem-public_cert.pem", cert_file, :verbose => true
+      mv "gem-private_key.pem", key_file, verbose: true
+      mv "gem-public_cert.pem", cert_file, verbose: true
 
       puts "Installed key and certificate."
     end

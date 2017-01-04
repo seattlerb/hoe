@@ -44,7 +44,7 @@ module Hoe::Debug
     end
 
     desc "Verify the manifest."
-    task :check_manifest => :clean do
+    task check_manifest: :clean do
       check_manifest
     end
 
@@ -54,7 +54,7 @@ module Hoe::Debug
     end
 
     task :isolate # stub
-    task :irb => :isolate do
+    task irb: :isolate do
       name = spec.name.gsub("-", "/")
       file = (spec.files.grep(/^lib\/#{name}\.rb$/).first ||
               spec.files.grep(/^lib\/[^\/]*\.rb$/).first)
@@ -86,7 +86,7 @@ module Hoe::Debug
 
       File.open f, "w" do |fp| fp.puts files end
 
-      verbose = { :verbose => Rake.application.options.verbose }
+      verbose = { verbose: Rake.application.options.verbose }
 
       begin
         sh "#{DIFF} -du Manifest.txt #{f}", verbose

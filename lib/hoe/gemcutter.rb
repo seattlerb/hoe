@@ -8,7 +8,7 @@ module Hoe::Gemcutter
 
   def define_gemcutter_tasks
     desc "Push gem to gemcutter."
-    task :release_to_gemcutter => [:clean, :package, :release_sanity] do
+    task release_to_gemcutter: [:clean, :package, :release_sanity] do
       pkg   = "pkg/#{spec.name}-#{spec.version}"
       gems  = Dir["#{pkg}*.gem"]
       gems.each do |g|
@@ -18,6 +18,6 @@ module Hoe::Gemcutter
       end
     end
 
-    task :release_to => :release_to_gemcutter
+    task release_to: :release_to_gemcutter
   end
 end unless defined? Hoe::Gemcutter
