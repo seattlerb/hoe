@@ -30,9 +30,9 @@ module Hoe::Compiler
   # Activate the rake-compiler dependencies.
 
   def activate_compiler_deps
-    dependency "rake-compiler", "~> 0.9", :development
+    dependency "rake-compiler", "~> 1.0", :development
 
-    gem "rake-compiler", "~> 0.9"
+    gem "rake-compiler", "~> 1.0"
   rescue LoadError
     warn "Couldn't load rake-compiler. Skipping. Run `rake newb` to fix."
   end
