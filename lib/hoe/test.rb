@@ -150,7 +150,7 @@ module Hoe::Test
 
     tests = ["rubygems"]
     tests << framework if framework
-    tests << test_globs.sort.map { |g| Dir.glob(g) }
+    tests << test_globs.sort.map { |g| Dir.glob(g).map{ |f| './' + f.gsub(/\.rb$/, '') } } }
     tests.flatten!
     tests.map! { |f| %(require "#{f}") }
 
