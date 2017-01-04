@@ -1,3 +1,14 @@
+=== 3.16.0 / YYYY-MM-DD
+
+* 1 minor enhancement:
+
+  * Updated compiler plugin dependency for rake-compiler to 1.x.
+
+* 2 bug fixes:
+
+  * Fixed rdoc cmd to be more resilient to ruby version changes (w/ isolate)
+  * Relaxed rake dependency to < 13 to fix against latest release.
+
 === 3.15.3 / 2016-11-17
 
 * 1 bug fix:
