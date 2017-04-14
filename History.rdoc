@@ -1,4 +1,4 @@
-=== 3.16.0 / YYYY-MM-DD
+=== 3.16.0 / 2017-01-03
 
 * 1 minor enhancement:
 
