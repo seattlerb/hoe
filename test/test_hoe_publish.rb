@@ -17,6 +17,7 @@ class TestHoePublish < Minitest::Test
   def test_make_rdoc_cmd
     expected = %W[
                 #{Gem.ruby}
+                #{nil}
                 #{Gem.bin_wrapper "rdoc"}
                 --title blah-1.0\ Documentation
                 -o doc
