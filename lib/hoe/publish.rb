@@ -214,6 +214,7 @@ module Hoe::Publish
       extra = "-S"
     end
 
+    ( # I don't understand this bug... but removing empties definitely fixes it.
     %W[#{Gem.ruby} #{extra}
        #{rdoc}
        --title #{title}
@@ -223,6 +224,7 @@ module Hoe::Publish
       extra_args +
       spec.require_paths +
       spec.extra_rdoc_files
+    ).reject(&:empty?)
   end
 
   def post_blog_zenweb site # :nodoc:
