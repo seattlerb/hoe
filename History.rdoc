@@ -1,3 +1,10 @@
+=== 3.16.1 / 2017-07-17
+
+* 2 bug fixes:
+
+  * Better handling of rdoc finding failures.
+  * Fixed bug making system calls w/ empty string in array? No clue.
+
 === 3.16.0 / 2017-01-03
 
 * 1 minor enhancement:
