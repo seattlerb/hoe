@@ -647,8 +647,8 @@ class Hoe
       self.history_file = manifest.grep(/^History\./).first
     end
 
-    self.history_file ||= Dir.glob("History.{txt,md}").first
-    self.readme_file  ||= Dir.glob("README.{txt,md}").first
+    self.history_file ||= Dir.glob("History.{txt,md}").first || "History.txt"
+    self.readme_file  ||= Dir.glob("README.{txt,md}").first || "README.txt"
 
     abort "Hoe.new {...} removed. Switch to Hoe.spec." if block_given?
   end
