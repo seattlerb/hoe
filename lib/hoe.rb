@@ -527,7 +527,7 @@ class Hoe
                                when Array then
                                  urls.first
                                else
-                                 raise "unknown urls format: #{urls.inspect}"
+                                 warn "** Unknown urls format: #{urls.inspect}"
                                end
       s.description          = description
       s.files                = manifest
