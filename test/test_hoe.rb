@@ -358,7 +358,7 @@ class TestHoe < Minitest::Test
   end
 
   def test_extensions
-    Hoe.plugin :compiler
+    Hoe.plugin :clean, :compiler
     Hoe.load_plugins
 
     hoe = nil
