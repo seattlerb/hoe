@@ -272,7 +272,7 @@ class TestHoe < Minitest::Test
 
     expected = [
       ["hoe",  :development, "~> #{Hoe::VERSION.sub(/\.\d+$/, "")}"],
-      ["rdoc", :development, "~> 4.0"],
+      ["rdoc", :development, "< 6, >= 4.0"],
     ]
 
     assert_equal expected, deps.map { |dep|
