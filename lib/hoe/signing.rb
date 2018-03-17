@@ -49,6 +49,11 @@ module Hoe::Signing
     task :generate_key do
       generate_key_task
     end
+
+    desc "Check pubilc key for signing your gems."
+    task :check_key do
+      check_key_task
+    end
   end
 
   def set_up_signing # :nodoc:
@@ -67,6 +72,22 @@ module Hoe::Signing
     if signing_key and cert_chain then
       spec.signing_key = signing_key
       spec.cert_chain = cert_chain
+    end
+  end
+
+  def check_key_task # :nodoc:
+    with_config do |config, _path|
+      break unless config["signing_cert_file"]
+      pub_key = File.expand_path config["signing_cert_file"].to_s
+
+      c = OpenSSL::X509::Certificate.new File.read pub_key
+      t = c.not_after
+
+      if t < Time.now then
+        warn "Gem signing certificate has expired"
+      else
+        warn "Gem signing certificate has NOT expired. Carry on."
+      end
     end
   end
 
