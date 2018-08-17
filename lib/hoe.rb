@@ -111,6 +111,10 @@ class Hoe
 
   RUBY_FLAGS = ENV["RUBY_FLAGS"] || default_ruby_flags
 
+  ##
+  # Map from the commonly used url names to gemspec's metadata keys
+  # See https://guides.rubygems.org/specification-reference/#metadata
+
   URLS_TO_META_MAP = {
     "bugs" => "bug_tracker_uri",
     "clog" => "changelog_uri",
