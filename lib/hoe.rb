@@ -197,6 +197,13 @@ class Hoe
   attr_accessor :name
 
   ##
+  # Optional: Metadata entries
+  #
+  # Set via Hoe.spec.
+
+  attr_accessor :metadata
+
+  ##
   # Optional: A post-install message to be displayed when gem is installed.
 
   attr_accessor :post_install_message
@@ -536,6 +543,13 @@ class Hoe
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
+      s.metadata             = {}.tap do |meta|
+        meta["bug_tracker_uri"] = urls["bugs"] if urls["bugs"]
+        meta["changelog_uri"] = urls["clog"] if urls["clog"]
+        meta["documentation_uri"] = urls["doco"] if urls["doco"]
+        meta["homepage_uri"] = urls["home"] if urls["home"]
+        meta["source_code_uri"] = urls["code"] if urls["code"]
+      end
 
       missing "Manifest.txt" if s.files.empty?
 
@@ -631,6 +645,7 @@ class Hoe
     self.extra_dev_deps       = []
     self.extra_rdoc_files     = []
     self.licenses             = []
+    self.metadata             = {}
     self.post_install_message = nil
     self.group_name           = name.downcase
     self.spec                 = nil

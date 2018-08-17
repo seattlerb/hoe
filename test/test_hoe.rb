@@ -244,6 +244,7 @@ class TestHoe < Minitest::Test
       "bugs"  => "https://github.com/seattlerb/hoe/issues",
       "rdoc"  => "http://docs.seattlerb.org/hoe/",
       "doco"  => "http://docs.seattlerb.org/hoe/Hoe.pdf",
+      "clog"  => "https://github.com/seattlerb/hoe/blob/master/History.rdoc",
       "other" => "http://github.com/jbarnette/hoe-plugin-examples",
     }
 
