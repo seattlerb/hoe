@@ -544,11 +544,11 @@ class Hoe
       s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
       s.metadata             = {}.tap do |meta|
-        meta["bug_tracker_uri"] = urls["bugs"] if urls["bugs"]
-        meta["changelog_uri"] = urls["clog"] if urls["clog"]
+        meta["bug_tracker_uri"]   = urls["bugs"] if urls["bugs"]
+        meta["changelog_uri"]     = urls["clog"] if urls["clog"]
         meta["documentation_uri"] = urls["doco"] if urls["doco"]
-        meta["homepage_uri"] = urls["home"] if urls["home"]
-        meta["source_code_uri"] = urls["code"] if urls["code"]
+        meta["homepage_uri"]      = urls["home"] if urls["home"]
+        meta["source_code_uri"]   = urls["code"] if urls["code"]
       end
 
       missing "Manifest.txt" if s.files.empty?
