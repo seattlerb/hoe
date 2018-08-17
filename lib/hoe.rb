@@ -209,13 +209,6 @@ class Hoe
   attr_accessor :name
 
   ##
-  # Optional: Metadata entries
-  #
-  # Set via Hoe.spec.
-
-  attr_accessor :metadata
-
-  ##
   # Optional: A post-install message to be displayed when gem is installed.
 
   attr_accessor :post_install_message
@@ -653,7 +646,6 @@ class Hoe
     self.extra_dev_deps       = []
     self.extra_rdoc_files     = []
     self.licenses             = []
-    self.metadata             = {}
     self.post_install_message = nil
     self.group_name           = name.downcase
     self.spec                 = nil
