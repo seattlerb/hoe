@@ -111,6 +111,14 @@ class Hoe
 
   RUBY_FLAGS = ENV["RUBY_FLAGS"] || default_ruby_flags
 
+  URLS_TO_META_MAP = {
+    "bugs" => "bug_tracker_uri",
+    "clog" => "changelog_uri",
+    "doco" => "documentation_uri",
+    "home" => "homepage_uri",
+    "code" => "source_code_uri",
+  }
+
   ##
   # Default configuration values for .hoerc. Plugins should populate
   # this on load.
@@ -543,13 +551,9 @@ class Hoe
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
-      s.metadata             = {}.tap do |meta|
-        meta["bug_tracker_uri"]   = urls["bugs"] if urls["bugs"]
-        meta["changelog_uri"]     = urls["clog"] if urls["clog"]
-        meta["documentation_uri"] = urls["doco"] if urls["doco"]
-        meta["homepage_uri"]      = urls["home"] if urls["home"]
-        meta["source_code_uri"]   = urls["code"] if urls["code"]
-      end
+      s.metadata             = urls.select { |name, _| URLS_TO_META_MAP.key? name }.map { |name, link|
+        [URLS_TO_META_MAP[name], link]
+      }.to_h
 
       missing "Manifest.txt" if s.files.empty?
 
