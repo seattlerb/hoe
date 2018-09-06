@@ -1,3 +1,9 @@
+=== 3.17.1 / 2018-09-06
+
+* 1 bug fix:
+
+  * Bumped dependencies on rdoc and rake for latest majors.
+
 === 3.17.0 / 2018-03-17
 
 * 2 minor enhancements:
