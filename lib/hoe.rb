@@ -471,7 +471,7 @@ class Hoe
 
     case name
     when "hoe" then
-      dependency "rake", [">= 0.8", "< 11.0"]
+      dependency "rake", [">= 0.8", "< 13.0"]
     else
       version = VERSION.split(/\./).first(2).join(".")
       dependency "hoe", "~> #{version}", :development
