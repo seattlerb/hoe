@@ -98,6 +98,6 @@ class TestHoeDebug < Minitest::Test
   end
 
   def with_config
-    yield({ "exclude" => [] }, "~/.hoerc")
+    yield({ "exclude" => /do not match anything/ }, "~/.hoerc")
   end
 end
