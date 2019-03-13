@@ -1,3 +1,9 @@
+=== 3.17.2 / 2019-03-13
+
+* 1 bug fix:
+
+  * Fixed gem sign breakage caused by rubygems update. Tested against rubygems 3.0.2
+
 === 3.17.1 / 2018-09-06
 
 * 1 bug fix:
