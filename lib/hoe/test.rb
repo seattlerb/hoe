@@ -32,9 +32,14 @@ module Hoe::Test
   ENV.delete "N" if ENV["N"]
   ENV["N"] = ENV["C"] if ENV["C"]
 
+  Hoe::DEFAULT_CONFIG["multiruby_skip"] = []
+
   ##
   # Optional: Array of incompatible versions for multiruby filtering.
   # Used as a regex.
+  #
+  # Can be defined both in .hoerc and in your hoe spec. Both will be
+  # used.
 
   attr_accessor :multiruby_skip
 
@@ -90,7 +95,11 @@ module Hoe::Test
 
       desc "Run the test suite using multiruby."
       task :multi do
-        ENV["EXCLUDED_VERSIONS"] = multiruby_skip.join(":")
+        skip = with_config do |config, _|
+          config["multiruby_skip"] + self.multiruby_skip
+        end
+
+        ENV["EXCLUDED_VERSIONS"] = skip.join(":")
         system "multiruby -S rake"
       end
 
