@@ -26,6 +26,7 @@ module Hoe::Test
 
   FILTER = (ENV["FILTER"] || ENV["TESTOPTS"] || "").dup
   FILTER << " -n #{ENV["N"]}" if ENV["N"]
+  FILTER << " -e #{ENV["X"]}" if ENV["X"]
 
   # this is an unfortunate naming collision. I don't use the CPU (N)
   # specifier so it is shifting to "C" inside of Hoe.
