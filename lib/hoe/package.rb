@@ -97,7 +97,7 @@ module Hoe::Package
     version = "--version '#{version}'" if     version
 
     cmd  = "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
-    cmd += " --no-rdoc --no-ri" unless rdoc
+    cmd += " --no-document" unless rdoc
     cmd += " #{null_dev}" unless Rake.application.options.trace
 
     puts cmd if Rake.application.options.trace
