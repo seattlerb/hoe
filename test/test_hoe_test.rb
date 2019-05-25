@@ -18,6 +18,14 @@ class TestHoeTest < Minitest::Test
     end
   end
 
+  def assert_deprecated
+    err_re = /DEPRECATED:/
+
+    assert_output "", err_re do
+      yield
+    end
+  end
+
   def test_make_test_cmd_with_different_testlibs
     skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
@@ -27,19 +35,27 @@ class TestHoeTest < Minitest::Test
                ].join
 
     # default
-    autorun = %(require "minitest/autorun"; )
-    assert_equal expected % autorun, @tester.make_test_cmd
+    assert_deprecated do
+      autorun = %(require "minitest/autorun"; )
+      assert_equal expected % autorun, @tester.make_test_cmd
+    end
 
-    @tester.testlib = :testunit
-    testunit = %(require "test/unit"; )
-    assert_equal expected % testunit, @tester.make_test_cmd
+    assert_deprecated do
+      @tester.testlib = :testunit
+      testunit = %(require "test/unit"; )
+      assert_equal expected % testunit, @tester.make_test_cmd
+    end
 
-    @tester.testlib = :minitest
-    autorun = %(require "minitest/autorun"; )
-    assert_equal expected % autorun, @tester.make_test_cmd
+    assert_deprecated do
+      @tester.testlib = :minitest
+      autorun = %(require "minitest/autorun"; )
+      assert_equal expected % autorun, @tester.make_test_cmd
+    end
 
-    @tester.testlib = :none
-    assert_equal expected % "", @tester.make_test_cmd
+    assert_deprecated do
+      @tester.testlib = :none
+      assert_equal expected % "", @tester.make_test_cmd
+    end
 
     @tester.testlib = :faketestlib
     e = assert_raises(RuntimeError) do

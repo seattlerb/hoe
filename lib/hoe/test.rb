@@ -10,6 +10,12 @@
 # test_deps::          Show which test files fail when run alone.
 
 module Hoe::Test
+  def deprecate msg # :nodoc:
+    where = caller_locations[1]
+
+    warn "DEPRECATED: %s from %s" % [msg, where]
+  end
+
   ##
   # Configuration for the supported test frameworks for test task.
 
@@ -84,14 +90,50 @@ module Hoe::Test
     task :test
 
     if File.directory? "test" then
-      desc "Run the test suite. Use FILTER or TESTOPTS to add flags/args."
-      task :test do
-        ruby make_test_cmd
-      end
+      case testlib
+      when :minitest then
+        require "minitest/test_task" # currently in hoe, but will move
 
-      desc "Print out the test command. Good for profiling and other tools."
-      task :test_cmd do
-        puts make_test_cmd
+        Minitest::TestTask.create :test do |t|
+          t.test_prelude = self.test_prelude
+          t.libs += Hoe.include_dirs.uniq
+          t.verbose = true
+        end
+      when :testunit then
+        desc "Run the test suite. Use FILTER or TESTOPTS to add flags/args."
+        task :test do
+          ruby make_test_cmd
+        end
+
+        desc "Print out the test command. Good for profiling and other tools."
+        task :test_cmd do
+          puts make_test_cmd
+        end
+
+        desc "Show which test files fail when run alone."
+        task :test_deps do
+          tests = Dir[*self.test_globs].uniq
+
+          paths = %w[bin lib test].join(File::PATH_SEPARATOR)
+          null_dev = Hoe::WINDOZE ? "> NUL 2>&1" : "> /dev/null 2>&1"
+
+          tests.each do |test|
+            unless system "ruby -I#{paths} #{test} #{null_dev}" then
+              puts "Dependency Issues: #{test}"
+            end
+          end
+        end
+
+        if testlib == :minitest then
+          desc "Show bottom 25 tests wrt time."
+          task "test:slow" do
+            sh "rake TESTOPTS=-v | sort -n -k2 -t= | tail -25"
+          end
+        end
+      when :none then
+        # do nothing
+      else
+        warn "Unsupported? Moving to Minitest::TestTask. Let me know if you use this!"
       end
 
       desc "Run the test suite using multiruby."
@@ -102,27 +144,6 @@ module Hoe::Test
 
         ENV["EXCLUDED_VERSIONS"] = skip.join(":")
         system "multiruby -S rake"
-      end
-
-      desc "Show which test files fail when run alone."
-      task :test_deps do
-        tests = Dir[*self.test_globs].uniq
-
-        paths = %w[bin lib test].join(File::PATH_SEPARATOR)
-        null_dev = Hoe::WINDOZE ? "> NUL 2>&1" : "> /dev/null 2>&1"
-
-        tests.each do |test|
-          unless system "ruby -I#{paths} #{test} #{null_dev}" then
-            puts "Dependency Issues: #{test}"
-          end
-        end
-      end
-
-      if testlib == :minitest then
-        desc "Show bottom 25 tests wrt time."
-        task "test:slow" do
-          sh "rake TESTOPTS=-v | sort -n -k2 -t= | tail -25"
-        end
       end
 
       default_tasks << :test
@@ -156,6 +177,8 @@ module Hoe::Test
       raise "unsupported test framework #{testlib}"
     end
 
+    deprecate "Moving to Minitest::TestTask. Let me know if you use this!"
+
     framework = SUPPORTED_TEST_FRAMEWORKS[testlib]
 
     tests = ["rubygems"]
@@ -173,6 +196,8 @@ module Hoe::Test
   # Attempt to load RSpec 2, returning true if successful
 
   def try_loading_rspec2
+    deprecate "I want to drop this entirely. Let me know if you use this!"
+
     require "rspec/core/rake_task"
 
     desc "Run all specifications"
@@ -192,6 +217,8 @@ module Hoe::Test
   # Attempt to load RSpec 1, returning true if successful
 
   def try_loading_rspec1
+    deprecate "I want to drop this entirely. Let me know if you use this!"
+
     require "spec/rake/spectask"
 
     desc "Run all specifications"
@@ -204,5 +231,4 @@ module Hoe::Test
     warn "%p while trying to load RSpec 1: %s" % [ err.class, err.message ]
     false
   end
-
 end
