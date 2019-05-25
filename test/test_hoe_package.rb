@@ -1,3 +1,5 @@
+require "hoe"
+
 Hoe.load_plugins
 
 class TestHoePackage < Minitest::Test
