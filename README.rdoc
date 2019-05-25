@@ -83,7 +83,7 @@ your announcements.
 
 === Manifest.txt
 
-<em><strong>manifest [noun]</strong> a document giving comprehensive
+<em><b>manifest [noun]</b> a document giving comprehensive
 details of a ship and its cargo and other contents, passengers, and
 crew for the use of customs officers.</em>
 
@@ -100,7 +100,7 @@ There is no way in the world that a professionally run ship would ever
 run this way and there is no way that you should either.
 
 Professional software releases know _exactly_ what is in them, amateur
-releases _do not_. "Write better globs" is the response I often hear.
+releases <em>do not</em>. "Write better globs" is the response I often hear.
 I consider myself and the people I work with to be rather smart people
 and if we get them wrong, chances are you will too. How many times
 have you peered under the covers and seen .DS_Store, emacs backup~
