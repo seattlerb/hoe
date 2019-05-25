@@ -275,11 +275,22 @@ class Hoe
 
   attr_accessor :version
 
+  @include_dirs = []
+
+  mc = (class << self; self; end)
+
+  ##
+  # Optional: Extra directories to use (eg for test runs). See
+  # +Hoe.add_include_dirs+.
+
+  mc.send :attr_accessor, :include_dirs
+
   ##
   # Add extra dirs to both $: and RUBY_FLAGS (for test runs and rakefile deps)
 
   def self.add_include_dirs(*dirs)
     dirs = dirs.flatten
+    include_dirs.concat dirs
     $:.unshift(*dirs)
     s = File::PATH_SEPARATOR
     RUBY_FLAGS.sub!(/-I/, "-I#{dirs.join(s)}#{s}")
