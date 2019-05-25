@@ -7,8 +7,6 @@ Hoe.plugin :seattlerb
 Hoe.plugin :isolate
 Hoe.plugin :rdoc
 
-Hoe.add_include_dirs "../../minitest/dev/lib"
-
 Hoe.spec "hoe" do
   developer "Ryan Davis", "ryand-ruby@zenspider.com"
 
