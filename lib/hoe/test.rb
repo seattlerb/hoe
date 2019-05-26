@@ -97,7 +97,6 @@ module Hoe::Test
         Minitest::TestTask.create :test do |t|
           t.test_prelude = self.test_prelude
           t.libs += Hoe.include_dirs.uniq
-          t.verbose = true
         end
       when :testunit then
         desc "Run the test suite. Use FILTER or TESTOPTS to add flags/args."
