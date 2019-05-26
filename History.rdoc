@@ -1,3 +1,24 @@
+=== 3.18.0 / 2019-05-25
+
+* 1 major enhancement:
+
+  * Added Minitest::TestTask (will move to minitest proper soon)
+
+* 8 minor enhancements:
+
+  * Added 'multiruby_skip' config so it can be in global ~/.hoerc.
+  * Added Hoe.include_dirs to allow tasks to probe directly.
+  * Added X=exclude_pattern to the test plugin. Can be used in conjunction with N=select_pattern.
+  * Deprecated Hoe::Test.make_test_cmd      (argue with me!)
+  * Deprecated Hoe::Test.try_loading_rspec  (argue with me!)
+  * Deprecated Hoe::Test.try_loading_rspec2 (argue with me!)
+  * Deprecated testunit support             (argue with me!)
+  * Switched normally hoe-generated test tasks over to use Minitest::TestTask.
+
+* 1 bug fix:
+
+  * Fixed incompatibility with rubygems 3.x. (drbrain)
+
 === 3.17.2 / 2019-03-13
 
 * 1 bug fix:
