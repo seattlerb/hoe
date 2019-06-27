@@ -39,7 +39,7 @@ for the first time)
 or:
 
   require 'hoe'
-  
+
   Hoe.spec projectname do
     # ... project specific data ...
   end
@@ -90,7 +90,7 @@ crew for the use of customs officers.</em>
 Every project should know what it is shipping. This is done via an
 explicit list of everything that goes out in a release. Hoe uses this
 during packaging so that nothing embarrassing is picked up.
-          
+
 Imagine, you're a customs inspector at the Los Angeles Port, the
 world's largest import/export port. A large ship filled to the brim
 pulls up to the pier ready for inspection. You walk up to the captain
@@ -122,9 +122,9 @@ ways. Hoe finds your version and uses it automatically during
 packaging.
 
 === Releasing in 1 easy step
-      
+
   % rake release VERSION=x.y.z
-      
+
 That really is all there is to it. Behind the scenes it:
 
 * Branches the release in our perforce server. (via hoe-seattlerb plugin)
@@ -133,7 +133,7 @@ That really is all there is to it. Behind the scenes it:
 * Uploads the packages to rubygems.org.
 * Posts news of the release my blog.
 * Sends an announcement email. (via the hoe-seattlerb plugin gem)
-      
+
 That `VERSION=x.y.z` is there as a last-chance sanity check that you
 know what you're releasing. You'd be surprised how blurry eyed/brained
 you get at 3AM. This check helps a lot more than it should.
@@ -205,7 +205,7 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 === Writing Plugins:
 
 A plugin can be as simple as:
-      
+
     module Hoe::Thingy
       attr_accessor :thingy
 
@@ -219,7 +219,7 @@ A plugin can be as simple as:
         end
       end
     end
-      
+
 Not terribly useful, but you get the idea. This example exercises both
 plugin methods (initialize_#{plugin} and define_#{plugin}_tasks and
 adds an accessor method to the Hoe instance.
@@ -244,13 +244,13 @@ All of the plugins that ship with hoe are activated by default. This is
 because they're providing the same functionality that the previous Hoe was and
 without them, it'd be rather useless. Other plugins should be "opt-in" and are
 activated by:
-          
+
     Hoe::plugin :thingy
-          
+
 Put this _above_ your hoe-spec. All it does is add `:thingy` to `Hoe.plugins`.
 You could also deactivate a plugin by removing it from `Hoe.plugins` although
 that shouldn't be necessary for the most part.
-          
+
 Please note that it is **not** a good idea to have a plugin you're writing
 activate itself. Let developers opt-in, not opt-out. Just because someone
 needs the `:thingy` plugin on one project doesn't mean they need them on _all_

@@ -174,7 +174,11 @@ module Hoe::Test
 
     tests.insert 1, test_prelude if test_prelude
 
-    "#{Hoe::RUBY_FLAGS} -e '#{tests.join("; ")}' -- #{FILTER}"
+    filter = (ENV["FILTER"] || ENV["TESTOPTS"] || "").dup
+    filter << " -n #{ENV["N"]}" if ENV["N"]
+    filter << " -e #{ENV["X"]}" if ENV["X"]
+
+    "#{Hoe::RUBY_FLAGS} -e '#{tests.join("; ")}' -- #{filter}"
   end
 
   ##
