@@ -25,20 +25,6 @@ module Hoe::Test
     :none     => nil,
   }
 
-  ##
-  # Used to add flags to test_unit (e.g., -n test_borked).
-  #
-  # eg FILTER="-n test_blah"
-
-  FILTER = (ENV["FILTER"] || ENV["TESTOPTS"] || "").dup
-  FILTER << " -n #{ENV["N"]}" if ENV["N"]
-  FILTER << " -e #{ENV["X"]}" if ENV["X"]
-
-  # this is an unfortunate naming collision. I don't use the CPU (N)
-  # specifier so it is shifting to "C" inside of Hoe.
-  ENV.delete "N" if ENV["N"]
-  ENV["N"] = ENV["C"] if ENV["C"]
-
   Hoe::DEFAULT_CONFIG["multiruby_skip"] = []
 
   ##

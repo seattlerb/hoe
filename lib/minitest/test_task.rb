@@ -118,14 +118,23 @@ module Minitest # :nodoc:
     # Environment Variables:
     #
     # + MT_LIB_EXTRAS - Extra libs to dynamically override/inject for custom runs.
-    # + N             - Tests to run (string or regexp)
-    # + X             - Tests to exclude (string or regexp)
-    # + TESTOPTS      - deprecated, use A
+    # + N             - Tests to run (string or /regexp/)
+    # + X             - Tests to exclude (string or /regexp/)
     # + A             - Any extra arguments. Honors shell quoting.
+    #
+    # Deprecated:
+    #
+    # + TESTOPTS      - for argument passing, use A
+    # + N             - for parallel testing, use MT_CPU
+    # + FILTER        - same as TESTOPTS
 
     def process_env
       warn "TESTOPTS is deprecated in Minitest::TestTask. Use A instead" if
         ENV["TESTOPTS"]
+      warn "FILTER is deprecated in Minitest::TestTask. Use A instead" if
+        ENV["FILTER"]
+      warn "N is deprecated in Minitest::TestTask. Use MT_CPU instead" if
+        ENV["N"] && ENV["N"].to_i > 0
 
       lib_extras = (ENV["MT_LIB_EXTRAS"] || "").split File::PATH_SEPARATOR
       self.libs.prepend lib_extras
@@ -133,7 +142,10 @@ module Minitest # :nodoc:
       extra_args << "-n" << ENV["N"]                      if ENV["N"]
       extra_args << "-e" << ENV["X"]                      if ENV["X"]
       extra_args.concat Shellwords.split(ENV["TESTOPTS"]) if ENV["TESTOPTS"]
+      extra_args.concat Shellwords.split(ENV["FILTER"])   if ENV["FILTER"]
       extra_args.concat Shellwords.split(ENV["A"])        if ENV["A"]
+
+      ENV.delete "N" if ENV["N"]
 
       # TODO? RUBY_DEBUG = ENV["RUBY_DEBUG"]
       # TODO? ENV["RUBY_FLAGS"]
@@ -194,7 +206,7 @@ module Minitest # :nodoc:
 
     def make_test_cmd globs = test_globs
       tests = []
-      tests.concat Dir[*globs].shuffle
+      tests.concat Dir[*globs].sort.shuffle # TODO: SEED -> srand first?
       tests.map! { |f| %(require "#{f}") }
 
       runner = []
