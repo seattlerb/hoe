@@ -137,7 +137,7 @@ module Minitest # :nodoc:
         ENV["N"] && ENV["N"].to_i > 0
 
       lib_extras = (ENV["MT_LIB_EXTRAS"] || "").split File::PATH_SEPARATOR
-      self.libs.prepend lib_extras
+      self.libs[0,0] = lib_extras
 
       extra_args << "-n" << ENV["N"]                      if ENV["N"]
       extra_args << "-e" << ENV["X"]                      if ENV["X"]
