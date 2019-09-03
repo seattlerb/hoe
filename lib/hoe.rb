@@ -313,7 +313,7 @@ class Hoe
     @loaded ||= {}
     @files  ||= Gem.find_files "hoe/*.rb"
 
-    @files.reverse.each do |path|
+    @files.reverse.each do |path| # reverse so first one wins
       @found[File.basename(path, ".rb").intern] = path
     end
 
