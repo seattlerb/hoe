@@ -1,3 +1,15 @@
+=== 3.18.1 / 2019-09-14
+
+* 1 minor enhancement:
+
+  * Added deprecations to minitest/test_task: TESTOPTS, N (for #threads), FILTER.
+
+* 3 bug fixes:
+
+  * Fixed one use of Array.prepend on ruby 2.3-2.4.
+  * Removed FILTER/N/X handling from hoe/test.rb in favor of minitest/test_task.rb.
+  * Sort globs before shuffling to normalize different file systems.
+
 === 3.18.0 / 2019-05-25
 
 * 1 major enhancement:
