@@ -112,6 +112,18 @@ class Hoe
   RUBY_FLAGS = ENV["RUBY_FLAGS"] || default_ruby_flags
 
   ##
+  # Map from the commonly used url names to gemspec's metadata keys
+  # See https://guides.rubygems.org/specification-reference/#metadata
+
+  URLS_TO_META_MAP = {
+    "bugs" => "bug_tracker_uri",
+    "clog" => "changelog_uri",
+    "doco" => "documentation_uri",
+    "home" => "homepage_uri",
+    "code" => "source_code_uri",
+  }
+
+  ##
   # Default configuration values for .hoerc. Plugins should populate
   # this on load.
 
@@ -547,6 +559,9 @@ class Hoe
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
+      s.metadata             = urls.select { |name, _| URLS_TO_META_MAP.key? name }.map { |name, link|
+        [URLS_TO_META_MAP[name], link]
+      }.to_h
 
       missing "Manifest.txt" if s.files.empty?
 
