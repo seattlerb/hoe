@@ -117,7 +117,11 @@ Dir.chdir project do
     warn "erb: #{path}"
 
     File.open path, "w" do |io|
-      erb = ERB.new file, nil, "<>"
+      if ERB.instance_method(:initialize).parameters.assoc(:key) # Ruby 2.6+
+        erb = ERB.new file, trim_mode: "<>"
+      else
+        erb = ERB.new file, nil, "<>"
+      end
       erb.filename = path
       io.puts erb.result(binding)
     end
