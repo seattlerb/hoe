@@ -544,14 +544,7 @@ class Hoe
       s.version              = version if version
       s.summary              = summary
       s.email                = email
-      s.homepage             = case urls
-                               when Hash then
-                                 urls["home"] || urls.values.first
-                               when Array then
-                                 urls.first
-                               else
-                                 warn "** Unknown urls format: #{urls.inspect}"
-                               end
+      s.homepage             = urls["home"] || urls.values.first
       s.description          = description
       s.files                = manifest
       s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
@@ -559,8 +552,8 @@ class Hoe
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
-      s.metadata             = urls.select { |name, _| URLS_TO_META_MAP.key? name }.map { |name, link|
-        [URLS_TO_META_MAP[name], link]
+      s.metadata             = (urls.keys & URLS_TO_META_MAP.keys).map { |name|
+        [URLS_TO_META_MAP[name], urls[name]]
       }.to_h
 
       missing "Manifest.txt" if s.files.empty?
@@ -734,7 +727,9 @@ class Hoe
     if lines.first =~ /::/ then
       Hash[lines.map { |line| line.split(/\s*::\s*/) }]
     else
-      lines
+      warn "DEPRECATED: Please switch readme to hash format for urls."
+      warn "  Only defining 'home' url."
+      { "home" => lines.first }
     end
   end
 

@@ -146,14 +146,9 @@ class TestHoe < Minitest::Test
   def test_initialize_intuit
     Dir.mktmpdir do |path|
       Dir.chdir path do
-        open "Manifest.txt", "w" do |io| # sorted
-          io.puts "FAQ.rdoc"
-          io.puts "History.rdoc"
-          io.puts "README.rdoc"
-        end
-
-        open "README.rdoc",  "w" do |io| io.puts "= blah" end
-        open "History.rdoc", "w" do |io| io.puts "=== 1.0" end
+        File.write "Manifest.txt", "FAQ.rdoc\nHistory.rdoc\nREADME.rdoc\n"
+        File.write "README.rdoc", "= blah\n\nhome :: http://blah/"
+        File.write "History.rdoc", "=== 1.0"
 
         assert_equal "History.rdoc", hoe.history_file
         assert_equal "README.rdoc", hoe.readme_file
@@ -166,15 +161,10 @@ class TestHoe < Minitest::Test
   def test_initialize_intuit_ambiguous
     Dir.mktmpdir do |path|
       Dir.chdir path do
-        open "Manifest.txt", "w" do |io|
-          io.puts "History.rdoc" # sorted
-          io.puts "README.ja.rdoc"
-          io.puts "README.rdoc"
-        end
-
-        open "README.rdoc",    "w" do |io| io.puts "= blah" end
-        open "README.ja.rdoc", "w" do |io| io.puts "= blah" end
-        open "History.rdoc",   "w" do |io| io.puts "=== 1.0" end
+        File.write "Manifest.txt", "History.rdoc\nREADME.ja.rdoc\nREADME.rdoc\n"
+        File.write "README.rdoc", "= blah\n\nhome :: http://blah/"
+        File.write "README.ja.rdoc", "= blah\n\nhome :: http://blah/"
+        File.write "History.rdoc", "=== 1.0"
 
         assert_equal "README.ja.rdoc", hoe(:skip_files).readme_file
       end
@@ -201,12 +191,12 @@ class TestHoe < Minitest::Test
             "* http://docs.seattlerb.org/hoe/Hoe.pdf",
             "* http://github.com/jbarnette/hoe-plugin-examples"].join "\n"
 
-    exp = ["https://github.com/seattlerb/hoe",
-           "http://docs.seattlerb.org/hoe/",
-           "http://docs.seattlerb.org/hoe/Hoe.pdf",
-           "http://github.com/jbarnette/hoe-plugin-examples"]
+    exp = { "home" => "https://github.com/seattlerb/hoe" }
+    err = /DEPRECATED: Please switch readme to hash format/
 
-    assert_equal exp, hoe.parse_urls(ary)
+    assert_output "", err do
+      assert_equal exp, hoe.parse_urls(ary)
+    end
   end
 
   def test_parse_urls_hash
