@@ -256,24 +256,6 @@ class Hoe
   attr_accessor :test_globs
 
   ##
-  # Deprecated: Optional: The url(s) of the project. (can be array).
-  # Auto-populates to a list of urls read from the beginning of
-  # README.txt.
-  #
-
-  def url
-    warn "NOTE: Hoe#url is deprecated, use urls. It will be removed on or after 2012-06-01."
-    warn "Used from #{caller.first}"
-    @url
-  end
-
-  def url=o # :nodoc:
-    warn "NOTE: Hoe#url= is deprecated, use urls=. It will be removed on or after 2012-06-01."
-    warn "Used from #{caller.first}"
-    @url=o
-  end
-
-  ##
   # Optional: The urls of the project. This can be an array or
   # (preferably) a hash. Auto-populates to the urls read from the
   # beginning of README.txt.
@@ -729,6 +711,7 @@ class Hoe
     else
       warn "DEPRECATED: Please switch readme to hash format for urls."
       warn "  Only defining 'home' url."
+      warn "  This will be removed on or after 2020-10-28."
       { "home" => lines.first }
     end
   end
