@@ -51,8 +51,6 @@ class TestHoeDebug < Minitest::Test
   end
 
   def test_check_manifest_missing
-    skip "https://github.com/MagLev/maglev/issues/224" if maglev?
-
     in_tmpdir do
       manifest
 
