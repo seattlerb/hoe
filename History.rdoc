@@ -1,3 +1,16 @@
+=== 3.19.0 / 2019-10-29
+
+* 4 minor enhancements:
+
+  * Added deprecation to parse_urls for ancient url array form.
+  * Added support for gemspec metadata. (viraptor)
+  * Hoe#parse_urls now returns a hash no matter what
+  * Removed looong deprecated Hoe#url/url= methods.
+
+* 1 bug fix:
+
+  * Fixed sow for ruby 2.6 deprecations in ERB. (felipec)
+
 === 3.18.1 / 2019-09-14
 
 * 1 minor enhancement:
