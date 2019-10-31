@@ -19,7 +19,7 @@ Hoe.spec "hoe" do
   pluggable!
   require_rubygems_version ">= 1.4"
 
-  dependency "rake", [">= 0.8", "< 13.0"] # FIX: to force it to exist pre-isolate
+  dependency "rake", [">= 0.8", "< 14.0"] # FIX: to force it to exist pre-isolate
 end
 
 task :plugins do
