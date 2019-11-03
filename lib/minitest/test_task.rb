@@ -19,20 +19,19 @@ module Minitest # :nodoc:
   #
   # The most basic and default setup.
   #
-  #   Minitest::TestTask.create :do_the_thing
+  #   Minitest::TestTask.create :my_tests
   #
   # The most basic/default setup, but with a custom name
   #
-  #   Minitest::TestTask.create :spec do |t|
-  #     t.test_globs = ["spec/**/*_spec.rb"]
-  #     t.libs << "../dependency/lib"
+  #   Minitest::TestTask.create :unit do |t|
+  #     t.test_globs = ["test/unit/**/*_test.rb"]
+  #     t.warning = false
   #   end
   #
-  # Customize the name, dependencies, and use a spec directory instead
-  # of test.
+  # Customize the name and only run unit tests.
 
   class TestTask < Rake::TaskLib
-    WINDOWS = RbConfig::CONFIG["host_os"] =~ /mswin|mingw/ # :nodoc: # TODO: verify
+    WINDOWS = RbConfig::CONFIG["host_os"] =~ /mswin|mingw/ # :nodoc:
 
     ##
     # Create several test-oriented tasks under +name+. Takes an
@@ -50,10 +49,11 @@ module Minitest # :nodoc:
     # Extra arguments to pass to the tests. Defaults empty but gets
     # populated by a number of enviroment variables:
     #
-    # + N (-n flag) a string or regexp of tests to run.
-    # + X (-e flag) a string or regexp of tests to exclude.
-    # + TESTOPTS - extra stuff. For compatibility? I guess?
-    # + A (arg) - quick way to inject an arbitrary argument (eg A=--help)
+    # N (-n flag) :: a string or regexp of tests to run.
+    # X (-e flag) :: a string or regexp of tests to exclude.
+    # A (arg)     :: quick way to inject an arbitrary argument (eg A=--help).
+    #
+    # See #process_env
 
     attr_accessor :extra_args
 
@@ -94,10 +94,13 @@ module Minitest # :nodoc:
     attr_accessor :test_prelude
 
     ##
-    # Print out commands as they run. Defaults to Rake's trace (-t
+    # Print out commands as they run. Defaults to Rake's +trace+ (-t
     # flag) option.
 
     attr_accessor :verbose
+
+    ##
+    # Use TestTask.create instead.
 
     def initialize name = :test # :nodoc:
       self.extra_args   = []
@@ -113,20 +116,20 @@ module Minitest # :nodoc:
 
     ##
     # Extract variables from the environment and convert them to
-    # command line arguments. See +extra_args+.
+    # command line arguments. See #extra_args.
     #
     # Environment Variables:
     #
-    # + MT_LIB_EXTRAS - Extra libs to dynamically override/inject for custom runs.
-    # + N             - Tests to run (string or /regexp/)
-    # + X             - Tests to exclude (string or /regexp/)
-    # + A             - Any extra arguments. Honors shell quoting.
+    # MT_LIB_EXTRAS :: Extra libs to dynamically override/inject for custom runs.
+    # N             :: Tests to run (string or /regexp/).
+    # X             :: Tests to exclude (string or /regexp/).
+    # A             :: Any extra arguments. Honors shell quoting.
     #
     # Deprecated:
     #
-    # + TESTOPTS      - for argument passing, use A
-    # + N             - for parallel testing, use MT_CPU
-    # + FILTER        - same as TESTOPTS
+    # TESTOPTS      :: For argument passing, use +A+.
+    # N             :: For parallel testing, use +MT_CPU+.
+    # FILTER        :: Same as +TESTOPTS+.
 
     def process_env
       warn "TESTOPTS is deprecated in Minitest::TestTask. Use A instead" if
@@ -153,10 +156,7 @@ module Minitest # :nodoc:
       extra_args.compact!
     end
 
-    ##
-    # Create the tasks.
-
-    def define
+    def define # :nodoc:
       default_tasks = []
 
       desc "Run the test suite. Use N, X, A, and TESTOPTS to add flags/args."
