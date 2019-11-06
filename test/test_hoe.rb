@@ -391,6 +391,8 @@ class TestHoe < Minitest::Test
   end
 
   def test_with_config_overrides
+    require "hoe/debug" # modifies Hoe::DEFAULT_CONFIG["exclude"]
+
     overrides = {
       "exclude" => Regexp.union( Hoe::DEFAULT_CONFIG["exclude"], /\.hg/ ),
       "plugins" => %w[tweedledee tweedledum],
