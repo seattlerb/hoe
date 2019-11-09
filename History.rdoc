@@ -1,3 +1,10 @@
+=== 3.20.0 / 2019-11-09
+
+* 2 minor enhancements:
+
+  * Added <test>:isolated task that runs tests in parallel. Replaces <test>:dep task.
+  * Bumped rake dependency to be < 15.
+
 === 3.19.0 / 2019-10-29
 
 * 4 minor enhancements:
