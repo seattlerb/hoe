@@ -169,23 +169,72 @@ module Minitest # :nodoc:
         puts "ruby #{make_test_cmd}"
       end
 
-      desc "Show which test files fail when run alone."
-      task "#{name}:deps" do
+      desc "Show which test files fail when run in isolation."
+      task "#{name}:isolated" do
         tests = Dir[*self.test_globs].uniq
 
-        null_dev = WINDOWS ? "> NUL 2>&1" : "> /dev/null 2>&1"
+        # 3 seems to be the magic number... (tho not by that much)
+        bad, good, n = {}, [], (ENV.delete("K") || 3).to_i
+        path = ENV.delete("F")
+        times = {}
 
-        tests.each do |test|
-          cmd = make_test_cmd test
+        tt0 = Time.now
 
-          if system "ruby #{cmd} #{null_dev}" then
-            puts "# good: #{test}"
+        n.threads_do tests.sort do |path|
+          t0 = Time.now
+          output = `#{Gem.ruby} #{make_test_cmd path} 2>&1`
+          t1 = Time.now - t0
+
+          times[path] = t1
+
+          if $?.success?
+            $stderr.print "."
+            good << path
           else
-            puts "# bad: #{test}"
-            puts "  ruby #{cmd}"
+            $stderr.print "x"
+            bad[path] = output
           end
         end
+
+        puts "done"
+        puts "Ran in %.2f seconds" % [ Time.now - tt0 ]
+
+        if path then
+          require "json"
+          File.open path, "w" do |io|
+            io.write JSON.pretty_generate times
+          end
+        end
+
+        unless good.empty?
+          puts
+          puts "# Good tests:"
+          puts
+          good.sort.each do |path|
+            puts "%.2fs: %s" % [times[path], path]
+          end
+        end
+
+        unless bad.empty?
+          puts
+          puts "# Bad tests:"
+          puts
+          bad.keys.sort.each do |path|
+            puts "%.2fs: %s" % [times[path], path]
+          end
+          puts
+          puts "# Bad Test Output:"
+          puts
+          bad.sort.each do |path, output|
+            puts
+            puts "# #{path}:"
+            puts output
+          end
+          exit 1
+        end
       end
+
+      task "#{name}:deps" => "#{name}:isolated" # now just an alias
 
       desc "Show bottom 25 tests wrt time."
       task "#{name}:slow" do
@@ -225,5 +274,32 @@ module Minitest # :nodoc:
 
       args.join " "
     end
+  end
+end
+
+class Work < Queue
+  def initialize jobs = []
+    super()
+
+    jobs.each do |job|
+      self << job
+    end
+
+    close
+  end
+end
+
+class Integer
+  def threads_do(jobs) # :nodoc:
+    require "thread"
+    q = Work.new jobs
+
+    self.times.map {
+      Thread.new do
+        while job = q.pop # go until quit value
+          yield job
+        end
+      end
+    }.each(&:join)
   end
 end
