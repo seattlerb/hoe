@@ -217,6 +217,30 @@ class TestHoe < Minitest::Test
     assert_equal exp, hoe.parse_urls(hash)
   end
 
+  def test_metadata
+    hash = [
+            "home  :: https://github.com/seattlerb/hoe",
+            "doco  :: http://docs.seattlerb.org/hoe/Hoe.pdf",
+            "clog  :: https://github.com/seattlerb/hoe/master/History.rdoc",
+            "bugs  :: https://github.com/seattlerb/hoe/issues",
+            "code  :: https://github.com/seattlerb/hoe",
+            "wiki  :: https://github.com/seattlerb/hoe/wiki",
+            "mail  :: https://github.com/seattlerb/hoe/wiki#mailing_list",
+           ].join "\n"
+
+    exp = {
+      "home" => "https://github.com/seattlerb/hoe",
+      "doco" => "http://docs.seattlerb.org/hoe/Hoe.pdf",
+      "clog" => "https://github.com/seattlerb/hoe/master/History.rdoc",
+      "bugs" => "https://github.com/seattlerb/hoe/issues",
+      "code" => "https://github.com/seattlerb/hoe",
+      "wiki" => "https://github.com/seattlerb/hoe/wiki",
+      "mail" => "https://github.com/seattlerb/hoe/wiki#mailing_list",
+    }
+
+    assert_equal exp, hoe.parse_urls(hash)
+  end
+
   def test_possibly_better
     t = Gem::Specification::TODAY
 
