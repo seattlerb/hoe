@@ -121,6 +121,8 @@ class Hoe
     "doco" => "documentation_uri",
     "home" => "homepage_uri",
     "code" => "source_code_uri",
+    "wiki" => "wiki_uri",
+    "mail" => "mailing_list_uri",
   }
 
   ##
