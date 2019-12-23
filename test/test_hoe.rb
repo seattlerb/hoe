@@ -280,7 +280,7 @@ class TestHoe < Minitest::Test
     assert_equal urls["home"], spec.homepage
     assert_equal ["--main", "README.rdoc"], spec.rdoc_options
     assert_equal ["lib"], spec.require_paths
-    assert_equal Gem::RubyGemsVersion, spec.rubygems_version
+    assert_equal Gem::VERSION, spec.rubygems_version
     assert_match(/^Hoe.*Rakefiles$/, spec.summary)
 
     deps = spec.dependencies.sort_by(&:name)
