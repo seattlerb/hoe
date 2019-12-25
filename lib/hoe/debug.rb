@@ -91,7 +91,7 @@ module Hoe::Debug
       begin
         sh "#{DIFF} -du Manifest.txt #{f}", verbose
       ensure
-        rm f, verbose
+        rm f, **verbose
       end
     end
   end
