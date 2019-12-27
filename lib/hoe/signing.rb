@@ -70,7 +70,8 @@ module Hoe::Signing
     end
 
     if signing_key and cert_chain then
-      spec.signing_key = OpenSSL::PKey::RSA.new File.read signing_key
+      passphrase = ENV['GEM_PRIVATE_KEY_PASSPHRASE']
+      spec.signing_key = OpenSSL::PKey::RSA.new(File.read(signing_key), passphrase)
       spec.cert_chain = cert_chain
     end
   end
