@@ -175,7 +175,7 @@ module Minitest # :nodoc:
 
         # 3 seems to be the magic number... (tho not by that much)
         bad, good, n = {}, [], (ENV.delete("K") || 3).to_i
-        path = ENV.delete("F")
+        file = ENV.delete("F")
         times = {}
 
         tt0 = Time.now
@@ -199,10 +199,10 @@ module Minitest # :nodoc:
         puts "done"
         puts "Ran in %.2f seconds" % [ Time.now - tt0 ]
 
-        if path then
+        if file then
           require "json"
-          File.open path, "w" do |io|
-            io.write JSON.pretty_generate times
+          File.open file, "w" do |io|
+            io.puts JSON.pretty_generate times
           end
         end
 
