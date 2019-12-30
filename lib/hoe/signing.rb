@@ -54,6 +54,8 @@ module Hoe::Signing
     task :check_key do
       check_key_task
     end
+  rescue NameError
+    warn "Couldn't set up signing (openssl error?). Skipping."
   end
 
   def set_up_signing # :nodoc:
