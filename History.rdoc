@@ -1,3 +1,18 @@
+=== 3.21.0 / 2020-01-11
+
+* 2 minor enhancements:
+
+  * Added support for wiki_uri and mailing_list_uri. (JuanitoFatas)
+  * Load encrypted private key using ENV['GEM_PRIVATE_KEY_PASSPHRASE'] as passphrase. (larskanis)
+
+* 5 bug fixes:
+
+  * Add require_ruby_version for 2.1+. (MSP-Greg)
+  * Fix a ruby 2.7 keyword arg deprecation. (anatol)
+  * Fix debug_gem task when you have a signing_key and broken rubygems (< 3.1.0).
+  * Fixed shadowed variable and json output for minitest's test:isolated task.
+  * Minor tweak to make hoe load when openssl isn't available.
+
 === 3.20.0 / 2019-11-09
 
 * 2 minor enhancements:
