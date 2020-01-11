@@ -24,6 +24,9 @@
 #
 # Keep your private key secret!  Keep your private key safe!
 #
+# You can provide your private key passphrase via the
+# GEM_PRIVATE_KEY_PASSPHRASE environment variable.
+#
 # To make sure your gems are signed run:
 #
 #   rake package; tar tf pkg/yourproject-1.2.3.gem
