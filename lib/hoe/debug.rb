@@ -96,3 +96,18 @@ module Hoe::Debug
     end
   end
 end
+
+class Gem::Specification < Gem::BasicSpecification
+  alias old_ruby_code ruby_code
+
+  def ruby_code(obj)
+    old_ruby_code obj
+  rescue Gem::Exception => e
+    case e.message
+    when /OpenSSL/
+      "nil"
+    else
+      raise
+    end
+  end
+end unless Gem::VERSION >= "3.1.0"
