@@ -26,36 +26,52 @@ class TestHoeTest < Minitest::Test
     end
   end
 
-  def test_make_test_cmd_with_different_testlibs
-    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
-
-    expected = ['-w -Ilib:bin:test:. -e \'require "rubygems"; %s',
+  EXPECTED = ['-w -Ilib:bin:test:. -e \'require "rubygems"; %s',
                 'require "test/test_hoe_test.rb"',
                 "' -- ",
                ].join
 
+  def test_make_test_cmd_defaults_to_minitest
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
+
     # default
     assert_deprecated do
       autorun = %(require "minitest/autorun"; )
-      assert_equal expected % autorun, @tester.make_test_cmd
+      assert_equal EXPECTED % autorun, @tester.make_test_cmd
     end
+  end
+
+  def test_make_test_cmd_for_testunit
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
     assert_deprecated do
       @tester.testlib = :testunit
       testunit = %(require "test/unit"; )
-      assert_equal expected % testunit, @tester.make_test_cmd
+      assert_equal EXPECTED % testunit, @tester.make_test_cmd
     end
+  end
+
+  def test_make_test_cmd_for_minitest
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
     assert_deprecated do
       @tester.testlib = :minitest
       autorun = %(require "minitest/autorun"; )
-      assert_equal expected % autorun, @tester.make_test_cmd
+      assert_equal EXPECTED % autorun, @tester.make_test_cmd
     end
+  end
+
+  def test_make_test_cmd_for_no_framework
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
     assert_deprecated do
       @tester.testlib = :none
-      assert_equal expected % "", @tester.make_test_cmd
+      assert_equal EXPECTED % "", @tester.make_test_cmd
     end
+  end
+
+  def test_make_test_cmd_for_faketestlib
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
     @tester.testlib = :faketestlib
     e = assert_raises(RuntimeError) do
