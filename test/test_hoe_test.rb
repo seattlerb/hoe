@@ -57,7 +57,9 @@ class TestHoeTest < Minitest::Test
     assert_deprecated do
       @tester.testlib = :minitest
       autorun = %(require "minitest/autorun"; )
-      assert_equal EXPECTED % autorun, @tester.make_test_cmd
+      prelude = %(require "other/file")
+      @tester.test_prelude = prelude
+      assert_equal EXPECTED % [prelude, autorun].join("; "), @tester.make_test_cmd
     end
   end
 
