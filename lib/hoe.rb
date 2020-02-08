@@ -119,6 +119,7 @@ class Hoe
     "bugs" => "bug_tracker_uri",
     "clog" => "changelog_uri",
     "doco" => "documentation_uri",
+    "docs" => "documentation_uri",
     "home" => "homepage_uri",
     "code" => "source_code_uri",
     "wiki" => "wiki_uri",
