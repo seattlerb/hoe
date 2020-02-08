@@ -217,6 +217,49 @@ class TestHoe < Minitest::Test
     assert_equal exp, hoe.parse_urls(hash)
   end
 
+  def test_parse_mrww
+    h = nil
+    mrww_readme = <<~EOM
+      = make
+      = rake
+      = work
+      = well
+
+      home :: https://github.com/seattlerb/makerakeworkwell
+      rdoc :: http://docs.seattlerb.org/makerakeworkwell
+
+      == DESCRIPTION:
+
+      make/rake/work/well provides two simple modifications to rake that
+      make working with file tasks cleaner, easier, and faster.
+    EOM
+
+
+
+    assert_silent do
+      h = Hoe.spec "blah" do
+        developer "author", "email"
+        license "MIT"
+        self.version      = "1.0"
+        self.readme_file  = nil
+        self.history_file = nil
+        self.changes = true
+
+        self.intuit_values mrww_readme
+      end
+    end
+
+    desc = mrww_readme.lines[10..11].join.chomp
+    urls = {
+      "home" => "https://github.com/seattlerb/makerakeworkwell",
+      "rdoc" => "http://docs.seattlerb.org/makerakeworkwell"
+    }
+
+    assert_equal desc, h.description
+    assert_equal desc, h.summary
+    assert_equal urls, h.urls
+  end
+
   def test_metadata
     hash = [
             "home  :: https://github.com/seattlerb/hoe",

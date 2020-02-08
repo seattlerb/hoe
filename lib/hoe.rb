@@ -1,7 +1,3 @@
-# -*- mode: ruby; coding: us-ascii; -*-
-
-require "rubygems"
-
 begin
   gem "rake"
 rescue Gem::LoadError
@@ -651,8 +647,8 @@ class Hoe
       self.history_file = manifest.grep(/^History\./).first
     end
 
-    self.history_file ||= Dir.glob("History.{txt,md}").first || "History.txt"
-    self.readme_file  ||= Dir.glob("README.{txt,md}").first || "README.txt"
+    self.history_file ||= Dir.glob("History.{rdoc,txt,md}").first || "History.txt"
+    self.readme_file  ||= Dir.glob("README.{rdoc,txt,md}").first || "README.txt"
 
     abort "Hoe.new {...} removed. Switch to Hoe.spec." if block_given?
   end
@@ -660,17 +656,23 @@ class Hoe
   ##
   # Intuit values from the readme and history files.
 
-  def intuit_values
-    header_re = /^((?:=+|#+) .*)$/
-    readme    = File.read_utf(readme_file).split(header_re)[1..-1] rescue ""
+  def intuit_values input
+    readme = input
+               .lines
+               .chunk { |l| l[/^(?:=+|#+)/] || "" }
+               .map(&:last)
+               .each_slice(2)
+               .map { |k, v|
+                  kp = k.join
+                  kp = kp.strip.chomp(":").split.last.downcase if k.size == 1
+                  [kp, v.join.strip]
+                }
+               .to_h
 
     unless readme.empty? then
-      sections = Hash[*readme.map { |s|
-        s =~ /^[=#]/ ? s.strip.downcase.chomp(":").split.last : s.strip
-      }]
-      desc     = sections.values_at(*description_sections).join("\n\n")
+      desc     = readme.values_at(*description_sections).join("\n\n")
       summ     = desc.split(/\.\s+/).first(summary_sentences).join(". ")
-      urls     = parse_urls(readme[1])
+      urls     = parse_urls(readme.values.first)
 
       self.urls        ||= urls
       self.description ||= desc
@@ -809,7 +811,7 @@ class Hoe
 
   def post_initialize
     activate_plugin_deps
-    intuit_values
+    intuit_values File.read_utf readme_file if readme_file
     validate_fields
     define_spec
     load_plugin_tasks
