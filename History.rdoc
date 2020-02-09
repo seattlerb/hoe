@@ -1,3 +1,17 @@
+=== 2.22.0 / 2020-02-09
+
+* 4 minor enhancements:
+
+  * Added metadate mapping for 'docs'.
+  * Added rdoc extension to the history and readme file finder globs.
+  * Extended readme parsing to more intelligently deal with markup sections.
+  * Refactored intuit_values to take the file content as an arg.
+
+* 2 bug fixes:
+
+  * Fixed ordering of test_prelude vs framework in Minitest::TestTask. (flavorjones)
+  * Fixed wiring of test_prelude into Minitest::TestTask.create. (flavorjones)
+
 === 3.21.0 / 2020-01-11
 
 * 2 minor enhancements:
