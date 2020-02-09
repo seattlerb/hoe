@@ -80,8 +80,9 @@ module Hoe::Test
       when :minitest then
         require "minitest/test_task" # currently in hoe, but will move
 
+        test_prelude = self.test_prelude
         Minitest::TestTask.create :test do |t|
-          t.test_prelude = self.test_prelude
+          t.test_prelude = test_prelude
           t.libs += Hoe.include_dirs.uniq
         end
       when :testunit then

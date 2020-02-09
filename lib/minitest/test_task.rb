@@ -259,8 +259,8 @@ module Minitest # :nodoc:
       tests.map! { |f| %(require "#{f}") }
 
       runner = []
-      runner << framework
       runner << test_prelude if test_prelude
+      runner << framework
       runner.concat tests
       runner = runner.join "; "
 

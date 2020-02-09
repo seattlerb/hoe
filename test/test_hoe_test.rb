@@ -26,36 +26,77 @@ class TestHoeTest < Minitest::Test
     end
   end
 
-  def test_make_test_cmd_with_different_testlibs
-    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
+  EXPECTED = %W[-w -Ilib:bin:test:.
+                -e 'require "rubygems"; %srequire "test/test_hoe_test.rb"'
+                --].join(" ") + " "
 
-    expected = ['-w -Ilib:bin:test:. -e \'require "rubygems"; %s',
-                'require "test/test_hoe_test.rb"',
-                "' -- ",
-               ].join
+  MT_EXPECTED = %W[-Ilib:test:. -w
+                   -e '%srequire "test/test_hoe_test.rb"'
+                   --].join(" ") + " "
+
+  def test_make_test_cmd_defaults_to_minitest
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
     # default
     assert_deprecated do
       autorun = %(require "minitest/autorun"; )
-      assert_equal expected % autorun, @tester.make_test_cmd
+      assert_equal EXPECTED % autorun, @tester.make_test_cmd
     end
+  end
+
+  def test_make_test_cmd_for_testunit
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
     assert_deprecated do
       @tester.testlib = :testunit
       testunit = %(require "test/unit"; )
-      assert_equal expected % testunit, @tester.make_test_cmd
+      assert_equal EXPECTED % testunit, @tester.make_test_cmd
+    end
+  end
+
+  def test_make_test_cmd_for_minitest
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
+
+    require "minitest/test_task" # currently in hoe, but will move
+
+    framework = %(require "minitest/autorun"; )
+
+    @tester = Minitest::TestTask.create :test do |t|
+      t.libs += Hoe.include_dirs.uniq
+      t.test_globs = ["test/test_hoe_test.rb"]
     end
 
-    assert_deprecated do
-      @tester.testlib = :minitest
-      autorun = %(require "minitest/autorun"; )
-      assert_equal expected % autorun, @tester.make_test_cmd
+    assert_equal MT_EXPECTED % [framework].join("; "), @tester.make_test_cmd
+  end
+
+  def test_make_test_cmd_for_minitest_prelude
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
+
+    require "minitest/test_task" # currently in hoe, but will move
+
+    prelude = %(require "other/file")
+    framework = %(require "minitest/autorun"; )
+
+    @tester = Minitest::TestTask.create :test do |t|
+      t.test_prelude = prelude
+      t.libs += Hoe.include_dirs.uniq
+      t.test_globs = ["test/test_hoe_test.rb"]
     end
+
+    assert_equal MT_EXPECTED % [prelude, framework].join("; "), @tester.make_test_cmd
+  end
+
+  def test_make_test_cmd_for_no_framework
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
     assert_deprecated do
       @tester.testlib = :none
-      assert_equal expected % "", @tester.make_test_cmd
+      assert_equal EXPECTED % "", @tester.make_test_cmd
     end
+  end
+
+  def test_make_test_cmd_for_faketestlib
+    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
     @tester.testlib = :faketestlib
     e = assert_raises(RuntimeError) do
