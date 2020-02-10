@@ -672,9 +672,8 @@ class Hoe
     unless readme.empty? then
       desc     = readme.values_at(*description_sections).join("\n\n")
       summ     = desc.split(/\.\s+/).first(summary_sentences).join(". ")
-      urls     = parse_urls(readme.values.first)
 
-      self.urls        ||= urls
+      self.urls        ||= parse_urls(readme.values.first)
       self.description ||= desc
       self.summary     ||= summ
     else

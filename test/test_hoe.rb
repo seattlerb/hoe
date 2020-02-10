@@ -1,3 +1,4 @@
+# coding: utf-8
 require "minitest/autorun"
 require "hoe"
 require "tempfile"
@@ -258,6 +259,42 @@ class TestHoe < Minitest::Test
     assert_equal desc, h.description
     assert_equal desc, h.summary
     assert_equal urls, h.urls
+  end
+
+  def test_intuit_values_should_be_silent_if_urls_are_already_set
+    h = nil
+    nokogiri_readme = <<~EOM
+      ## Links
+      
+      * https://nokogiri.org
+      * [Installation Help](https://nokogiri.org/tutorials/installing_nokogiri.html)
+      * [Tutorials](https://nokogiri.org/tutorials/toc.html)
+      * [Cheat Sheet](https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet)
+      * [GitHub](https://github.com/sparklemotion/nokogiri)
+      * [Mailing List](https://groups.google.com/group/nokogiri-talk)
+      * [Chat/Gitter](https://gitter.im/sparklemotion/nokogiri)
+
+    EOM
+
+    exp = {
+      "home" => "https://nokogiri.org",
+      "bugs" => "https://github.com/sparklemotion/nokogiri/issues",
+      "doco" => "https://nokogiri.org/rdoc/index.html",
+      "clog" => "https://nokogiri.org/CHANGELOG.html",
+      "code" => "https://github.com/sparklemotion/nokogiri",
+    }
+
+    assert_silent do
+      h = Hoe.spec "blah" do
+        developer "author", "email"
+        license "MIT"
+
+        self.urls = exp
+        self.intuit_values nokogiri_readme
+      end
+    end
+
+    assert_equal exp, h.urls
   end
 
   def test_metadata
