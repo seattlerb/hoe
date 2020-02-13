@@ -1,3 +1,9 @@
+=== 3.22.1 / 2020-02-12
+
+* 1 bug fix:
+
+  * Avoid calling parse_urls if URL metadata are already set. (flavorjones)
+
 === 2.22.0 / 2020-02-09
 
 * 4 minor enhancements:
