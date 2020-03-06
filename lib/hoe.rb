@@ -84,6 +84,86 @@ require "hoe/rake"
 
 class Hoe
 
+  module ParseMetadata
+
+    ##
+    # Intuit values from the readme and history files.
+
+    def intuit_values_from_readme input
+      readme = readme_to_hash(input)
+      unless readme.empty? then
+        desc     = readme.values_at(*description_sections).join("\n\n")
+        summ     = desc.split(/\.\s+/).first(summary_sentences).join(". ")
+
+        self.urls        ||= parse_urls(readme.values.first)
+        self.description ||= desc
+        self.summary     ||= summ
+      else
+        missing readme_file
+      end
+    end
+
+    def intuit_values_from_history(input)
+      self.changes = parse_history_for_changes(input)
+    end
+
+    def readme_to_hash(input)
+      input
+        .lines
+        .chunk { |l| l[/^(?:=+|#+)/] || "" }
+        .map(&:last)
+        .each_slice(2)
+        .map { |k, v|
+        kp = k.join
+        kp = kp.strip.chomp(":").split.last.downcase if k.size == 1
+        [kp, v.join.strip]
+      }
+        .to_h
+    end
+
+    def parse_history_for_changes(input)
+      begin
+        h = File.read_utf(input)
+        h.split(/^(={2,}|\#{2,})/)[1..2].join.strip
+      rescue
+        missing history_file
+        ""
+      end
+    end
+
+    ##
+    # Parse the urls section of the readme file. Returns a hash or an
+    # array depending on the format of the section.
+    #
+    #     label1 :: url1
+    #     label2 :: url2
+    #     label3 :: url3
+    #
+    # vs:
+    #
+    #     * url1
+    #     * url2
+    #     * url3
+    #
+    # The hash format is preferred as it will be used to populate gem
+    # metadata. The array format will work, but will warn that you
+    # should update the readme.
+
+    def parse_urls text
+      lines = text.gsub(/^\* /, "").delete("<>").split(/\n/).grep(/\S+/)
+
+      if lines.first =~ /::/ then
+        Hash[lines.map { |line| line.split(/\s*::\s*/) }]
+      else
+        warn "DEPRECATED: Please switch readme to hash format for urls."
+        warn "  Only defining 'home' url."
+        warn "  This will be removed on or after 2020-10-28."
+        { "home" => lines.first }
+      end
+    end
+  end
+
+  include ParseMetadata
   include Rake::DSL if defined?(Rake::DSL)
 
   # duh
@@ -100,7 +180,7 @@ class Hoe
   RUBY_DEBUG = ENV["RUBY_DEBUG"]
 
   default_ruby_flags = "-w -I#{%w[lib bin test .].join(File::PATH_SEPARATOR)}" +
-    (RUBY_DEBUG ? " #{RUBY_DEBUG}" : "")
+                       (RUBY_DEBUG ? " #{RUBY_DEBUG}" : "")
 
   ##
   # Used to specify flags to ruby [has smart default].
@@ -515,11 +595,11 @@ class Hoe
       manifest = read_manifest
 
       abort [
-             "Manifest is missing or couldn't be read.",
-             "The Manifest is kind of a big deal.",
-             "Maybe you're using a gem packaged by a linux project.",
-             "It seems like they enjoy breaking other people's code.",
-             ].join "\n" unless manifest
+        "Manifest is missing or couldn't be read.",
+        "The Manifest is kind of a big deal.",
+        "Maybe you're using a gem packaged by a linux project.",
+        "It seems like they enjoy breaking other people's code.",
+      ].join "\n" unless manifest
 
       s.name                 = name
       s.version              = version if version
@@ -653,72 +733,6 @@ class Hoe
     abort "Hoe.new {...} removed. Switch to Hoe.spec." if block_given?
   end
 
-  ##
-  # Intuit values from the readme and history files.
-
-  def intuit_values input
-    readme = input
-               .lines
-               .chunk { |l| l[/^(?:=+|#+)/] || "" }
-               .map(&:last)
-               .each_slice(2)
-               .map { |k, v|
-                  kp = k.join
-                  kp = kp.strip.chomp(":").split.last.downcase if k.size == 1
-                  [kp, v.join.strip]
-                }
-               .to_h
-
-    unless readme.empty? then
-      desc     = readme.values_at(*description_sections).join("\n\n")
-      summ     = desc.split(/\.\s+/).first(summary_sentences).join(". ")
-
-      self.urls        ||= parse_urls(readme.values.first)
-      self.description ||= desc
-      self.summary     ||= summ
-    else
-      missing readme_file
-    end
-
-    self.changes ||= begin
-                       h = File.read_utf(history_file)
-                       h.split(/^(={2,}|\#{2,})/)[1..2].join.strip
-                     rescue
-                       missing history_file
-                       ""
-                     end
-  end
-
-  ##
-  # Parse the urls section of the readme file. Returns a hash or an
-  # array depending on the format of the section.
-  #
-  #     label1 :: url1
-  #     label2 :: url2
-  #     label3 :: url3
-  #
-  # vs:
-  #
-  #     * url1
-  #     * url2
-  #     * url3
-  #
-  # The hash format is preferred as it will be used to populate gem
-  # metadata. The array format will work, but will warn that you
-  # should update the readme.
-
-  def parse_urls text
-    lines = text.gsub(/^\* /, "").delete("<>").split(/\n/).grep(/\S+/)
-
-    if lines.first =~ /::/ then
-      Hash[lines.map { |line| line.split(/\s*::\s*/) }]
-    else
-      warn "DEPRECATED: Please switch readme to hash format for urls."
-      warn "  Only defining 'home' url."
-      warn "  This will be removed on or after 2020-10-28."
-      { "home" => lines.first }
-    end
-  end
 
   ##
   # Load activated plugins by calling their define tasks method.
@@ -810,7 +824,8 @@ class Hoe
 
   def post_initialize
     activate_plugin_deps
-    intuit_values File.read_utf readme_file if readme_file
+    intuit_values_from_readme File.read_utf readme_file if readme_file
+    intuit_values_from_history(history_file) if history_file
     validate_fields
     define_spec
     load_plugin_tasks
