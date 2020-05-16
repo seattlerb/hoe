@@ -145,7 +145,7 @@ module Hoe::Publish
 
     desc "Generate email announcement file."
     task :debug_email do
-      puts generate_email
+      puts generate_email ENV["FULL"]
     end
 
     desc 'Post announcement to blog. Uses the "blogs" array in your hoerc.'
