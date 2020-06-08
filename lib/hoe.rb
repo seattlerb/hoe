@@ -223,6 +223,13 @@ class Hoe
   attr_accessor :group_name
 
   ##
+  # Optional: The homepage of the project. Auto-populates to the home key
+  # of the urls read from the README.txt
+  #
+
+  attr_accessor :homepage
+
+  ##
   # The Gem::Specification.
 
   attr_accessor :spec # :nodoc:
@@ -525,7 +532,7 @@ class Hoe
       s.version              = version if version
       s.summary              = summary
       s.email                = email
-      s.homepage             = urls["home"] || urls.values.first
+      s.homepage             ||= urls["home"] || urls.values.first
       s.description          = description
       s.files                = manifest
       s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
@@ -810,12 +817,15 @@ class Hoe
 
   def post_initialize
     activate_plugin_deps
-    intuit_values File.read_utf readme_file if readme_file
+    unless skip_intuit_values?
+      intuit_values File.read_utf readme_file if readme_file
+    end
     validate_fields
     define_spec
     load_plugin_tasks
     add_dependencies
   end
+
 
   ##
   # Reads Manifest.txt and returns an Array of lines in the manifest.
@@ -894,6 +904,14 @@ class Hoe
       value = self.send(field)
       abort "Hoe #{field} value not set. aborting" if value.nil? or value.empty?
     end
+  end
+
+  def skip_intuit_values?
+    %w[summary description homepage].each do |field|
+      value = self.send(field)
+      return false if value.nil? or value.empty?
+    end
+    true
   end
 
   ##
