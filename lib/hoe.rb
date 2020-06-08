@@ -222,6 +222,12 @@ class Hoe
 
   attr_accessor :group_name
 
+
+  ##
+  # Optional: The name of the executables directory. [default: bin]
+
+  attr_accessor :bindir
+
   ##
   # Optional: The homepage of the project. Auto-populates to the home key
   # of the urls read from the README.txt
@@ -535,8 +541,8 @@ class Hoe
       s.homepage             ||= urls["home"] || urls.values.first
       s.description          = description
       s.files                = manifest
-      s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
-      s.bindir               = "bin"
+      s.executables          = s.files.grep(/^#{bindir}/) { |f| File.basename(f) }
+      s.bindir               = bindir || "bin"
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
