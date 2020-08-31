@@ -475,7 +475,7 @@ class Hoe
 
     case name
     when "hoe" then
-      dependency "rake", [">= 0.8", "< 13.0"]
+      # do nothing? these deps are already in the hoe spec in the Rakefile
     else
       version = VERSION.split(/\./).first(2).join(".")
       dependency "hoe", "~> #{version}", :development
