@@ -150,7 +150,6 @@ class TestHoe < Minitest::Test
         File.write "Manifest.txt", "FAQ.rdoc\nHistory.rdoc\nREADME.rdoc\n"
         File.write "README.rdoc", "= blah\n\nhome :: http://blah/"
         File.write "History.rdoc", "=== 1.0"
-
         assert_equal "History.rdoc", hoe.history_file
         assert_equal "README.rdoc", hoe.readme_file
         assert_equal %w[FAQ.rdoc History.rdoc README.rdoc],
@@ -171,6 +170,7 @@ class TestHoe < Minitest::Test
       end
     end
   end
+
 
   def test_file_read_utf
     Tempfile.open "BOM" do |io|
@@ -295,6 +295,30 @@ class TestHoe < Minitest::Test
     end
 
     assert_equal exp, h.urls
+  end
+
+  def test_intuit_values_should_be_silent_if_summary_description_and_homepage_are_set
+    h = nil
+    readme = <<~EOM
+    == this is readme
+
+    == description
+    this is a bogus description
+   EOM
+
+    assert_silent do
+      h = Hoe.spec "blah" do
+        developer "auther", "email"
+        license "MIT"
+        self.homepage = 'http://myhome'
+        self.description = 'this is real description'
+        self.summary = 'this is summary'
+      end
+    end
+
+    assert_equal h.homepage , 'http://myhome'
+    assert_equal h.description , 'this is real description'
+    assert_equal h.summary , 'this is summary'
   end
 
   def test_metadata

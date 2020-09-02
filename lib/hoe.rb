@@ -538,17 +538,18 @@ class Hoe
       s.version              = version if version
       s.summary              = summary
       s.email                = email
-      s.homepage             ||= urls["home"] || urls.values.first
+      s.homepage             = homepage || urls["home"] || urls.values.first
+      
       s.description          = description
       s.files                = manifest
-      s.executables          = s.files.grep(/^#{bindir}/) { |f| File.basename(f) }
       s.bindir               = bindir || "bin"
+      s.executables          = s.files.grep(/^#{bindir}/) { |f| File.basename(f) }
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
       s.metadata             = (urls.keys & URLS_TO_META_MAP.keys).map { |name|
-        [URLS_TO_META_MAP[name], urls[name]]
-      }.to_h
+        [URLS_TO_META_MAP[name], urls[name]] 
+      }.to_h if urls
 
       missing "Manifest.txt" if s.files.empty?
 
