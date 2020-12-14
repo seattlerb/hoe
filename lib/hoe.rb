@@ -708,7 +708,7 @@ class Hoe
   # should update the readme.
 
   def parse_urls text
-    lines = text.gsub(/^\* /, "").delete("<>").split(/\n/).grep(/\S+/)
+    lines = text.gsub(/^\* /, "").delete("<>").lines.map(&:chomp).grep(/\S+/)
 
     if lines.first =~ /::/ then
       Hash[lines.map { |line| line.split(/\s*::\s*/) }]
