@@ -84,7 +84,7 @@ module Hoe::Debug
 
       files = files.sort.join "\n"
 
-      File.open f, "w" do |fp| fp.puts files end
+      File.open f, "wb" do |fp| fp.puts files end
 
       verbose = { :verbose => Rake.application.options.verbose }
 
