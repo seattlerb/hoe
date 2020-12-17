@@ -70,7 +70,6 @@ module Hoe::Debug
   # Verifies your Manifest.txt against the files in your project.
 
   def check_manifest
-    f = "Manifest.tmp"
     require "find"
     files = []
     with_config do |config, _|
@@ -82,17 +81,14 @@ module Hoe::Debug
         files << path[2..-1]
       end
 
-      files = files.sort.join "\n"
+      files = files.sort
+      manifest_files = File.readlines("Manifest.txt").map(&:chomp).sort
 
-      File.open f, "wb" do |fp| fp.puts files end
+      added_files = files - manifest_files
+      raise "#{added_files} need to be added to the manifest" if added_files.any?
 
-      verbose = { :verbose => Rake.application.options.verbose }
-
-      begin
-        sh "#{DIFF} -du Manifest.txt #{f}", verbose
-      ensure
-        rm f, **verbose
-      end
+      removed_files = manifest_files - files
+      raise "#{removed_files} need to be removed to the manifest" if removed_files.any?
     end
   end
 end

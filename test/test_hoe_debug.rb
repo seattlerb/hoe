@@ -64,9 +64,9 @@ class TestHoeDebug < Minitest::Test
         end
       end
 
-      assert_match %r%^Command failed with status%, e.message
-      assert_match %r%^\+missing.rb%, out
+      assert_match %r%^\["missing.rb"\] need to be added to the manifest%, e.message
       assert_equal "", err
+      assert_equal "", out
     end
   end
 
