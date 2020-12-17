@@ -104,7 +104,7 @@ module Minitest # :nodoc:
 
     def initialize name = :test # :nodoc:
       self.extra_args   = []
-      self.framework    = %(require "minitest/autorun")
+      self.framework    = %(require 'minitest/autorun')
       self.libs         = %w[lib test .]
       self.name         = name
       self.test_globs   = ["test/**/{test,spec}_*.rb",
@@ -256,7 +256,7 @@ module Minitest # :nodoc:
     def make_test_cmd globs = test_globs
       tests = []
       tests.concat Dir[*globs].sort.shuffle # TODO: SEED -> srand first?
-      tests.map! { |f| %(require "#{f}") }
+      tests.map! { |f| %(require '#{f}') }
 
       runner = []
       runner << test_prelude if test_prelude
@@ -268,7 +268,7 @@ module Minitest # :nodoc:
       args << "-I#{libs.join(File::PATH_SEPARATOR)}" unless libs.empty?
       args << "-w" if warning
       args << '-e'
-      args << "'#{runner}'"
+      args << "\"#{runner}\""
       args << '--'
       args << extra_args.map(&:shellescape)
 

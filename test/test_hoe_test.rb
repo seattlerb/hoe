@@ -31,7 +31,7 @@ class TestHoeTest < Minitest::Test
                 --].join(" ") + " "
 
   MT_EXPECTED = %W[-Ilib:test:. -w
-                   -e '%srequire "test/test_hoe_test.rb"'
+                   -e "%srequire 'test/test_hoe_test.rb'"
                    --].join(" ") + " "
 
   def test_make_test_cmd_defaults_to_minitest
@@ -59,7 +59,7 @@ class TestHoeTest < Minitest::Test
 
     require "minitest/test_task" # currently in hoe, but will move
 
-    framework = %(require "minitest/autorun"; )
+    framework = %(require 'minitest/autorun'; )
 
     @tester = Minitest::TestTask.create :test do |t|
       t.libs += Hoe.include_dirs.uniq
@@ -74,8 +74,8 @@ class TestHoeTest < Minitest::Test
 
     require "minitest/test_task" # currently in hoe, but will move
 
-    prelude = %(require "other/file")
-    framework = %(require "minitest/autorun"; )
+    prelude = %(require 'other/file')
+    framework = %(require 'minitest/autorun'; )
 
     @tester = Minitest::TestTask.create :test do |t|
       t.test_prelude = prelude
