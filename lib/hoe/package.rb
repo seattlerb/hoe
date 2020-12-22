@@ -92,9 +92,9 @@ module Hoe::Package
     null_dev = Hoe::WINDOZE ? "> NUL 2>&1" : "> /dev/null 2>&1"
 
     gem_cmd = Gem.default_exec_format % "gem"
-    sudo    = "sudo "                  unless should_not_sudo
-    local   = "--local"                unless version
-    version = "--version '#{version}'" if     version
+    sudo    = "sudo "                   unless should_not_sudo
+    local   = "--local"                 unless version
+    version = %(--version "#{version}") if     version
 
     cmd  = "#{sudo}#{gem_cmd} install #{local} #{name} #{version}"
     cmd += " --no-document" unless rdoc
