@@ -1,3 +1,9 @@
+=== 3.22.3 / 2021-01-10
+
+* 1 bug fix:
+
+  * Bumped ruby version to include < 4 (trunk).
+
 === 3.22.2 / 2020-08-31
 
 * 1 bug fix:
