@@ -841,20 +841,6 @@ class Hoe
   end
 
   ##
-  # Declare that this gem requires ruby to be in the 1.8+ family.
-
-  def ruby18!
-    require_ruby_version "~> 1.8"
-  end
-
-  ##
-  # Declare that this gem requires ruby to be in the 1.9 family.
-
-  def ruby19!
-    require_ruby_version "~> 1.9"
-  end
-
-  ##
   # Declare that this gem requires ruby to be in the 2.0+ family.
 
   def ruby20!
@@ -881,6 +867,9 @@ class Hoe
   def ruby23!
     require_ruby_version "~> 2.3"
   end
+
+  # I don't care for these methods (eg 3.0 is out) ... so I'm not
+  # continuing them.
 
   ##
   # Provide a linear degrading value from n to m over start to finis
