@@ -1,3 +1,10 @@
+=== 3.23.0 / 2021-05-29
+
+* 2 minor enhancements:
+
+  * Bump racc (plugin) dependency.
+  * Removed ruby18! and ruby19! methods. ugh
+
 === 3.22.3 / 2021-01-10
 
 * 1 bug fix:
