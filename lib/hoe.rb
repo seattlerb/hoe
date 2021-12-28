@@ -904,18 +904,28 @@ class Hoe
     config = Hoe::DEFAULT_CONFIG
 
     rc = File.expand_path("~/.hoerc")
-    exists = File.exist? rc
-    homeconfig = exists ? YAML.load_file(rc) : {}
+    homeconfig = maybe_load_yaml rc
 
     config = config.merge homeconfig
 
     localrc = File.join Dir.pwd, ".hoerc"
-    exists = File.exist? localrc
-    localconfig = exists ? YAML.load_file(localrc) : {}
+    localconfig = maybe_load_yaml(localrc)
 
     config = config.merge localconfig
 
     yield config, rc
+  end
+
+  def maybe_load_yaml path
+    if File.exist? path then
+      if YAML.respond_to? :safe_load_file then
+        YAML.safe_load_file path, permitted_classes: [Regexp, Symbol]
+      else
+        YAML.load_file path
+      end
+    else
+      {}
+    end
   end
 end
 
