@@ -1,3 +1,9 @@
+=== 3.23.1 / 2022-01-04
+
+* 1 bug fix:
+
+  * Fixed loading config files for ruby 3.1's now default YAML.safe_load_file.
+
 === 3.23.0 / 2021-05-29
 
 * 2 minor enhancements:
