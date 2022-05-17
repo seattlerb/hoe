@@ -26,11 +26,14 @@ class TestHoeTest < Minitest::Test
     end
   end
 
-  EXPECTED = %W[-w -Ilib:bin:test:.
+  path    = %w[lib bin test .].join File::PATH_SEPARATOR
+  mt_path = %w[lib test .].join File::PATH_SEPARATOR
+
+  EXPECTED = %W[-w -I#{path}
                 -e 'require "rubygems"; %srequire "test/test_hoe_test.rb"'
                 --].join(" ") + " "
 
-  MT_EXPECTED = %W[-Ilib:test:. -w
+  MT_EXPECTED = %W[-I#{mt_path} -w
                    -e '%srequire "test/test_hoe_test.rb"'
                    --].join(" ") + " "
 
