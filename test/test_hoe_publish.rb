@@ -19,9 +19,16 @@ class TestHoePublish < Minitest::Test
   end
 
   def test_make_rdoc_cmd
+    rdoc = Gem.bin_wrapper "rdoc"
+
+    unless File.exist? rdoc then
+      extra = "-S"
+      rdoc  = "rdoc"
+    end
+
     expected = %W[
                 #{Gem.ruby}
-                #{Gem.bin_wrapper "rdoc"}
+                #{rdoc}
                 --title blah-1.0\ Documentation
                 -o doc
                 --main README.rdoc
@@ -29,7 +36,11 @@ class TestHoePublish < Minitest::Test
                 History.rdoc Manifest.txt README.rdoc
                ]
 
-    skip if linux?
-    assert_equal expected, @hoe.make_rdoc_cmd
+    expected[1, 0] = extra if extra
+
+    # skip if linux?
+    capture_io do
+      assert_equal expected, @hoe.make_rdoc_cmd
+    end
   end
 end
