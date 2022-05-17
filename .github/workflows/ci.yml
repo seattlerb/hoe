@@ -1,0 +1,71 @@
+---
+name: CI
+
+# https://github.com/actions/virtual-environments#available-environments
+# https://github.com/ruby/setup-ruby/blob/master/README.md
+# https://github.com/ruby/setup-ruby/blob/master/README.md#supported-platformsg
+
+'on': [push, pull_request, workflow_dispatch]
+
+jobs:
+  test:
+    name: >-
+      test ${{ matrix.os }} ${{ matrix.ruby }}
+
+    runs-on: ${{ matrix.os }}
+    if: |
+      !(   contains(github.event.pull_request.title,  '[ci skip]')
+        || contains(github.event.pull_request.title,  '[skip ci]'))
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        ruby:
+          - '2.7'
+          - '3.0'
+          - '3.1'
+          - head
+
+    steps:
+      - name: repo checkout
+        uses: actions/checkout@v2
+
+      - name: load ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler: none
+
+      - name: rake test
+        run: |
+          rake test
+          ruby -v
+        timeout-minutes: 3
+
+  isolated:
+    name: >-
+      test:isolated
+
+    runs-on: ubuntu-latest
+    if: |
+      !(   contains(github.event.pull_request.title,  '[ci skip]')
+        || contains(github.event.pull_request.title,  '[skip ci]'))
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: repo checkout
+        uses: actions/checkout@v2
+
+      - name: load ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby
+
+      - name: rake test:isolated
+        run: |
+          rake test:isolated
+          ruby -v
+        timeout-minutes: 3
