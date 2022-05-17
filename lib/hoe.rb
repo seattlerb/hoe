@@ -223,6 +223,18 @@ class Hoe
   attr_accessor :group_name
 
   ##
+  # Optional: The name of the executables directory. [default: bin]
+
+  attr_accessor :bindir
+
+  ##
+  # Optional: The homepage of the project. Auto-populates to the home key
+  # of the urls read from the README.txt
+  #
+
+  attr_accessor :homepage
+
+  ##
   # The Gem::Specification.
 
   attr_accessor :spec # :nodoc:
@@ -525,17 +537,18 @@ class Hoe
       s.version              = version if version
       s.summary              = summary
       s.email                = email
-      s.homepage             = urls["home"] || urls.values.first
+      s.homepage             = homepage || urls["home"] || urls.values.first
+
       s.description          = description
       s.files                = manifest
-      s.executables          = s.files.grep(/^bin/) { |f| File.basename(f) }
-      s.bindir               = "bin"
+      s.bindir               = bindir || "bin"
+      s.executables          = s.files.grep(/^#{s.bindir}/) { |f| File.basename(f) }
       s.require_paths        = dirs unless dirs.empty?
       s.rdoc_options         = ["--main", readme_file]
       s.post_install_message = post_install_message
       s.metadata             = (urls.keys & URLS_TO_META_MAP.keys).map { |name|
         [URLS_TO_META_MAP[name], urls[name]]
-      }.to_h
+      }.to_h if urls
 
       missing "Manifest.txt" if s.files.empty?
 
@@ -810,7 +823,9 @@ class Hoe
 
   def post_initialize
     activate_plugin_deps
-    intuit_values File.read_utf readme_file if readme_file
+    unless skip_intuit_values?
+      intuit_values File.read_utf readme_file if readme_file
+    end
     validate_fields
     define_spec
     load_plugin_tasks
@@ -894,6 +909,10 @@ class Hoe
       value = self.send(field)
       abort "Hoe #{field} value not set. aborting" if value.nil? or value.empty?
     end
+  end
+
+  def skip_intuit_values?
+    %w[summary description homepage].all? { |field| send field }
   end
 
   ##

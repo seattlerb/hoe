@@ -297,6 +297,30 @@ class TestHoe < Minitest::Test
     assert_equal exp, h.urls
   end
 
+  def test_intuit_values_should_be_silent_if_summary_description_and_homepage_are_set
+    h = nil
+    _readme = <<~EOM
+      == this is readme
+
+      == description
+      this is a bogus description
+    EOM
+
+    assert_silent do
+      h = Hoe.spec "blah" do
+        developer "auther", "email"
+        license "MIT"
+        self.homepage = 'http://myhome'
+        self.description = 'this is real description'
+        self.summary = 'this is summary'
+      end
+    end
+
+    assert_equal h.homepage , 'http://myhome'
+    assert_equal h.description , 'this is real description'
+    assert_equal h.summary , 'this is summary'
+  end
+
   def test_metadata
     hash = [
             "home  :: https://github.com/seattlerb/hoe",
