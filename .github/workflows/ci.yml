@@ -41,7 +41,6 @@ jobs:
       - name: rake test
         run: |
           rake test
-          ruby -v
         timeout-minutes: 3
 
   isolated:
@@ -67,5 +66,4 @@ jobs:
       - name: rake test:isolated
         run: |
           rake test:isolated
-          ruby -v
         timeout-minutes: 3
