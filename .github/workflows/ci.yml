@@ -2,8 +2,7 @@
 name: CI
 
 # https://github.com/actions/virtual-environments#available-environments
-# https://github.com/ruby/setup-ruby/blob/master/README.md
-# https://github.com/ruby/setup-ruby/blob/master/README.md#supported-platformsg
+# https://github.com/ruby/setup-ruby/blob/master/README.md#supported-platforms
 
 'on': [push, pull_request, workflow_dispatch]
 
