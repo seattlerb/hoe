@@ -1,3 +1,11 @@
+=== 3.24.0 / 2022-06-20
+
+* 3 minor enhancements:
+
+  * Add bindir and homepage accessor methods. (dsisnero)
+  * Don't auto-intuit values if they're already set. (dsisnero)
+  * Use bindir to determine executables. (dsisnero)
+
 === 3.23.1 / 2022-01-04
 
 * 1 bug fix:
