@@ -465,7 +465,7 @@ class TestHoe < Minitest::Test
 
   def test_nosudo
     hoe = self.hoe do
-      def system cmd
+      def sh cmd
         cmd
       end
     end
