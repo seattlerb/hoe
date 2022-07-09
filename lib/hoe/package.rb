@@ -100,8 +100,7 @@ module Hoe::Package
     cmd += " --no-document" unless rdoc
     cmd += " #{null_dev}" unless Rake.application.options.trace
 
-    puts cmd if Rake.application.options.trace
-    result = system cmd
+    result = sh cmd
     Gem::Specification.reset
     result
   end
