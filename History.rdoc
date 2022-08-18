@@ -1,3 +1,13 @@
+=== 3.25.0 / 2022-08-18
+
+* 1 minor enhancement:
+
+  * Added otp_command config option for OTP auth on gem push.
+
+* 1 bug fix:
+
+  * Use sh instead of system during gem install to raise on error.
+
 === 3.24.0 / 2022-06-20
 
 * 3 minor enhancements:
