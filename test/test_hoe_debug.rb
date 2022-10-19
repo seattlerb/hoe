@@ -1,8 +1,7 @@
-require "hoe"
-require File.expand_path "lib/hoe/debug.rb" # ugh. avoid dupe warnings
-require "tmpdir"
-require "tempfile"
 require "minitest/autorun"
+require "hoe"
+require_relative "../lib/hoe/debug"
+require "tmpdir"
 
 class TestHoeDebug < Minitest::Test
 

@@ -1,5 +1,5 @@
-require "hoe"
 require "minitest/autorun"
+require "hoe"
 
 Hoe.load_plugins
 

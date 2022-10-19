@@ -1,6 +1,6 @@
-require "hoe"
-require "hoe/gemcutter" unless defined? Hoe::Gemcutter
 require "minitest/autorun"
+require "hoe"
+require_relative "../lib/hoe/gemcutter"
 
 class TestHoeGemcutter < Minitest::Test
   include Hoe::Gemcutter
