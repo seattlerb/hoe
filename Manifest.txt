@@ -8,6 +8,7 @@ bin/sow
 lib/hoe.rb
 lib/hoe/clean.rb
 lib/hoe/compiler.rb
+lib/hoe/cov.rb
 lib/hoe/debug.rb
 lib/hoe/deps.rb
 lib/hoe/flay.rb
@@ -20,7 +21,6 @@ lib/hoe/package.rb
 lib/hoe/publish.rb
 lib/hoe/racc.rb
 lib/hoe/rake.rb
-lib/hoe/rcov.rb
 lib/hoe/rdoc.rb
 lib/hoe/signing.rb
 lib/hoe/test.rb

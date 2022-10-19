@@ -57,6 +57,11 @@ module Hoe::Test
   attr_accessor :rspec_options
 
   ##
+  # The test task created for this plugin.
+
+  attr_accessor :test_task
+
+  ##
   # Initialize variables for plugin.
 
   def initialize_test
@@ -81,7 +86,7 @@ module Hoe::Test
         require "minitest/test_task" # currently in hoe, but will move
 
         test_prelude = self.test_prelude
-        Minitest::TestTask.create :test do |t|
+        self.test_task = Minitest::TestTask.create :test do |t|
           t.test_prelude = test_prelude
           t.libs += Hoe.include_dirs.uniq
         end

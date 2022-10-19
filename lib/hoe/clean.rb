@@ -16,7 +16,7 @@ module Hoe::Clean
 
   def initialize_clean
     self.clean_globs ||= %w[diff diff.txt TAGS ri deps .source_index
-                            *.gem **/*~ **/.*~ **/*.rbc coverage*]
+                            *.gem **/*~ **/.*~ **/*.rbc]
   end
 
   ##
