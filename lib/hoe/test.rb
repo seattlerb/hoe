@@ -88,7 +88,7 @@ module Hoe::Test
         test_prelude = self.test_prelude
         self.test_task = Minitest::TestTask.create :test do |t|
           t.test_prelude = test_prelude
-          t.libs += Hoe.include_dirs.uniq
+          t.libs.prepend Hoe.include_dirs.uniq
         end
       when :testunit then
         desc "Run the test suite. Use FILTER or TESTOPTS to add flags/args."

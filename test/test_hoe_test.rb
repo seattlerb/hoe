@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "hoe"
+require "minitest/test_task" # currently in hoe, but will move
 
 Hoe.load_plugins # make sure Hoe::Test is loaded
 
@@ -60,11 +61,9 @@ class TestHoeTest < Minitest::Test
   def test_make_test_cmd_for_minitest
     skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
 
-    require "minitest/test_task" # currently in hoe, but will move
-
     framework = %(require "minitest/autorun"; )
 
-    @tester = Minitest::TestTask.create :test do |t|
+    @tester = Minitest::TestTask.create :testtest do |t|
       t.libs += Hoe.include_dirs.uniq
       t.test_globs = ["test/test_hoe_test.rb"]
     end
@@ -74,8 +73,6 @@ class TestHoeTest < Minitest::Test
 
   def test_make_test_cmd_for_minitest_prelude
     skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
-
-    require "minitest/test_task" # currently in hoe, but will move
 
     prelude = %(require "other/file")
     framework = %(require "minitest/autorun"; )

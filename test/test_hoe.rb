@@ -265,7 +265,7 @@ class TestHoe < Minitest::Test
     h = nil
     nokogiri_readme = <<~EOM
       ## Links
-      
+
       * https://nokogiri.org
       * [Installation Help](https://nokogiri.org/tutorials/installing_nokogiri.html)
       * [Tutorials](https://nokogiri.org/tutorials/toc.html)

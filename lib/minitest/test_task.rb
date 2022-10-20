@@ -2,6 +2,15 @@ require "shellwords"
 require "rbconfig"
 require "rake/tasklib"
 
+warn <<~EOM
+    minitest/test_task.rb is now packaged with minitest. If you see
+    this, you are getting it from hoe instead. If you're NOT able to
+    upgrade minitest to pick this up, please drop an issue on
+    seattlerb/hoe and let me know.
+
+    Required from #{caller[2]}
+EOM
+
 module Minitest # :nodoc:
 
   ##
