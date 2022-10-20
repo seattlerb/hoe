@@ -1,3 +1,14 @@
+=== 3.26.0 / 2022-10-20
+
+* 2 minor enhancements:
+
+  * Added warning to bundled minitest/test_task.
+  * Removed dead rcov plugin and added (simple)cov plugin.
+
+* 1 bug fix:
+
+  * Fixed test task load path issue, prepend Hoe.include_dirs to ensure they come first.
+
 === 3.25.0 / 2022-08-18
 
 * 1 minor enhancement:
