@@ -1,4 +1,3 @@
-# coding: utf-8
 require "minitest/autorun"
 require "hoe"
 require "tempfile"
@@ -192,11 +191,8 @@ class TestHoe < Minitest::Test
             "* http://docs.seattlerb.org/hoe/Hoe.pdf",
             "* http://github.com/jbarnette/hoe-plugin-examples"].join "\n"
 
-    exp = { "home" => "https://github.com/seattlerb/hoe" }
-    err = /DEPRECATED: Please switch readme to hash format/
-
-    assert_output "", err do
-      assert_equal exp, hoe.parse_urls(ary)
+    assert_raises RuntimeError do
+      hoe.parse_urls ary
     end
   end
 

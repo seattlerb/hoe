@@ -24,7 +24,6 @@ lib/hoe/rake.rb
 lib/hoe/rdoc.rb
 lib/hoe/signing.rb
 lib/hoe/test.rb
-lib/minitest/test_task.rb
 template/.autotest.erb
 template/History.txt.erb
 template/Manifest.txt.erb

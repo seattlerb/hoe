@@ -87,7 +87,7 @@ class Hoe
   include Rake::DSL if defined?(Rake::DSL)
 
   # duh
-  VERSION = "3.26.0"
+  VERSION = "4.0.0"
 
   @@plugins = [:clean, :debug, :deps, :flay, :flog, :newb, :package,
                :publish, :gemcutter, :signing, :test]
@@ -726,10 +726,7 @@ class Hoe
     if lines.first =~ /::/ then
       Hash[lines.map { |line| line.split(/\s*::\s*/) }]
     else
-      warn "DEPRECATED: Please switch readme to hash format for urls."
-      warn "  Only defining 'home' url."
-      warn "  This will be removed on or after 2020-10-28."
-      { "home" => lines.first }
+      raise "Please switch readme to hash format for urls."
     end
   end
 
