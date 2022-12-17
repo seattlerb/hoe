@@ -72,7 +72,10 @@ module Hoe::Package
       pre = ENV["PRERELEASE"] || ENV["PRE"]
       v += ".#{pre}" if pre
 
-      abort "Versions don't match #{v} vs #{version}" if v != version
+      c = changes[/\d\S+/]
+
+      abort "Versions don't match: %s vs %s" % [v, version] if v != version
+      abort "Versions don't match %s: %s vs %s" % [history_file, v, c] if v != c
     end
   end
 
