@@ -37,6 +37,9 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler: none
 
+      - name: install minitest # needs to be > 5.16 for minitest/test_task
+        run: gem install minitest -N
+
       - name: rake test
         run: |
           rake test
