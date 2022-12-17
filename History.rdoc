@@ -1,3 +1,9 @@
+=== 4.0.1 / 2022-12-17
+
+* 1 bug fix:
+
+  * Add extra checks to release_sanity to ensure history file is updated before release.
+
 === 4.0.0 / 2022-12-16
 
 * 3 major enhancements:
