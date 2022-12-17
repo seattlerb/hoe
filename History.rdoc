@@ -1,3 +1,11 @@
+=== 4.0.0 / 2022-12-16
+
+* 3 major enhancements:
+
+  * Removed Minitest::TestTask. Shipped with minitest 5.16+ now!
+  * Removed direct support for rspec, test/unit. Still extendable tho.
+  * Removed support for old style readme parsing.
+
 === 3.26.0 / 2022-10-20
 
 * 2 minor enhancements:
