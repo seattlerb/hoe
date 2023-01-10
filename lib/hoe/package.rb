@@ -56,7 +56,7 @@ module Hoe::Package
 
     # no doco, invisible hook
     task :prerelease do
-      abort "Fix your version before you release" if spec.version =~ /borked/
+      abort "Fix your version before you release" if spec.version.to_s =~ /borked/
     end
 
     # no doco, invisible hook
