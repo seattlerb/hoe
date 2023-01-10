@@ -18,8 +18,8 @@ Hoe.spec "hoe" do
   license "MIT"
 
   pluggable!
-  require_rubygems_version ">= 1.4"
-  require_ruby_version [">= 2.1", "< 4"]
+  require_rubygems_version ">= 3.0"
+  require_ruby_version [">= 2.6", "< 4"]
 
   dependency "rake", [">= 0.8", "< 15.0"] # FIX: to force it to exist pre-isolate
 end
