@@ -1,3 +1,13 @@
+=== 4.0.2 / 2023-01-21
+
+* 1 minor enhancement:
+
+  * Bump minimum ruby version to 2.6+. Can't wait to drop 2.6.
+
+* 1 bug fix:
+
+  * Fix for rubygems method error. Version used to respect #=~, now needs to #to_s first.
+
 === 4.0.1 / 2022-12-17
 
 * 1 bug fix:
