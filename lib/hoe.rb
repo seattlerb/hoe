@@ -458,7 +458,7 @@ class Hoe
   #  Call it multiple times if you are releasing under multiple licenses.
   #
   def license name
-    self.licenses << name
+    self.licenses << name.to_s
   end
 
   ##
