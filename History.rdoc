@@ -1,3 +1,9 @@
+=== 4.0.3 / 2023-05-02
+
+* 1 bug fix:
+
+  * Ensure that license name is a string.
+
 === 4.0.2 / 2023-01-21
 
 * 1 minor enhancement:
