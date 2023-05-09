@@ -675,12 +675,13 @@ class Hoe
                .chunk { |l| l[/^(?:=+|#+)/] || "" }
                .map(&:last)
                .each_slice(2)
-               .map { |k, v|
-                  kp = k.join
-                  kp = kp.strip.chomp(":").split.last.downcase if k.size == 1
-                  [kp, v.join.strip]
-                }
-               .to_h
+               .to_h { |k, v|
+                 kp = k.map { |s|
+                   s.strip.chomp(":").sub(/(?:=+|#+)\s*/, '').downcase
+                 }.join("\n")
+
+                 [kp, v.join.strip]
+               }
 
     unless readme.empty? then
       desc     = readme.values_at(*description_sections).join("\n\n")
