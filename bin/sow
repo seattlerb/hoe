@@ -102,12 +102,16 @@ FileUtils.cp_r template_path, project
 Dir.chdir project do
   dirs = Dir["**/*"].select { |f| File.directory? f }.sort.reverse
   dirs.grep(/file_name$/).each do |file|
-    FileUtils.mv file, file.sub(/file_name$/, file_name)
+    target = file.sub(/file_name$/, file_name)
+    FileUtils.mkdir_p File.dirname(target)
+    FileUtils.mv file, target
   end
 
   dirs = Dir["**/*"].select { |f| File.directory? f }.sort.reverse
   dirs.grep(/ext_name$/).each do |file|
-    FileUtils.mv file, file.sub(/ext_name$/, ext_name)
+    target = file.sub(/ext_name$/, ext_name)
+    FileUtils.mkdir_p File.dirname(target)
+    FileUtils.mv file, target
   end
 
   paths = (Dir["**/*"] + Dir["**/.*"]).select { |f| File.file? f }.sort
