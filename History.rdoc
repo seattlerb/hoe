@@ -1,3 +1,9 @@
+=== 4.0.5 / 2023-07-25
+
+* 1 bug fix:
+
+  * sow: Fixed nested module directory creation. (chriscz)
+
 === 4.0.4 / 2023-06-06
 
 * 1 minor enhancement:
