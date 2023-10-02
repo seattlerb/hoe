@@ -37,6 +37,10 @@ module Hoe::Compiler
     warn "Couldn't load rake-compiler. Skipping. Run `rake newb` to fix."
   end
 
+  ##
+  # Declare a compiler extension, expecting ext/NAME/extconf.rb to
+  # exist.
+
   def extension name
     @extensions ||= []
     @extensions << name

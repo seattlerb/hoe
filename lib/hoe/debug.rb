@@ -97,10 +97,10 @@ module Hoe::Debug
   end
 end
 
-class Gem::Specification < Gem::BasicSpecification
-  alias old_ruby_code ruby_code
+class Gem::Specification < Gem::BasicSpecification # :nodoc:
+  alias old_ruby_code ruby_code # :nodoc:
 
-  def ruby_code(obj)
+  def ruby_code(obj) # :nodoc:
     old_ruby_code obj
   rescue Gem::Exception => e
     case e.message

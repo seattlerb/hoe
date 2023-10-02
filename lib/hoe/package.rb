@@ -4,7 +4,7 @@ rescue LoadError
   # rake/gempackagetask will go away some day
   warn "It has happened... rubygems/package_task is gone!"
   require "rake/gempackagetask"
-  Gem::PackageTask = Rake::GemPackageTask
+  Gem::PackageTask = Rake::GemPackageTask # :nodoc:
 end
 
 ##

@@ -12,6 +12,9 @@ module Hoe::Gemcutter
 
   Hoe::DEFAULT_CONFIG["otp_command"] = false
 
+  ##
+  # Push gems to server.
+
   def gem_push gems
     with_config do |config, _|
       otp_command = config["otp_command"]

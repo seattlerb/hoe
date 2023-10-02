@@ -909,7 +909,7 @@ class Hoe
     end
   end
 
-  def skip_intuit_values?
+  def skip_intuit_values? # :nodoc:
     %w[summary description homepage].all? { |field| send field }
   end
 
@@ -933,7 +933,7 @@ class Hoe
     yield config, rc
   end
 
-  def maybe_load_yaml path
+  def maybe_load_yaml path # :nodoc:
     if File.exist? path then
       if YAML.respond_to? :safe_load_file then
         YAML.safe_load_file path, permitted_classes: [Regexp, Symbol]
@@ -946,7 +946,7 @@ class Hoe
   end
 end
 
-class File
+class File # :nodoc:
   # Like File::read, but strips out a BOM marker if it exists.
   def self.read_utf path
     r19 = "<3".respond_to? :encoding

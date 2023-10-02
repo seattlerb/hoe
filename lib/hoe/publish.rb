@@ -301,7 +301,7 @@ class ::Rake::SshDirPublisher # :nodoc:
   attr_reader :host, :remote_dir, :local_dir
 end
 
-class String
+class String # :nodoc:
   ##
   # Very basic munge from rdoc to markdown format.
 

@@ -1,5 +1,5 @@
 module Rake
-  class Task
+  class Task # :nodoc:
     # Used to name the source of a given task
     attr_accessor :plugin
     # :stopdoc:
@@ -29,7 +29,7 @@ module Rake
     end
   end
 
-  module TaskManager
+  module TaskManager # :nodoc:
     ##
     # This gives us access to the tasks already defined in rake.
     def all_tasks
