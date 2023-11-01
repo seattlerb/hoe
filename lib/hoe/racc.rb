@@ -57,8 +57,8 @@ module Hoe::Racc
   # Define tasks for racc plugin
 
   def define_racc_tasks
-    racc_files   = self.spec.files.find_all { |f| f =~ /\.y$/ }
-    rex_files    = self.spec.files.find_all { |f| f =~ /\.rex$/ }
+    racc_files   = self.spec.files.grep(/\.y$/)
+    rex_files    = self.spec.files.grep(/\.rex$/)
 
     parser_files = racc_files.map { |f| f.sub(/\.y$/, ".rb") }
     lexer_files  = rex_files.map  { |f| f.sub(/\.rex$/, ".rex.rb") }
@@ -100,5 +100,5 @@ module Hoe::Racc
     racc_tasks.each do |t|
       task t => [:parser, :lexer]
     end
-  end
+  end # define_racc_tasks
 end
