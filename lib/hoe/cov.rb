@@ -7,6 +7,12 @@
 
 module Hoe::Cov
 
+  attr_accessor :cov_filter
+
+  def initialize_cov
+    self.cov_filter = %w[tmp test]
+  end
+
   ##
   # Activate the cov dependencies.
 
@@ -24,7 +30,8 @@ module Hoe::Cov
 
     desc "Run tests and analyze code coverage"
     task :cov => :isolate do
-      test_task.test_prelude = "require \"simplecov\"; SimpleCov.start"
+      test_task.test_prelude =
+        %(require "simplecov"; SimpleCov.start { add_filter %p }) % [cov_filter]
 
       Rake::Task[:test].invoke
     end
