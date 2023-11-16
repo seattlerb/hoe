@@ -1,3 +1,14 @@
+=== 4.1.0 / 2023-11-16
+
+* 1 minor enhancement:
+
+  * Added Hoe::Cov#cov_filter accessor.
+
+* 2 bug fixes:
+
+  * Removed use of Gem.bin_wrapper. rdoc is now just rdoc.
+  * Removed use of Gem.default_exec_format. gem is now just gem.
+
 === 4.0.5 / 2023-07-25
 
 * 1 bug fix:
