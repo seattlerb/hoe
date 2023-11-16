@@ -7,9 +7,12 @@
 
 module Hoe::Cov
 
+  ##
+  # Directories to filter out from coverage.
+
   attr_accessor :cov_filter
 
-  def initialize_cov
+  def initialize_cov # :nodoc:
     self.cov_filter = %w[tmp test]
   end
 
