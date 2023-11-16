@@ -204,26 +204,16 @@ module Hoe::Publish
   def make_rdoc_cmd(*extra_args) # :nodoc:
     title = "#{name}-#{version} Documentation"
     title = "#{group_name}'s #{title}" if group_name != name
-    rdoc  = Gem.bin_wrapper "rdoc"
 
-    extra = nil
-
-    unless File.exist? rdoc then
-      warn "Can't find #{rdoc}. Falling back."
-      rdoc = "rdoc"
-      extra = "-S"
-    end
-
-    ( # I don't understand this bug... but removing empties definitely fixes it.
-    %W[#{Gem.ruby} #{extra}
-       #{rdoc}
-       --title #{title}
-       -o #{local_rdoc_dir}
-      ] +
-      spec.rdoc_options +
-      extra_args +
-      spec.require_paths +
-      spec.extra_rdoc_files
+    (
+     %W[#{Gem.ruby} -S rdoc
+        --title #{title}
+        -o #{local_rdoc_dir}
+       ] +
+       spec.rdoc_options +
+       extra_args +
+       spec.require_paths +
+       spec.extra_rdoc_files
     ).reject(&:empty?)
   end
 

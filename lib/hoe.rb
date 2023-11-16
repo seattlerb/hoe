@@ -961,7 +961,3 @@ class File # :nodoc:
     end
   end
 end
-
-def Gem.bin_wrapper name # :nodoc: HACK
-  File.join Gem.bindir, Gem.default_exec_format % name
-end unless Gem.respond_to? :bin_wrapper
