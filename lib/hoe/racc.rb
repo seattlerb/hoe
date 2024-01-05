@@ -51,16 +51,23 @@ module Hoe::Racc
 
   def activate_racc_deps
     dependency "racc", "~> 1.5", :development
+    dependency "oedipus_lex", "~> 2.6", :development
   end
 
   ##
   # Define tasks for racc plugin
 
   def define_racc_tasks
-    racc_files   = self.spec.files.grep(/\.y$/)
+    y_files      = self.spec.files.grep(/\.y$/)
+    yy_files     = self.spec.files.grep(/\.yy$/)
     rex_files    = self.spec.files.grep(/\.rex$/)
 
-    parser_files = racc_files.map { |f| f.sub(/\.y$/, ".rb") }
+    yy_re = Regexp.union yy_files.map { |s| s.delete_suffix ".yy" }
+
+    parser_files =
+      y_files.map { |f| f.sub(/\.y$/, ".rb") } +
+      spec.files.grep(/(#{yy_re})\d+\.rb$/) -
+      yy_files
     lexer_files  = rex_files.map  { |f| f.sub(/\.rex$/, ".rex.rb") }
 
     self.clean_globs += parser_files
@@ -87,6 +94,9 @@ module Hoe::Racc
     end
 
     task :isolate # stub task
+
+    multitask :parser # make them multithreaded!
+    multitask :lexer
 
     desc "build the parser" unless parser_files.empty?
     task :parser => :isolate
