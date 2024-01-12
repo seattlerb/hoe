@@ -1,3 +1,14 @@
+=== 4.2.0 / 2024-01-12
+
+* 2 minor enhancements:
+
+  * Extended hoe/racc to be multitask! ruby_parser goes from 8.5s to 1.2s!
+  * Extended hoe/racc to build .yy files to allow for multi-file generation.
+
+* 1 bug fix:
+
+  * Fixed missing dep declaration on oedipus_lex.
+
 === 4.1.0 / 2023-11-16
 
 * 1 minor enhancement:
