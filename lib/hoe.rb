@@ -680,7 +680,7 @@ class Hoe
                    s.strip.chomp(":").sub(/(?:=+|#+)\s*/, '').downcase
                  }.join("\n")
 
-                 [kp, v.join.strip]
+                 [kp, (v || []).join.strip]
                }
 
     unless readme.empty? then
