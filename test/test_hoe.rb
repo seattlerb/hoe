@@ -171,6 +171,20 @@ class TestHoe < Minitest::Test
     end
   end
 
+  def test_initialize_intuit__empty
+    Dir.mktmpdir do |path|
+      Dir.chdir path do
+        File.write "README.rdoc", "= blah\n"
+
+        e = assert_raises RuntimeError do
+          hoe
+        end
+
+        assert_equal "No body for \"= blah\" section", e.message
+      end
+    end
+  end
+
   def test_file_read_utf
     Tempfile.open "BOM" do |io|
       io.write "\xEF\xBB\xBFBOM"

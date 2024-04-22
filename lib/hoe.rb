@@ -676,6 +676,8 @@ class Hoe
                .map(&:last)
                .each_slice(2)
                .to_h { |k, v|
+                 raise "No body for %p section" % [k[0].strip] \
+                   unless v
                  kp = k.map { |s|
                    s.strip.chomp(":").sub(/(?:=+|#+)\s*/, '').downcase
                  }.join("\n")
