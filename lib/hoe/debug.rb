@@ -86,7 +86,7 @@ module Hoe::Debug
 
       File.open f, "w" do |fp| fp.puts files end
 
-      verbose = { :verbose => Rake.application.options.verbose }
+      verbose = { :verbose => Rake.verbose }
 
       begin
         sh "#{DIFF} -du Manifest.txt #{f}", verbose

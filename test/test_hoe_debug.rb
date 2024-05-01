@@ -7,8 +7,8 @@ class TestHoeDebug < Minitest::Test
 
   include Hoe::Debug
 
-  # On Rake 0.8.7 verbose_flag is true, causing two tests to fail.
-  RakeFileUtils.verbose_flag = nil
+  # On Rake 0.8.7 verbose_flag is true, causing three tests to fail.
+  Rake.verbose(false)
 
   attr_accessor :generated_files
 
