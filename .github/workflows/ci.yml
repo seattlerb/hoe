@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: repo checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: load ruby
         uses: ruby/setup-ruby@v1
@@ -58,7 +58,7 @@ jobs:
 
     steps:
       - name: repo checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: load ruby
         uses: ruby/setup-ruby@v1
