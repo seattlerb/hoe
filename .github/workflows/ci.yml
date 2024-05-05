@@ -29,10 +29,10 @@ jobs:
 
     steps:
       - name: repo checkout
-        uses: actions/checkout
+        uses: actions/checkout@main
 
       - name: load ruby
-        uses: ruby/setup-ruby
+        uses: ruby/setup-ruby@master
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler: none
@@ -58,10 +58,10 @@ jobs:
 
     steps:
       - name: repo checkout
-        uses: actions/checkout
+        uses: actions/checkout@main
 
       - name: load ruby
-        uses: ruby/setup-ruby
+        uses: ruby/setup-ruby@master
         with:
           ruby-version: ruby
           bundler: none
