@@ -1,3 +1,13 @@
+=== 4.2.1 / 2024-05-21
+
+* 1 minor enhancement:
+
+  * Raise error if readme file is improperly structured.
+
+* 1 bug fix:
+
+  * Fix NoMethodError: undefined method 'verbose'. (adangel)
+
 === 4.2.0 / 2024-01-12
 
 * 2 minor enhancements:
