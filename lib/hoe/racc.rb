@@ -40,7 +40,7 @@ module Hoe::Racc
 
     # -v = verbose
     # -l = no-line-convert (they don't ever line up anyhow)
-    self.racc_flags ||= "-v -l"
+    self.racc_flags ||= +"-v -l"
     self.oedipus_options ||= {
                               :do_parse => false,
                              }
