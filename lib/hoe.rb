@@ -848,6 +848,8 @@ class Hoe
     spec_extras[:required_rubygems_version] = versions
   end
 
+  alias required_rubygems_version require_rubygems_version
+
   ##
   # Declare that your gem requires a specific ruby version. Last one wins.
 
