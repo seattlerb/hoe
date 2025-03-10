@@ -47,6 +47,8 @@ module Hoe::Package
       pkg.need_zip = @need_zip
     end
 
+    task(:gem).prerequisites.prepend :clean
+
     desc "Install the package as a gem. (opt. NOSUDO=1)"
     task :install_gem => [:clean, :package, :check_extra_deps] do
       install_gem Dir["pkg/*.gem"].first
