@@ -1,3 +1,10 @@
+=== 4.2.3 / 2025-03-25
+
+* 2 minor enhancements:
+
+  * Added alias required_rubygems_version to spec.
+  * Added clean as a prepended prerequisite to task gem.
+
 === 4.2.2 / 2024-06-29
 
 * 1 bug fix:
