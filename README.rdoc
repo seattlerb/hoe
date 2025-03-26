@@ -178,30 +178,34 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 
 === Known 3rd-Party Plugins:
 
-* hoe-bundler    - Generates a Gemfile based on a Hoe's declared dependencies.
-* hoe-debugging  - A Hoe plugin to help you debug your codes.
-* hoe-deveiate   - A collection of Rake tasks and utility functions.
-* hoe-doofus     - A Hoe plugin that helps me keep from messing up gem releases.
-* hoe-gemcutter  - Adds gemcutter release automation to Hoe.
-* hoe-geminabox  - Allows you to push your gems to geminabox
-* hoe-gemspec    - Generate a prerelease gemspec based on a Hoe spec.
-* hoe-gemspec2   - ??? submit a PR to add description
-* hoe-git        - A set of Hoe plugins for tighter Git integration.
-* hoe-heroku     - Helps you get your stuff on Heroku.
-* hoe-hg         - A Hoe plugin for Mercurial integration.
-* hoe-highline   - A Hoe plugin for building interactive Rake tasks
-* hoe-ignore     - ??? submit a PR to add description
-* hoe-manifest   - ??? submit a PR to add description
-* hoe-manualgen  - A manual-generation plugin for Hoe
-* hoe-mercurial  - A Hoe plugin for Mercurial integration.
-* hoe-reek       - Integrates the reek code smell engine into your hoe projects.
-* hoe-roodi      - Integrates the roodi code smell tool into your hoe projects.
-* hoe-rubygems   - Additional RubyGems tasks.
-* hoe-seattlerb  - Minitest, email announcements, release branching.
-* hoe-telicopter - Provides tasks used by hotelicopter.
-* hoe-travis     - Allows your gem to gain maximum benefit from <http://travis-ci.org>.
-* hoe-version    - ??? submit a PR to add description
-* hoe-yard       - A Hoe plugin for generating YARD documentation.
+* hoe-bundler    - Generate a Gemfile based on a Hoe spec's declared dependencies. (Mike Dalessio)
+* hoe-debugging  - A Hoe plugin to help you debug your C extensions (John Barnette)
+* hoe-deveiate   - A collection of Rake tasks and utility functions I use to maintain my Open Source projects (Michael Granger)
+* hoe-doofus     - A Hoe plugin that helps me (and you, maybe?) keep from messing up gem releases (John Barnette)
+* hoe-gemcutter  - Adds gemcutter release automation to Hoe. (James Tucker)
+* hoe-geminabox  - A small [hoe] plugin that allows you to push your gems to [geminabox] (Ben Bleything)
+* hoe-gemspec    - Generate a prerelease gemspec based on a Hoe spec. (Mike Dalessio)
+* hoe-gemspec2   - Adds support for generation of gemspec files to Hoe (raggi)
+* hoe-git        - A set of Hoe plugins for tighter Git integration (John Barnette)
+* hoe-git2       - A set of Hoe plugins for tighter Git integration (John Barnette)
+* hoe-halostatue - Hoe::Halostatue is a [Hoe][hoe] meta-plugin that ensures that the following plugins are installed and enabled for your project:  - [`hoe-doofus`][hoe-doofus] - [`hoe-gemspec2`][hoe-gemspec2] - [`hoe-git2`][hoe-git2] - [`hoe-markdown`][hoe-markdown] - [`hoe-rubygems`][hoe-rubygems]  It also provides an improved implementation for `Hoe#parse_urls` that works better with a Markdown README (Austin Ziegler)
+* hoe-heroku     - A [Hoe] plugin that helps you get your stuff on Heroku (Ben Bleything)
+* hoe-hg         - A Hoe plugin for Mercurial integration (McClain Looney)
+* hoe-highline   - A Hoe plugin for building interactive Rake tasks (Michael Granger)
+* hoe-ignore     - FIX (describe your package) (Evan Phoenix)
+* hoe-manns      - Collection of some personal used tasks (Sascha Manns)
+* hoe-manualgen  - A manual-generation plugin for Hoe (Michael Granger)
+* hoe-markdown   - Hoe plugin with helpers for markdown documentation files. (Mike Dalessio)
+* hoe-mercurial  - This is a fork of the [hoe-hg](https://bitbucket.org/mml/hoe-hg)  plugin (Michael Granger)
+* hoe-packaging  - Collection of some personal used tasks for creating and deploying RPM and DEB packages. (Sascha Manns)
+* hoe-reek       - Tasks to integrate the reek code smell engine into your hoe projects (Sascha Manns)
+* hoe-roodi      - hoe-roodi is a Hoe plugin to integrate the roodi code smell tool into your hoe projects. (Erik Hollensbe)
+* hoe-rubocop    - This hoe plugin extends hoe for using some rake tasks to control rubocop. (Sascha Manns)
+* hoe-rubygems   - A Hoe plugin with additional RubyGems tasks (John Barnette)
+* hoe-seattlerb  - Hoe plugins providing tasks used by seattle.rb including minitest, perforce, and email providing full front-to-back release/announce automation. (Ryan Davis)
+* hoe-telicopter - Hoe plugin providing tasks used by hotelicopter, currently just the email plugin from the seattlerb plugin by Ryan Davis (jim nist)
+* hoe-travis     - hoe-travis is a Hoe plugin that allows your gem to gain maximum benefit from http://travis-ci.org (Eric Hodel)
+* hoe-version    - Hoe plugin to provide rake tasks to bump version (bhenderson)
 
 === Writing Plugins:
 
