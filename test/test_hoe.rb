@@ -365,6 +365,7 @@ class TestHoe < Minitest::Test
     files = File.read("Manifest.txt").split(/\n/)
 
     spec = hoe.spec
+    spec.date = nil # forces Date.today. default switched to 1980 for some reason
 
     urls = {
       "home"  => "http://www.zenspider.com/projects/hoe.html",
