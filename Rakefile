@@ -32,13 +32,17 @@ end
 task :known_plugins do
   dep         = Gem::Dependency.new(/^hoe-/, Gem::Requirement.default)
   fetcher     = Gem::SpecFetcher.fetcher
-  spec_tuples = fetcher.find_matching dep
+  spec_tuples = fetcher.search_for_dependency(dep).flatten(1)
 
-  max = spec_tuples.map { |(tuple, _source)| tuple.first.size }.max
+  max = spec_tuples.map { |(tuple, _source)| tuple.name.size }.max
 
-  spec_tuples.each do |(tuple, source)|
-    spec = Gem::SpecFetcher.fetcher.fetch_spec(tuple, URI.parse(source))
-    puts "* %-#{max}s - %s (%s)" % [spec.name, spec.summary, spec.authors.first]
+  spec_tuples.sort_by { |(tuple, _source)| tuple.name }.each do |(tuple, source)|
+    spec = source.fetch_spec(tuple)
+    summary = spec
+                .summary
+                .gsub(/\[([^\]]+)\](?:[\[\(].*?[\]\)])?/, '\1')
+
+    puts "* %-#{max}s - %s (%s)" % [spec.name, summary, spec.authors.first]
   end
 end
 
