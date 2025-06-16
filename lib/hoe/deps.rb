@@ -154,7 +154,7 @@ module Hoe::Deps
              warn "Fetching full index and caching. This can take a while."
              url = GEMURL + "Marshal.#{Gem.marshal_version}.Z"
              dump = Gem::RemoteFetcher.fetcher.fetch_path url
-             dump = Gem.inflate dump
+             dump = Gem::Util.inflate dump
 
              warn "stripping index to latest gems"
              ary = Marshal.load dump
