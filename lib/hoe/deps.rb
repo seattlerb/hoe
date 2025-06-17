@@ -82,30 +82,6 @@ module Hoe::Deps
     end
   end
 
-  def deps_email_task # :nodoc:
-    gems = self.get_gems_by_name
-    gem  = gems[self.name]
-
-    abort "Couldn't find gem: #{self.name}" unless gem
-
-    deps = self.dependent_upon self.name
-    email = deps.map(&:email).compact.flatten.sort.uniq
-    email = email.map { |s| s.split(/,\s*/) }.flatten.sort.uniq
-
-    email.map! { |s| # don't you people realize how easy this is?
-      s.gsub(/ at | _at_ |\s*(atmark|@nospam@|-at?-|@at?@|<at?>|\[at?\]|\(at?\))\s*/i, "@").gsub(/\s*(dot|\[d(ot)?\]|\.dot\.)\s*/i, ".").gsub(/\s+com$/, ".com")
-    }
-
-    bad, good = email.partition { |e| e !~ /^[\w.+-]+\@[\w.+-]+$/ }
-
-    warn "Rejecting #{bad.size} email. I couldn't unmunge them." unless
-      bad.empty?
-
-    puts good.join(", ")
-
-    warn "Warning: couldn't extract any email addresses" if good.empty?
-  end
-
   def deps_fetch_task # :nodoc:
     deps = self.dependent_upon self.name
 
