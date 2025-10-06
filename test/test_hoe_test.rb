@@ -28,11 +28,9 @@ class TestHoeTest < Minitest::Test
 
   MT_EXPECTED = %W[-I#{mt_path} -w
                    -e '%srequire "test/test_hoe_test.rb"'
-                   --].join(" ") + " "
+                   -- %s].join(" ")
 
   def test_make_test_cmd_for_minitest
-    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
-
     framework = %(require "minitest/autorun"; )
 
     @tester = Minitest::TestTask.create :testtest do |t|
@@ -40,12 +38,12 @@ class TestHoeTest < Minitest::Test
       t.test_globs = ["test/test_hoe_test.rb"]
     end
 
-    assert_equal MT_EXPECTED % [framework].join("; "), @tester.make_test_cmd
+    fw = [framework].join("; ")
+    env = ENV["A"]
+    assert_equal MT_EXPECTED % [fw, env], @tester.make_test_cmd
   end
 
   def test_make_test_cmd_for_minitest_prelude
-    skip "Using TESTOPTS... skipping" if ENV["TESTOPTS"]
-
     prelude = %(require "other/file")
     framework = %(require "minitest/autorun"; )
 
@@ -55,6 +53,8 @@ class TestHoeTest < Minitest::Test
       t.test_globs = ["test/test_hoe_test.rb"]
     end
 
-    assert_equal MT_EXPECTED % [prelude, framework].join("; "), @tester.make_test_cmd
+    prelude = [prelude, framework].join("; ")
+    env = ENV["A"]
+    assert_equal MT_EXPECTED % [prelude, env], @tester.make_test_cmd
   end
 end
