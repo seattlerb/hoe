@@ -953,15 +953,8 @@ end
 class File # :nodoc:
   # Like File::read, but strips out a BOM marker if it exists.
   def self.read_utf path
-    r19 = "<3".respond_to? :encoding
-    opt = r19 ? "r:bom|utf-8" : "rb"
-
-    open path, opt do |f|
-      if r19 then
-        f.read
-      else
-        f.read.sub %r%\A\xEF\xBB\xBF%, ""
-      end
+    open path, "r:bom|utf-8" do |f|
+      f.read
     end
   end
 end
