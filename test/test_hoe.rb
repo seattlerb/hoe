@@ -192,10 +192,7 @@ class TestHoe < Minitest::Test
 
       content = File.read_utf io.path
       assert_equal "BOM", content
-
-      if content.respond_to? :encoding then
-        assert_equal Encoding::UTF_8, content.encoding
-      end
+      assert_equal Encoding::UTF_8, content.encoding
     end
   end
 
