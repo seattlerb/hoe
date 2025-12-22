@@ -182,6 +182,11 @@ class Hoe
   attr_accessor :extra_dev_deps
 
   ##
+  # Optional: rdoc arguments to be used when generating rdoc.
+
+  attr_accessor :rdoc_options
+
+  ##
   # Optional: Extra files you want to add to RDoc.
   #
   # .txt files are automatically included (excluding the obvious).
@@ -544,7 +549,7 @@ class Hoe
       s.bindir               = bindir || "bin"
       s.executables          = s.files.grep(/^#{s.bindir}/) { |f| File.basename(f) }
       s.require_paths        = dirs unless dirs.empty?
-      s.rdoc_options         = ["--main", readme_file]
+      s.rdoc_options         = rdoc_options
       s.post_install_message = post_install_message
       s.metadata             = (urls.keys & URLS_TO_META_MAP.keys).map { |name|
         [URLS_TO_META_MAP[name], urls[name]]
@@ -662,6 +667,9 @@ class Hoe
 
     self.history_file ||= Dir.glob("History.{rdoc,txt,md}").first || "History.txt"
     self.readme_file  ||= Dir.glob("README.{rdoc,txt,md}").first || "README.txt"
+
+    # delayed to set readme_file first
+    self.rdoc_options = ["--main", readme_file]
 
     abort "Hoe.new {...} removed. Switch to Hoe.spec." if block_given?
   end
