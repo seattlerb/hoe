@@ -1,3 +1,13 @@
+=== 4.4.0 / 2025-12-22
+
+* 1 minor enhancement:
+
+  * Added rdoc_options accessor to expose it so you can add more.
+
+* 1 bug fix:
+
+  * Updated File.read_utf to assume String encoding support. (wtn)
+
 === 4.3.0 / 2025-06-17
 
 * 4 bug fixes:
