@@ -19,7 +19,7 @@ Hoe.spec "hoe" do
 
   pluggable!
   require_rubygems_version ">= 3.0"
-  require_ruby_version [">= 2.7", "< 4"]
+  require_ruby_version [">= 2.7"]
 
   dependency "rake", [">= 0.8", "< 15.0"] # FIX: to force it to exist pre-isolate
 end
