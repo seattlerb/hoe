@@ -167,6 +167,7 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * Hoe::Flog
 * Hoe::GemPreludeSucks
 * Hoe::Gemcutter
+* Hoe::Git
 * Hoe::Inline
 * Hoe::Newb
 * Hoe::Package

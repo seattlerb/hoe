@@ -15,6 +15,7 @@ lib/hoe/flay.rb
 lib/hoe/flog.rb
 lib/hoe/gem_prelude_sucks.rb
 lib/hoe/gemcutter.rb
+lib/hoe/git.rb
 lib/hoe/inline.rb
 lib/hoe/newb.rb
 lib/hoe/package.rb
