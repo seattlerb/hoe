@@ -100,7 +100,7 @@ module Hoe::Publish
   # Declare a dependency on rdoc, IF NEEDED.
 
   def activate_publish_deps
-    dependency "rdoc", [">= 4.0", "< 7"], :developer if need_rdoc
+    dependency "rdoc", [">= 6.0", "< 8"], :developer if need_rdoc
   end
 
   ##
