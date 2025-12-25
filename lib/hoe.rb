@@ -428,7 +428,8 @@ class Hoe
     names.reject! { |n| n =~ /^[A-Z_]+$/ }
 
     names.each do |name|
-      next unless Hoe.plugins.include? name.downcase.intern
+      underscored = name.gsub(/(?<!^)(?=[A-Z])/, "_").downcase.intern
+      next unless Hoe.plugins.include? underscored
       warn "extend #{name}" if $DEBUG
       self.extend Hoe.const_get(name)
     end
