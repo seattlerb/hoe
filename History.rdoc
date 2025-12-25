@@ -1,3 +1,11 @@
+=== 4.5.0 / 2025-12-24
+
+* 3 minor enhancements:
+
+  * Added Hoe::Git plugin, forked from jbarnette/hoe-git + halostatue/hoe-git2
+  * Bumped ruby version to 3.2+.
+  * Clarified dependency on rake to ~> 13.0.
+
 === 4.4.0 / 2025-12-22
 
 * 1 minor enhancement:
