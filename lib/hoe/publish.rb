@@ -117,7 +117,8 @@ module Hoe::Publish
 
       desc "Generate rdoc coverage report"
       task :dcov => :isolate do
-        sh(*make_rdoc_cmd("-C"))
+        level = ENV["L"]
+        sh(*make_rdoc_cmd("-C#{level}"))
       end
 
       desc "Remove RDoc files"
