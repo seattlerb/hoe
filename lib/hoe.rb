@@ -114,12 +114,20 @@ class Hoe
   URLS_TO_META_MAP = {
     "bugs" => "bug_tracker_uri",
     "clog" => "changelog_uri",
+    "code" => "source_code_uri",
     "doco" => "documentation_uri",
     "docs" => "documentation_uri",
     "home" => "homepage_uri",
-    "code" => "source_code_uri",
-    "wiki" => "wiki_uri",
     "mail" => "mailing_list_uri",
+    "wiki" => "wiki_uri",
+
+    "changelog"     => "changelog_uri",
+    "changes"       => "changelog_uri",
+    "documentation" => "documentation_uri",
+    "history"       => "changelog_uri",
+    "issues"        => "bug_tracker_uri",
+    "rdoc"          => "documentation_uri",
+    "tickets"       => "bug_tracker_uri",
   }
 
   ##
@@ -161,6 +169,13 @@ class Hoe
   # auto-description. Defaults to %w(description).
 
   attr_accessor :description_sections
+
+  ##
+  # Optional: Add a (hopefully hidden) H2 to the description to force
+  # rubygems.org to properly render the description as rdoc. Defaults
+  # to true.
+
+  attr_accessor :description_rdoc_hack
 
   ##
   # *MANDATORY*: The author's email address(es). (can be array)
@@ -644,7 +659,8 @@ class Hoe
     self.author               = []
     self.changes              = nil
     self.description          = nil
-    self.description_sections = %w[description]
+    self.description_sections = %w[description features/problems]
+    self.description_rdoc_hack = true
     self.email                = []
     self.extra_deps           = []
     self.extra_dev_deps       = []
@@ -684,21 +700,24 @@ class Hoe
                .chunk { |l| l[/^(?:=+|#+)/] || "" }
                .map(&:last)
                .each_slice(2)
+               .select { |k, v| k && v }
                .to_h { |k, v|
-                 raise "No body for %p section" % [k[0].strip] \
-                   unless v
-                 kp = k.map { |s|
-                   s.strip.chomp(":").sub(/(?:=+|#+)\s*/, '').downcase
-                 }.join("\n")
+                 kp = k.join.strip.chomp(":").sub(/(?:=+|#+)\s*/, '').downcase
+
+                 # keep key in value, but title case it
+                 v.prepend k.join.downcase.gsub(/\b[a-z]/, &:upcase)
 
                  [kp, v.join.strip]
                }
 
     unless readme.empty? then
-      desc     = readme.values_at(*description_sections).join("\n\n")
+      desc     = readme.values_at(*description_sections).compact.join("\n\n")
+      desc     = desc.lines.drop(2).join # drop first header (eg description)
+      desc    += "\n\n==== To Install:\n" if description_rdoc_hack &&
+        desc !~ /^==+ [A-Z]/
       summ     = desc.split(/\.\s+/).first(summary_sentences).join(". ")
 
-      self.urls        ||= parse_urls(readme.values.first)
+      self.urls        ||= parse_urls(readme.values.first.lines.drop(1).join)
       self.description ||= desc
       self.summary     ||= summ
     else
@@ -733,13 +752,10 @@ class Hoe
   # should update the readme.
 
   def parse_urls text
-    lines = text.gsub(/^\* /, "").delete("<>").split(/\n/).grep(/\S+/)
+    keys  = Regexp.union Hoe::URLS_TO_META_MAP.keys
+    kv_re = /^\s*(#{keys})\s*::\s*<?([^>\s]+)>?/
 
-    if lines.first =~ /::/ then
-      Hash[lines.map { |line| line.split(/\s*::\s*/) }]
-    else
-      raise "Please switch readme to hash format for urls."
-    end
+    text.scan(kv_re).to_h
   end
 
   ##
@@ -772,11 +788,12 @@ class Hoe
   end
 
   ##
-  # Bitch about a file that is missing data or unparsable for intuiting values.
+  # Raise about a file that is missing data or unparsable for intuiting values.
 
   def missing name
-    warn "** #{name} is missing or in the wrong format for auto-intuiting."
-    warn "   run `sow blah` and look at its text files"
+    raise \
+      "** #{name} is missing or in the wrong format for auto-intuiting." \
+      "   run `sow blah` and look at its text files"
   end
 
   ##

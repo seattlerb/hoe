@@ -8,9 +8,16 @@ class Hoe
   end
 end
 
-$rakefile = nil # shuts up a warning in rdoctask.rb
-
 class TestHoe < Minitest::Test
+  def without_plugins
+    old = Hoe.plugins.dup
+    Hoe.plugins.clear
+
+    yield
+  ensure
+    Hoe.plugins.replace old
+  end
+
   def hoe *skips, &b
     @hoe ||= Hoe.spec "blah" do
       developer "author", "email"
@@ -150,6 +157,8 @@ class TestHoe < Minitest::Test
         File.write "README.rdoc", "= blah\n\nhome :: http://blah/"
         File.write "History.rdoc", "=== 1.0"
 
+        hoe = without_plugins { self.hoe }
+
         assert_equal "History.rdoc", hoe.history_file
         assert_equal "README.rdoc", hoe.readme_file
         assert_equal %w[FAQ.rdoc History.rdoc README.rdoc],
@@ -180,7 +189,7 @@ class TestHoe < Minitest::Test
           hoe
         end
 
-        assert_equal "No body for \"= blah\" section", e.message
+        assert_match(/wrong format/, e.message)
       end
     end
   end
@@ -196,30 +205,17 @@ class TestHoe < Minitest::Test
     end
   end
 
-  def test_parse_urls_ary
-    ary  = ["* https://github.com/seattlerb/hoe",
-            "* http://docs.seattlerb.org/hoe/",
-            "* http://docs.seattlerb.org/hoe/Hoe.pdf",
-            "* http://github.com/jbarnette/hoe-plugin-examples"].join "\n"
-
-    assert_raises RuntimeError do
-      hoe.parse_urls ary
-    end
-  end
-
   def test_parse_urls_hash
     hash = [
             "home  :: https://github.com/seattlerb/hoe",
-            "rdoc  :: http://docs.seattlerb.org/hoe/",
-            "doco  :: http://docs.seattlerb.org/hoe/Hoe.pdf",
-            "other :: http://github.com/jbarnette/hoe-plugin-examples",
+            "rdoc  :: https://docs.seattlerb.org/hoe/",
+            "doco2 :: https://docs.seattlerb.org/hoe/Hoe.pdf",
+            "other :: https://github.com/jbarnette/hoe-plugin-examples",
            ].join "\n"
 
     exp = {
-      "home"  => "https://github.com/seattlerb/hoe",
-      "rdoc"  => "http://docs.seattlerb.org/hoe/",
-      "doco"  => "http://docs.seattlerb.org/hoe/Hoe.pdf",
-      "other" => "http://github.com/jbarnette/hoe-plugin-examples",
+      "home" => "https://github.com/seattlerb/hoe",
+      "rdoc" => "https://docs.seattlerb.org/hoe/",
     }
 
     assert_equal exp, hoe.parse_urls(hash)
@@ -242,8 +238,6 @@ class TestHoe < Minitest::Test
       make working with file tasks cleaner, easier, and faster.
     EOM
 
-
-
     assert_silent do
       h = Hoe.spec "blah" do
         developer "author", "email"
@@ -258,13 +252,17 @@ class TestHoe < Minitest::Test
     end
 
     desc = mrww_readme.lines[10..11].join.chomp
+    summ = desc.chomp(".")
+    rdoc = "\n\n==== To Install:\n"
+    desc += rdoc
+
     urls = {
       "home" => "https://github.com/seattlerb/makerakeworkwell",
       "rdoc" => "http://docs.seattlerb.org/makerakeworkwell"
     }
 
     assert_equal desc, h.description
-    assert_equal desc, h.summary
+    assert_equal summ, h.summary
     assert_equal urls, h.urls
   end
 
@@ -352,6 +350,8 @@ class TestHoe < Minitest::Test
     assert_equal exp, hoe.parse_urls(hash)
   end
 
+  make_my_diffs_pretty!
+
   def test_possibly_better
     t = Gem::Specification::TODAY
 
@@ -368,10 +368,8 @@ class TestHoe < Minitest::Test
       "home"  => "https://zenspider.com/projects/hoe.html",
       "code"  => "https://github.com/seattlerb/hoe",
       "bugs"  => "https://github.com/seattlerb/hoe/issues",
-      "rdoc"  => "https://docs.seattlerb.org/hoe/",
-      "doco"  => "https://docs.seattlerb.org/hoe/Hoe.pdf",
+      "doco"  => "https://docs.seattlerb.org/hoe/",
       "clog"  => "https://github.com/seattlerb/hoe/blob/master/History.rdoc",
-      "other" => "https://github.com/jbarnette/hoe-plugin-examples",
     }
 
     assert_equal urls, hoe.urls
@@ -397,8 +395,10 @@ class TestHoe < Minitest::Test
 
     deps = spec.dependencies.sort_by(&:name)
 
+    version = Hoe::VERSION[/\d+\.\d+/]
+
     expected = [
-      ["hoe",  :development, "~> #{Hoe::VERSION.sub(/\.\d+$/, "")}"],
+      ["hoe",  :development, "~> #{version}"],
       ["rdoc", :development, "< 8", ">= 6.0"],
     ]
 
