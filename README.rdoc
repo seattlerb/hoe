@@ -1,12 +1,12 @@
 = Hoe
 
-home  :: http://www.zenspider.com/projects/hoe.html
+home  :: https://zenspider.com/projects/hoe.html
 code  :: https://github.com/seattlerb/hoe
 bugs  :: https://github.com/seattlerb/hoe/issues
-rdoc  :: http://docs.seattlerb.org/hoe/
-doco  :: http://docs.seattlerb.org/hoe/Hoe.pdf
+rdoc  :: https://docs.seattlerb.org/hoe/
+doco  :: https://docs.seattlerb.org/hoe/Hoe.pdf
 clog  :: https://github.com/seattlerb/hoe/blob/master/History.rdoc
-other :: http://github.com/jbarnette/hoe-plugin-examples
+other :: https://github.com/jbarnette/hoe-plugin-examples
 
 == DESCRIPTION:
 
@@ -19,7 +19,7 @@ testing, packaging, deployment, and announcement.
 See class rdoc for help. Hint: `ri Hoe` or any of the plugins listed
 below.
 
-For extra goodness, see: http://docs.seattlerb.org/hoe/Hoe.pdf
+For extra goodness, see: https://docs.seattlerb.org/hoe/Hoe.pdf
 
 == FEATURES/PROBLEMS:
 
@@ -205,7 +205,7 @@ Again, this must be done before the Hoe spec, or it won't be useful.
 * hoe-rubygems   - A Hoe plugin with additional RubyGems tasks (John Barnette)
 * hoe-seattlerb  - Hoe plugins providing tasks used by seattle.rb including minitest, perforce, and email providing full front-to-back release/announce automation. (Ryan Davis)
 * hoe-telicopter - Hoe plugin providing tasks used by hotelicopter, currently just the email plugin from the seattlerb plugin by Ryan Davis (jim nist)
-* hoe-travis     - hoe-travis is a Hoe plugin that allows your gem to gain maximum benefit from http://travis-ci.org (Eric Hodel)
+* hoe-travis     - hoe-travis is a Hoe plugin that allows your gem to gain maximum benefit from https://travis-ci.org (Eric Hodel)
 * hoe-version    - Hoe plugin to provide rake tasks to bump version (bhenderson)
 * hoe-yard       - A Hoe plugin for generating YARD documentation (Postmodern)
 

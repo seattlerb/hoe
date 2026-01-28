@@ -365,13 +365,13 @@ class TestHoe < Minitest::Test
     spec.date = nil # forces Date.today. default switched to 1980 for some reason
 
     urls = {
-      "home"  => "http://www.zenspider.com/projects/hoe.html",
+      "home"  => "https://www.zenspider.com/projects/hoe.html",
       "code"  => "https://github.com/seattlerb/hoe",
       "bugs"  => "https://github.com/seattlerb/hoe/issues",
-      "rdoc"  => "http://docs.seattlerb.org/hoe/",
-      "doco"  => "http://docs.seattlerb.org/hoe/Hoe.pdf",
+      "rdoc"  => "https://docs.seattlerb.org/hoe/",
+      "doco"  => "https://docs.seattlerb.org/hoe/Hoe.pdf",
       "clog"  => "https://github.com/seattlerb/hoe/blob/master/History.rdoc",
-      "other" => "http://github.com/jbarnette/hoe-plugin-examples",
+      "other" => "https://github.com/jbarnette/hoe-plugin-examples",
     }
 
     assert_equal urls, hoe.urls
