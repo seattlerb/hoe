@@ -3,8 +3,8 @@
 home  :: https://zenspider.com/projects/hoe.html
 code  :: https://github.com/seattlerb/hoe
 bugs  :: https://github.com/seattlerb/hoe/issues
-rdoc  :: https://docs.seattlerb.org/hoe/
-doco  :: https://docs.seattlerb.org/hoe/Hoe.pdf
+doco  :: https://docs.seattlerb.org/hoe/
+doco2 :: https://docs.seattlerb.org/hoe/Hoe.pdf
 clog  :: https://github.com/seattlerb/hoe/blob/master/History.rdoc
 other :: https://github.com/jbarnette/hoe-plugin-examples
 
