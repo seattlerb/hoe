@@ -365,7 +365,7 @@ class TestHoe < Minitest::Test
     spec.date = nil # forces Date.today. default switched to 1980 for some reason
 
     urls = {
-      "home"  => "https://www.zenspider.com/projects/hoe.html",
+      "home"  => "https://zenspider.com/projects/hoe.html",
       "code"  => "https://github.com/seattlerb/hoe",
       "bugs"  => "https://github.com/seattlerb/hoe/issues",
       "rdoc"  => "https://docs.seattlerb.org/hoe/",
