@@ -1,3 +1,20 @@
+=== 4.6.0 / 2026-01-28
+
+* 6 minor enhancements:
+
+  * Added "features/problems" to description_sections array.
+  * Added L=<level> option to dcov task.
+  * Added description_rdoc_hack=true to force rubygems.org to use rdoc formatting.
+  * Multiple description sections include the header descriptions (excluding first).
+  * Redid some of the parsing in intuit_values to be cleaner.
+  * Stole halostatue's extensions to Readme url parsing. Thanks!
+
+* 3 bug fixes:
+
+  * #missing path now raises instead of warns.
+  * #parse_urls no longer raises on the old array format. Long dead.
+  * Normalize GHA workflow with minitest and others.
+
 === 4.5.1 / 2026-01-02
 
 * 2 bug fixes:
