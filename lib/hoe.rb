@@ -984,3 +984,6 @@ class File # :nodoc:
     end
   end
 end
+
+module Gem # :nodoc:
+end

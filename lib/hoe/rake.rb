@@ -1,4 +1,4 @@
-module Rake
+module Rake # :nodoc:
   class Task # :nodoc:
     # Used to name the source of a given task
     attr_accessor :plugin
