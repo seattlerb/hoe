@@ -50,7 +50,7 @@ module Hoe::Debug
 
     desc "Show information about the gem."
     task :debug_gem do
-      puts spec.to_ruby
+      pp spec
     end
 
     task :isolate # stub
