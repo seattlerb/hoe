@@ -22,12 +22,14 @@ end
 
 def make_sub_modules klass
   last = nil
-  result = ""
+  result = []
+
   klass.split("::")[0..-2].each do |part|
     last = [last, part].compact.join("::")
     result << "module #{last}; end\n"
   end
   result << "\n" unless result.empty?
+  result.join
 end
 
 op = OptionParser.new do |opts|
@@ -43,6 +45,10 @@ op = OptionParser.new do |opts|
   opts.on("-d", "--dev", "Add project to subdir under 'dev'.") do
     check_subdir option
     option[:subdir] = "dev"
+  end
+
+  opts.on "-C dir", String, "Change directory to dir before creating project." do |d|
+    Dir.chdir d
   end
 
   opts.on("-s style", "--style style", String, "Use template <style>.") do |s|
