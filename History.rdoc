@@ -1,3 +1,14 @@
+=== 4.6.1 / 2026-02-23
+
+* 1 minor enhancement:
+
+  * Added -C dir arg to sow to cd to dir before creating so I can test local changes easier.
+
+* 2 bug fixes:
+
+  * Fixes for a very buggy rdoc... wtf
+  * Switch to pp for debug_gem. Long file lists are finally readable. Gem#to_ruby is ugly as fuck.
+
 === 4.6.0 / 2026-01-28
 
 * 6 minor enhancements:
