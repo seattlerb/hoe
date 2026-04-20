@@ -18,6 +18,10 @@ end
 # release::            Package and upload the release.
 
 module Hoe::Package
+  include Rake::DSL if defined?(Rake::DSL)
+
+  Hoe::DEFAULT_CONFIG["otp_command"] = false
+
   ##
   # Optional: Should package create a tarball? [default: true]
 
@@ -80,6 +84,16 @@ module Hoe::Package
       abort "Versions don't match: %s vs %s" % [v, version] if v != version
       abort "Versions don't match %s: %s vs %s" % [history_file, v, c] if v != c
     end
+
+    desc "Push gem to package."
+    task :release_to_rubygems => [:clean, :package, :release_sanity] do
+      pkg   = "pkg/#{spec.name}-#{spec.version}"
+      gems  = Dir["#{pkg}*.gem"]
+
+      gem_push gems
+    end
+
+    task :release_to => :release_to_rubygems
   end
 
   ##
@@ -120,5 +134,20 @@ module Hoe::Package
     abort "ERROR: You should format PRE like pre or alpha.1 or something" if
       (Gem::VERSION < "1.4"  and pre !~ /^[a-z]+(\.\d+)?$/) or
       (Gem::VERSION >= "1.4" and pre !~ /^[a-z]+(\.?\d+)?$/)
+  end
+
+  ##
+  # Push gems to server.
+
+  def gem_push gems
+    with_config do |config, _|
+      otp_command = config["otp_command"]
+
+      ENV["GEM_HOST_OTP_CODE"] = `#{otp_command}`.chomp if otp_command
+    end
+
+    gems.each do |g|
+      sh Gem.ruby, "-S", "gem", "push", g
+    end
   end
 end
