@@ -9,8 +9,15 @@ module Hoe::Cov
 
   ##
   # Directories to filter out from coverage.
+  #
+  # The default = tmp:test
 
   attr_accessor :cov_filter
+
+  ##
+  # Set to true to enable branch level coverage reporting.
+  #
+  # The default = false
 
   attr_accessor :cov_branches
 
