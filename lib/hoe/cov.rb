@@ -12,8 +12,11 @@ module Hoe::Cov
 
   attr_accessor :cov_filter
 
+  attr_accessor :cov_branches
+
   def initialize_cov # :nodoc:
     self.cov_filter = %w[tmp test]
+    self.cov_branches = nil
   end
 
   ##
@@ -33,8 +36,9 @@ module Hoe::Cov
 
     desc "Run tests and analyze code coverage"
     task :cov => :isolate do
+      extra = cov_branches && "; enable_coverage :branch"
       test_task.test_prelude =
-        %(require "simplecov"; SimpleCov.start { add_filter %p }) % [cov_filter]
+        %(require "simplecov"; SimpleCov.start { add_filter %p%s }) % [cov_filter, extra]
 
       Rake::Task[:test].invoke
     end
