@@ -1,3 +1,10 @@
+=== 4.7.0 / 2026-04-22
+
+* 2 minor enhancements:
+
+  * Added cov_branches to enable branch level coverage reporting.
+  * Merged hoe/gemcutter into hoe/package. Distinction doesn't make sense.
+
 === 4.6.1 / 2026-02-23
 
 * 1 minor enhancement:
