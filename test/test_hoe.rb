@@ -374,7 +374,7 @@ class TestHoe < Minitest::Test
 
     assert_equal urls, hoe.urls
 
-    text_files = files.grep(/(txt|rdoc)$/).reject { |f| f =~ /template/ }
+    text_files = files.grep(/(txt|rdoc)$/).reject { |f| f =~ /template|Manifest/ }
 
     assert_equal "blah", spec.name
     assert_equal "1.2.3", spec.version.to_s

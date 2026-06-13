@@ -25,7 +25,7 @@ class TestHoePublish < Minitest::Test
                 -o doc
                 --main README.rdoc
                 lib
-                History.rdoc Manifest.txt README.rdoc
+                History.rdoc README.rdoc
                ]
 
     # skip if linux?

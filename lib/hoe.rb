@@ -580,9 +580,15 @@ class Hoe
         s.author  = author
       end
 
-      s.extra_rdoc_files += s.files.grep(/\.(txt|rdoc|md)$/)
-      s.extra_rdoc_files.reject! { |f| f =~ %r%^(test|spec|vendor|template|data|tmp)/% }
-      s.extra_rdoc_files += @extra_rdoc_files
+      # TODO: pull up to accessors?
+      bad_files = %w[ Manifest.txt ]
+      bad_dirs  = %w[ test spec vendor template data tmp ]
+
+      s.extra_rdoc_files += s.files
+        .grep(/\.(txt|rdoc|md)$/)
+        .grep_v(/^(?:#{bad_files.join "|"})/)
+        .grep_v(/^(?:#{bad_dirs.join "|"})\//)
+      s.extra_rdoc_files += self.extra_rdoc_files
     end
 
     check_for_version
