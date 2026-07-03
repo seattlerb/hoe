@@ -1,3 +1,9 @@
+=== 4.7.1 / 2026-07-03
+
+* 1 bug fix:
+
+  * Remove Manifest.txt from extra_rdoc_files as latest rdoc mangles the file.
+
 === 4.7.0 / 2026-04-22
 
 * 2 minor enhancements:
