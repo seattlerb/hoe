@@ -54,6 +54,8 @@ module Hoe::Debug
     end
 
     task :isolate # stub
+
+    desc "Run an IRB session with the project loaded."
     task :irb => :isolate do
       name = spec.name.gsub("-", "/")
       file = (spec.files.grep(/^lib\/#{name}\.rb$/).first ||
